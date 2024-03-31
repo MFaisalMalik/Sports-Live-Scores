@@ -29,7 +29,7 @@ function Cards() {
             <CardItem
               src='images/Hockey.jpg'
               text='Hockey'
-              path='/products'
+              path='/service'
             />
           </ul>
         </div>
