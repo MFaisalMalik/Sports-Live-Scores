@@ -1,24 +1,29 @@
-import logo from './logo.svg';
+import React from 'react';
+import Navbar from './components/Navbar';
 import './App.css';
+import Home from './components/pages/Home';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Blogs from './components/pages/Blog';
+import LiveScores from './components/pages/LiveScores';
+import SignUp from './components/pages/SignUp';
+import BettingOdds from './components/pages/BettingOdds';
+import SignIn from './components/pages/SignIn';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+        <Navbar />
+        <Switch>
+          <Route path='/' exact component={Home} />
+          <Route path='/blog' component={Blogs} />
+          <Route path='/live-scores' component={LiveScores} />
+          <Route path='/betting-odds' component={BettingOdds} />
+          <Route path='/Sign-in' component={SignIn} />
+          <Route path='/sign-up' component={SignUp} />
+        </Switch>
+      </Router>
+    </>
   );
 }
 
