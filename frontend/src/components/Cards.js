@@ -13,6 +13,7 @@ function Cards() {
               src='images/Football.jpg'
               text='Football'
               path='/services'
+              id = 'left-card'
             />
             <CardItem
               src='images/Baseball.jpg'
@@ -25,6 +26,7 @@ function Cards() {
               src='images/Basketball.jpg'
               text='Basketball'             
               path='/services'
+              id = 'left-card'
             />
             <CardItem
               src='images/Hockey.jpg'
