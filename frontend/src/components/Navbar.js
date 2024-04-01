@@ -71,7 +71,28 @@ function Navbar() {
                 Betting Odds
               </Link>
             </li>
+            
+            <li>
+              <Link
+                to='/sign-in'
+                id='nav-links-mobile-sign-in'
+                className='nav-links-mobile'
+                onClick={closeMobileMenu}
+              >
+                Sign In
+              </Link>
+            </li>
 
+            <li>
+              <Link
+                to='/sign-up'
+                id='nav-links-mobile-sign-up'
+                className='nav-links-mobile'
+                onClick={closeMobileMenu}
+              >
+                Sign Up
+              </Link>
+            </li>
           </ul>
           {button && <Button name= 'sign-in' buttonStyle='btn--outline' to='/sign-in'>SIGN IN</Button>}
           {button && <Button name= 'sign-up' buttonStyle='btn--outline' to='/sign-up'>SIGN UP</Button>}
