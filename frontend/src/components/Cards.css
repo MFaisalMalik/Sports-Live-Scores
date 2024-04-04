@@ -1,6 +1,10 @@
+@import 'theme.css';
+
+
 .cards {
   padding: 4rem;
-  background: #fff;
+  /* background: #fff; */
+  background: var(--cardItemsSec-color);
 }
 
 h1 {
@@ -100,7 +104,8 @@ h1 {
 }
 
 .cards__item__text {
-  color: #252e48;
+  /* color: #252e48; */
+  color: black;
   font-size: 20px;
   line-height: 24px;
 }

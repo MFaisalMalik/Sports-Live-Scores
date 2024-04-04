@@ -12,26 +12,26 @@ function Cards() {
             <CardItem
               src='images/Football.jpg'
               text='Football'
-              path='/services'
+              path='/football'
               id = 'left-card'
             />
             <CardItem
               src='images/Baseball.jpg'
               text='Baseball'            
-              path='/services'
+              path='/baseball'
             />
           </ul>
           <ul className='cards__items'>
             <CardItem
               src='images/Basketball.jpg'
               text='Basketball'             
-              path='/services'
+              path='/basketball'
               id = 'left-card'
             />
             <CardItem
               src='images/Hockey.jpg'
               text='Hockey'
-              path='/service'
+              path='/hockey'
             />
           </ul>
         </div>

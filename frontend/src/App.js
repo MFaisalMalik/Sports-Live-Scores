@@ -8,6 +8,12 @@ import LiveScores from './components/pages/LiveScores';
 import SignUp from './components/pages/SignUp';
 import BettingOdds from './components/pages/BettingOdds';
 import SignIn from './components/pages/SignIn';
+import Football from './components/pages/Football';
+import Baseball from './components/pages/Baseball';
+import Basketball from './components/pages/Basketball';
+import Hockey from './components/pages/Hockey';
+
+
 
 function App() {
   return (
@@ -21,6 +27,10 @@ function App() {
           <Route path='/betting-odds' component={BettingOdds} />
           <Route path='/Sign-in' component={SignIn} />
           <Route path='/sign-up' component={SignUp} />
+          <Route path='/football' component={Football} />
+          <Route path='/baseball' component={Baseball} />
+          <Route path='/basketball' component={Basketball} />
+          <Route path='/hockey' component={Hockey} />
         </Switch>
       </Router>
     </>
