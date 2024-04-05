@@ -9,6 +9,10 @@
 .blogs,
 .live-scores,
 .betting-odds,
+.football,
+.hockey,
+.baseball,
+.basketball,
 .sign-in,
 .sign-up {
   display: flex;
@@ -61,4 +65,74 @@
   background-repeat: no-repeat;
   color: #fff;
   font-size: 100px;
+}
+
+.football {
+  background-image: url('/images/football-cover.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  justify-content: flex-start;
+  color: #fff;
+  font-size: 90px;
+  padding-left: 40px;
+  height: 400px;
+}
+
+.baseball {
+  background-image: url('/images/baseball-cover.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  justify-content: flex-start;
+  color: #fff;
+  font-size: 100px;
+  padding-left: 40px;
+  height: 400px;
+}
+
+.basketball {
+  background-image: url('/images/basketball-cover.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  justify-content: flex-start;
+  color: #fff;
+  font-size: 80px;
+  padding-left: 50px;
+  height: 400px;
+}
+
+.hockey {
+  background-image: url('/images/hockey-cover.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  justify-content: flex-start;
+  color: #fff;
+  font-size: 100px;
+  padding-left: 40px;
+  padding-bottom: 50px;
+  height: 400px;
+}
+
+.container {
+  margin: 40px 100px;
+  margin-bottom: 50px;
+}
+
+.game-bets-free,
+.players-bets-free,
+.game-bets-premium {
+  border-right: 1px solid;
+}
+
+.text-class {
+  margin-left: 0px;
+  font-size: 28px;
+}
+
+.text-class-2 {
+  margin-left: 20px;
+  font-size: 28px;
 }
