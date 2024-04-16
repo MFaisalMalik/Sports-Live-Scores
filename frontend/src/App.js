@@ -12,6 +12,7 @@ import Football from './components/pages/Football';
 import Baseball from './components/pages/Baseball';
 import Basketball from './components/pages/Basketball';
 import Hockey from './components/pages/Hockey';
+import Packages from './components/pages/Packages';
 
 
 
@@ -25,8 +26,9 @@ function App() {
           <Route path='/blog' component={Blogs} />
           <Route path='/live-scores' component={LiveScores} />
           <Route path='/betting-odds' component={BettingOdds} />
-          <Route path='/Sign-in' component={SignIn} />
+          <Route path='/sign-in' component={SignIn} />
           <Route path='/sign-up' component={SignUp} />
+          <Route path='/packages' component={Packages} />
           <Route path='/football' component={Football} />
           <Route path='/baseball' component={Baseball} />
           <Route path='/basketball' component={Basketball} />
