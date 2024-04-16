@@ -1,3 +1,5 @@
+@import '../theme.css';
+
 :root {
   --primary: #fff;
 }
@@ -84,4 +86,20 @@ button[name="search-premium"] {
   color: #242424;
   transition: 250ms;
   border: 1px solid #242424;
+}
+
+.btn--rounded {
+  border-radius: 20px;
+  padding: 10px 20px;
+  background-color: var(--navbar-color);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  width: 200px;
+  height: 45px;
+}
+
+.btn--rounded:hover {
+  background-color: #fff;
 }
