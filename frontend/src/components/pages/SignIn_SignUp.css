@@ -1,6 +1,6 @@
-@import '../theme.css';
+@import '../../theme.css';
 
-.container {
+.signup-signin-container {
     display: flex;
     flex-direction: column;
     margin: auto;

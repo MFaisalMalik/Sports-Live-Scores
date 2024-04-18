@@ -1,4 +1,4 @@
-@import 'theme.css';
+@import '../theme.css';
 
 .navbar {
   /* background: linear-gradient(90deg, rgb(28, 27, 27) 0%, rgb(26, 23, 23) 100%); */

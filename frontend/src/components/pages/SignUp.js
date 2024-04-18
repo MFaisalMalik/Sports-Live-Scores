@@ -3,7 +3,7 @@ import './SignIn_SignUp.css';
 
 export default function SignUp() {
   return (
-    <div className='container'>
+    <div className='signup-signin-container'>
       <div className='header'>
         <div className='text '>Sign Up</div>
         <div className='underline'></div>
