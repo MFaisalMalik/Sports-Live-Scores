@@ -21,7 +21,7 @@ function HeroSection() {
           className='btns'
           buttonStyle='btn--outline'
           buttonSize='btn--large'
-          to='/sign-up'
+          to='/packages'
         >
           SIGN UP
         </Button>
