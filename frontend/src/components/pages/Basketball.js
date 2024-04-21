@@ -2,6 +2,7 @@ import React from 'react';
 import '../../App.css';
 import { Button } from "../Button";
 import Footer from "../Footer";
+import './GamePages.css';
 
 export default function Basketball() {
   return (

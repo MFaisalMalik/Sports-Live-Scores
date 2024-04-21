@@ -2,11 +2,12 @@ import React from 'react';
 import '../../App.css';
 import { Button } from "../Button";
 import Footer from "../Footer";
+import './GamePages.css';
 
 export default function Baseball() {
   return (
     <>
-      <h1 className="baseball">BASKETBALL</h1>
+      <h1 className="baseball">BASEBALL</h1>
       <div className="container">
         <div className="categories">
           <div className="row">

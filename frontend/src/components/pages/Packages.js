@@ -11,14 +11,14 @@ function Packages() {
           <div className='cards__wrapper'>
             <ul className='cards__items'>
               <PackageCard
-                name='1 Month Pass'
-                price='$29.99'
+                name='7 Days Pass'
+                price='Free'
                 path='/sign-up'
               />
 
               <PackageCard
-                name='1 Year Pass'
-                price='$199.99'           
+                name='1 Month Pass'
+                price='$19.99'           
                 path='/sign-up'
               />
 
