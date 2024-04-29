@@ -172,3 +172,14 @@
     transition: 250ms;
   } */
 }
+
+/* @media screen and (max-width: 1200px) {
+  .navbar-logo {
+    position: absolute;
+    top: 10%;
+    left: -22%;
+    transform: translate(25%, 50%);
+    font-size: 23px;
+  }
+
+} */
