@@ -18,7 +18,7 @@ export default function Basketball() {
                   className="btns"
                   buttonStyle="btn--primary"
                   buttonSize="btn--large"
-                  to="/sign-in"
+                  to="/basketball-game-stats"
                   name="search"
                 >
                   SEARCH

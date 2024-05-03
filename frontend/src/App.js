@@ -13,6 +13,10 @@ import Baseball from './components/pages/Baseball';
 import Basketball from './components/pages/Basketball';
 import Hockey from './components/pages/Hockey';
 import Packages from './components/pages/Packages';
+import BaseballGameStats from './components/pages/BaseballGameStats';
+import BasketballGameStats from './components/pages/BasketballGameStats';
+import HockeyGameStats from './components/pages/HockeyGameStats';
+import FootballGameStats from './components/pages/FootballGameStats';
 
 
 
@@ -33,6 +37,10 @@ function App() {
           <Route path='/baseball' component={Baseball} />
           <Route path='/basketball' component={Basketball} />
           <Route path='/hockey' component={Hockey} />
+          <Route path='/baseball-game-stats' component={BaseballGameStats} />
+          <Route path='/basketball-game-stats' component={BasketballGameStats} />
+          <Route path='/hockey-game-stats' component={HockeyGameStats} />
+          <Route path='/football-game-stats' component={FootballGameStats} />
         </Switch>
       </Router>
     </>
