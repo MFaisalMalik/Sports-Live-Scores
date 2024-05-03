@@ -16,5 +16,11 @@
   "type": "module",
   "scripts": {
     "start": "nodemon index.js"
-  }
+  },
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
