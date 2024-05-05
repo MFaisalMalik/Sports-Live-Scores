@@ -18,7 +18,7 @@ export default function Football() {
                   className="btns"
                   buttonStyle="btn--primary"
                   buttonSize="btn--large"
-                  to="/sign-in"
+                  to="/football-game-stats"
                   name="search"
                 >
                   SEARCH

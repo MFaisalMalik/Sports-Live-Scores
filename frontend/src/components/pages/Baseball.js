@@ -18,7 +18,7 @@ export default function Baseball() {
                   className="btns"
                   buttonStyle="btn--primary"
                   buttonSize="btn--large"
-                  to="/sign-in"
+                  to="/baseball-game-stats"
                   name="search"
                 >
                   SEARCH
