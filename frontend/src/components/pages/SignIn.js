@@ -36,7 +36,6 @@ export default function SignIn() {
   return (
     <div className='signup-signin-container'>
       {userLoggedIn && history.push('/home', true)}
-      <button onClick={() => history.push('/login')}>Login</button>
 
       <div className='header'>
         <div className='text '>Sign In</div>
