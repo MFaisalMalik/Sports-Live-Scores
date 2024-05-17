@@ -13,7 +13,7 @@ export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSigningIn, setIsSigningIn] = useState(false);
-  const [isSigningInGoogle, setIsSigningInGoogle] = useState(false);
+  // const [isSigningInGoogle, setIsSigningInGoogle] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async (e) => {
@@ -31,21 +31,21 @@ export default function SignIn() {
       });
   }
 
-  const onGoogleSignIn = (e) => {
-    e.preventDefault();
+  // const onGoogleSignIn = (e) => {
+  //   e.preventDefault();
 
-    if (isSigningIn)
-      return;
+  //   if (isSigningIn)
+  //     return;
 
-    setIsSigningIn(true);
-    setIsSigningInGoogle(true);
-    doSignInWithGoogle()
-      .catch(error => {
-        setErrorMessage(error.message)
-        setIsSigningIn(false);
-        setIsSigningInGoogle(false);
-      })
-  }
+  //   setIsSigningIn(true);
+  //   setIsSigningInGoogle(true);
+  //   doSignInWithGoogle()
+  //     .catch(error => {
+  //       setErrorMessage(error.message)
+  //       setIsSigningIn(false);
+  //       setIsSigningInGoogle(false);
+  //     })
+  // }
 
   return (
     <div className='signup-signin-container'>
@@ -104,7 +104,7 @@ export default function SignIn() {
         Lost Password? <span>Click Here!</span>
       </div>
 
-      <div className='flex-row-center'>
+      {/* <div className='flex-row-center'>
         <div className='divider-line divider-left'></div>
         <div className='or-text'>OR</div>
         <div className='divider-line divider-right'></div>
@@ -129,7 +129,7 @@ export default function SignIn() {
           </defs>
         </svg>
         {isSigningInGoogle ? 'Signing In...' : 'Continue with Google'}
-      </button>
+      </button> */}
 
     </div>
   );
