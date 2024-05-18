@@ -6,9 +6,9 @@ class GameStats {
         (this.game = game),
         (this.market = market),
         (this.sharpOdds = sharpOdds),
-        (this.winProbability = winProbability);
+        (this.winProbability = winProbability),
         (this.type = type);
     }
 }
 
-export default GameStats
+export default GameStats;
