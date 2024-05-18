@@ -83,7 +83,13 @@ function Navbar() {
                   to="/"
                   id="nav-links-mobile-sign-out"
                   className="nav-links-mobile"
-                  onClick={closeMobileMenu}
+                  onClick={() => {
+                    doSignOut()
+                      .then(() => {
+                        history.push('/', true);
+                        closeMobileMenu();
+                      });
+                  }}
                 >
                   Sign Out
                 </Link>
