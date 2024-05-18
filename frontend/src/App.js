@@ -17,12 +17,13 @@ import BaseballGameStats from './components/pages/BaseballGameStats';
 import BasketballGameStats from './components/pages/BasketballGameStats';
 import HockeyGameStats from './components/pages/HockeyGameStats';
 import FootballGameStats from './components/pages/FootballGameStats';
+import { AuthProvider } from './contexts/authContext';
 
 
 
 function App() {
   return (
-    <>
+    <AuthProvider>
       <Router>
         <Navbar />
         <Switch>
@@ -43,7 +44,7 @@ function App() {
           <Route path='/football-game-stats' component={FootballGameStats} />
         </Switch>
       </Router>
-    </>
+    </AuthProvider>
   );
 }
 

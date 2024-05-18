@@ -32,7 +32,7 @@
 }
 
 .inputs {
-    margin-top: 55px;
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
     gap: 25px;
@@ -63,21 +63,27 @@
 }
 
 .forgot-password {
-    padding-left: 62px;
-    margin-top: 27px;
+    padding-left: 40px;
+    margin-top: 10px;
     color: #797979;
     font-size: 18px;
 }
 
 .forgot-password span {
     color: var(--navbar-color);
-    cursor: pointer;   
+    cursor: pointer;
 }
 
 .submit-container {
     display: flex;
     gap: 30px;
-    margin: 30px auto;    
+    margin: 15px auto;
+}
+
+.error-message {
+    color: #dc2626;
+    font-weight: bold;
+    margin-left: 25px;
 }
 
 .submit {
@@ -93,3 +99,90 @@
     font-weight: 700;
     cursor: pointer;
 }
+
+.submit:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* .flex-row-center {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    width: 350px;
+    margin-top: 20px;
+    margin-left: 25px;
+}
+
+.divider-line {
+    border-bottom: 2px solid;
+    margin-bottom: 10px;
+    width: 100%;
+    color: #888888;
+}
+
+.divider-left {
+    margin-right: 10px;
+}
+
+.divider-right {
+    margin-left: 10px;
+}
+
+.or-text {
+    font-size: 0.875rem;
+    font-weight: bold;
+    width: fit-content;
+}
+
+.sign-in-with-google {
+    height: 40px;
+    width: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 2.5px;
+    margin-top: 20px;
+    margin-left: 25px;
+    border: 1px;
+    border-radius: 5px;
+    font-size: 0.875rem;
+    font-weight: medium;
+    transition: all 0.3s ease-in-out;
+}
+
+.sign-in-with-google:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.sign-in-with-google:hover:not(:disabled) {
+    background-color: #f5f5f5;
+}
+
+.sign-in-with-google:active:not(:disabled) {
+    background-color: #e0e0e0;
+}
+
+.svg-icon {
+    fill: none;
+    width: 25px;
+    height: 25px;
+}
+
+.svg-icon path:nth-child(1) {
+    fill: #4285F4;
+}
+
+.svg-icon path:nth-child(2) {
+    fill: #34A853;
+}
+
+.svg-icon path:nth-child(3) {
+    fill: #FBBC04;
+}
+
+.svg-icon path:nth-child(4) {
+    fill: #EA4335;
+} */

@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from './Button';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import { useAuth } from '../contexts/authContext';
+import { doSignOut } from '../firebase/auth';
 import './Navbar.css';
 
 function Navbar() {
+  const { userLoggedIn } = useAuth();
+  const history = useHistory();
+
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
 
@@ -26,11 +31,9 @@ function Navbar() {
 
   return (
     <>
-
       <nav className='navbar'>
         <div className='navbar-container'>
           <Link to='/' className='navbar-logo' onClick={closeMobileMenu}>
-            {/* <i class='fab fa-typo3' /> */}
             <img src='/images/logo.ico' alt='icon'></img>
             SIMPLICITY SPORT BETS
           </Link>
@@ -73,31 +76,67 @@ function Navbar() {
                 Betting Odds
               </Link>
             </li>
-            
-            <li>
-              <Link
-                to='/sign-in'
-                id='nav-links-mobile-sign-in'
-                className='nav-links-mobile'
-                onClick={closeMobileMenu}
-              >
-                Sign In
-              </Link>
-            </li>
 
-            <li>
-              <Link
-                to='/packages'
-                id='nav-links-mobile-sign-up'
-                className='nav-links-mobile'
-                onClick={closeMobileMenu}
-              >
-                Sign Up
-              </Link>
-            </li>
+            {userLoggedIn ? (
+              <li>
+                <Link
+                  to="/"
+                  id="nav-links-mobile-sign-out"
+                  className="nav-links-mobile"
+                  onClick={closeMobileMenu}
+                >
+                  Sign Out
+                </Link>
+              </li>
+            ) : (
+              <>
+                <li>
+                  <Link
+                    to="/sign-in"
+                    id="nav-links-mobile-sign-in"
+                    className="nav-links-mobile"
+                    onClick={closeMobileMenu}
+                  >
+                    Sign In
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/packages"
+                    id="nav-links-mobile-sign-up"
+                    className="nav-links-mobile"
+                    onClick={closeMobileMenu}
+                  >
+                    Sign Up
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
-          {button && <Button name= 'sign-in' buttonStyle='btn--outline' to='/sign-in'>SIGN IN</Button>}
-          {button && <Button name= 'sign-up' buttonStyle='btn--outline' to='/packages'>SIGN UP</Button>}
+
+          {button && (
+            userLoggedIn ? (
+              <Button
+                name="sign-out"
+                buttonStyle="btn--outline"
+                onClick={() => {
+                  doSignOut()
+                    .then(() => history.push('/', true));
+                }}
+              >
+                SIGN OUT
+              </Button>
+            ) : (
+              <>
+                <Button name="sign-in" buttonStyle="btn--outline" to="/sign-in">
+                  SIGN IN
+                </Button>
+                <Button name="sign-up" buttonStyle="btn--outline" to="/packages">
+                  SIGN UP
+                </Button>
+              </>
+            )
+          )}
         </div>
       </nav>
     </>
