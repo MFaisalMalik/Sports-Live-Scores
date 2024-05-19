@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import './SignIn_SignUp.css';
 import { Link, useHistory } from 'react-router-dom'
 import { useAuth } from '../../contexts/authContext'
@@ -21,18 +22,22 @@ export default function SignUp() {
     if (isRegistering)
       return true;
 
-    if (password != confirmPassword) {
+    if (password !== confirmPassword) {
       setErrorMessage("Passwords do not match");
       return;
     }
 
     setIsRegistering(true);
-    await doCreateUserWithEmailAndPassword(email, password)
-      .catch(error => {
-        setErrorMessage(error.message);
-        setIsRegistering(false);
-      });
 
+    try {
+      const user = { name, email };
+      await axios.post('http://localhost:5000/api/user', user);
+      await doCreateUserWithEmailAndPassword(email, password);
+
+    } catch (error) {
+      setErrorMessage(error.response?.data || error.message);
+      setIsRegistering(false);
+    }
   }
 
   return (

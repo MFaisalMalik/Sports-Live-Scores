@@ -68,9 +68,9 @@ export default function GameTable(props) {
                     </TableHead>
                     <TableBody>
                         {gameStats &&
-                            gameStats.
-                            filter((game) => game.type === props.gameType).
-                            map((game) => (
+                            gameStats
+                            .filter((game) => game.type === props.gameType)
+                            .map((game) => (
                                 <TableRow key={game.id}>
                                     <TableCell align="center" sx={cellStyles}>
                                         {game.game}
