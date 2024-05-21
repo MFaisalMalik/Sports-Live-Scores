@@ -35,7 +35,7 @@ export const Button = ({
 
   const checkName = name ? name : 'no-name';
   return (
-    <Link to={to} className='btn-mobile'>
+    <Link to={to} className=''>
       <button
         className={`btn ${checkButtonStyle} ${checkButtonSize}`}
         onClick={onClick}

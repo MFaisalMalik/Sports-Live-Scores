@@ -2,8 +2,9 @@
 
 
 .cards {
-  padding: 4rem;
+  /* padding: 4rem; */
   /* background: #fff; */
+  margin-top: 4rem;
   background: var(--cardItemsSec-color);
 }
 
@@ -27,19 +28,22 @@ h1 {
 
 .cards__items {
   margin-bottom: 35px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem
 }
-
+/* 
 #left-card {
   margin-right: 50px;
-}
+} */
 
 .cards__item {
   display: flex;
   flex: 1;
-  margin: 0 1rem;
+  /* margin: 0 1rem; */
   border-radius: 10px;
-  width: 300px;
-  border: 1px solid #070F2B;
+  width: 320px;
+  border: 1px solid #070f2b36;
 }
 
 .cards__item__link {
@@ -117,14 +121,22 @@ h1 {
   }
 }
 
-@media only screen and (min-width: 1024px) {
-  .cards__items {
-    display: flex;
+
+/* @media (min-width: 640px){
+  .cards__item {
+    width: 100%;
   }
+} */
+
+@media only screen and (min-width: 1024px) {
+  /* .cards__items {
+    display: flex;
+    flex-wrap: wrap;
+  } */
 }
 
 @media only screen and (max-width: 1024px) {
-  .cards__item {
-    margin-bottom: 2rem;
-  }
+  /* .cards__item {
+    margin: 0 0 2rem;
+  } */
 }

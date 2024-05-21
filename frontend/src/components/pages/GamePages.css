@@ -1,10 +1,8 @@
-.container {
+/* .container {
   margin: 40px 100px;
   margin-bottom: 50px;
-}
+} */
 
-.game-bets-free,
-.players-bets-free,
 .game-bets-premium {
   border-right: 1px solid;
 }
