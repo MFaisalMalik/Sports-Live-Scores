@@ -155,11 +155,11 @@ function Packages() {
                   </span>
                 </li>
                 <li className="flex items-start">
-                  <TickIcon colorClass="text-purple-700" />
+                  <TickIcon colorclassName="text-purple-700" />
                   Unlimited feedback
                 </li>
                 <li className="flex items-start">
-                   <TickIcon colorClass="text-purple-700" />
+                   <TickIcon colorclassName="text-purple-700" />
 
                   <span
                     className="text-gray-800 border-b-2 border-gray-500 border-dotted cursor-pointer"
@@ -172,7 +172,7 @@ function Packages() {
                   </span>
                 </li>
                 <li className="flex items-start">
-                   <TickIcon colorClass="text-purple-700" />
+                   <TickIcon colorclassName="text-purple-700" />
 
                   <span
                     className="text-gray-800 border-b-2 border-gray-500 border-dotted cursor-pointer"
@@ -185,11 +185,11 @@ function Packages() {
                   </span>
                 </li>
                 <li className="flex items-start">
-                   <TickIcon colorClass="text-purple-700" />
+                   <TickIcon colorclassName="text-purple-700" />
                   <span>Unlimited Integrations</span>
                 </li>
                 <li className="flex items-start">
-                   <TickIcon colorClass="text-purple-700" />
+                   <TickIcon colorclassName="text-purple-700" />
                   Humane support
                 </li>
               </ul>
@@ -226,11 +226,11 @@ function Packages() {
                   </span>
                 </li>
                 <li className="flex items-start">
-                   <TickIcon colorClass="text-pink-700" />
+                   <TickIcon colorclassName="text-pink-700" />
                   Unlimited feedback
                 </li>
                 <li className="flex items-start">
-                   <TickIcon colorClass="text-pink-700" />
+                   <TickIcon colorclassName="text-pink-700" />
 
                   <span
                     className="text-gray-800 border-b-2 border-gray-500 border-dotted cursor-pointer"
@@ -243,7 +243,7 @@ function Packages() {
                   </span>
                 </li>
                 <li className="flex items-start">
-                   <TickIcon colorClass="text-pink-700" />
+                   <TickIcon colorclassName="text-pink-700" />
 
                   <span
                     className="text-gray-800 border-b-2 border-gray-500 border-dotted cursor-pointer"
@@ -256,12 +256,12 @@ function Packages() {
                   </span>
                 </li>
                 <li className="flex items-start">
-                   <TickIcon colorClass="text-pink-700" />
+                   <TickIcon colorclassName="text-pink-700" />
 
                   <span className="text-gray-700">Unlimited Integrations</span>
                 </li>
                 <li className="flex items-start">
-                   <TickIcon colorClass="text-pink-700" />
+                   <TickIcon colorclassName="text-pink-700" />
 
                   <span
                     className="text-gray-800 border-b-2 border-gray-500 border-dotted cursor-pointer"

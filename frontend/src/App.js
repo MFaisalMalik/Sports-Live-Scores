@@ -3,7 +3,7 @@ import Navbar from "./components/Navbar";
 import "./App.css";
 import Home from "./components/pages/Home";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Blogs from "./components/pages/Blog";
+import Blogs from "./components/pages/Blogs";
 import LiveScores from "./components/pages/LiveScores";
 import SignUp from "./components/pages/SignUp";
 import BettingOdds from "./components/pages/BettingOdds";
@@ -19,6 +19,7 @@ import HockeyGameStats from "./components/pages/HockeyGameStats";
 import FootballGameStats from "./components/pages/FootballGameStats";
 import { AuthProvider } from "./contexts/authContext";
 import ScrollToTop from "./components/commons/ScrollToTop";
+import Article from "./components/pages/Article";
 
 function App() {
   return (
@@ -28,7 +29,8 @@ function App() {
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/blog" element={<Blogs />} />
+          <Route path="/blogs" element={<Blogs />} />
+          <Route path="/blogs/:blogSlug" element={<Article />} />
           <Route path="/live-scores" element={<LiveScores />} />
           <Route path="/betting-odds" element={<BettingOdds />} />
           <Route path="/sign-in" element={<SignIn />} />
