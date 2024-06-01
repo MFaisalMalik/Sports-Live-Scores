@@ -1,12 +1,12 @@
 import React from "react";
 import Navbar from "./components/Navbar";
 import "./App.css";
+import 'react-toastify/dist/ReactToastify.css';
 import Home from "./components/pages/Home";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Blogs from "./components/pages/Blogs";
-import LiveScores from "./components/pages/LiveScores";
 import SignUp from "./components/pages/SignUp";
-import BettingOdds from "./components/pages/BettingOdds";
+import LiveScores from "./components/pages/LiveScores";
 import SignIn from "./components/pages/SignIn";
 import Football from "./components/pages/Football";
 import Baseball from "./components/pages/Baseball";
@@ -20,6 +20,12 @@ import FootballGameStats from "./components/pages/FootballGameStats";
 import { AuthProvider } from "./contexts/authContext";
 import ScrollToTop from "./components/commons/ScrollToTop";
 import Article from "./components/pages/Article";
+import AdminSidebar from "./components/admin/AdminSidebar";
+import Default from "./components/pages/admin/Default";
+import AddNewBlog from "./components/pages/admin/AddNewBlog";
+import EditBlog from "./components/pages/admin/EditBlog";
+import { ToastContainer } from "react-toastify";
+import BettingOds from "./components/pages/BettingOdds";
 
 function App() {
   return (
@@ -27,12 +33,18 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <ScrollToTop />
+        <ToastContainer />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/blogs" element={<Blogs />} />
+          <Route path="/admin" element={<AdminSidebar />}>
+            <Route path="default" element={<Default />} />
+            <Route path="add-new-blog" element={<AddNewBlog />} />
+            <Route path="edit-blog/:blogSlug" element={<EditBlog />} />
+          </Route>
           <Route path="/blogs/:blogSlug" element={<Article />} />
           <Route path="/live-scores" element={<LiveScores />} />
-          <Route path="/betting-odds" element={<BettingOdds />} />
+          <Route path="/betting-odds" element={<BettingOds />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/packages" element={<Packages />} />
