@@ -23,12 +23,12 @@ export default function Hockey() {
           </h2>
           <div className="grid gap-x-4 gap-y-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             <Link to="/hockey-game-stats">
-              <div class="relative group">
-                <span class="absolute top-0 left-0 w-full h-full mt-1 ml-1 group-hover:mt-[2px] group-hover:ml-[2px] transition-all bg-indigo-500 rounded-lg"></span>
-                <div class="relative h-full p-5 bg-white border-2 border-indigo-500 rounded-lg">
+              <div className="relative group">
+                <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 group-hover:mt-[2px] group-hover:ml-[2px] transition-all bg-indigo-500 rounded-lg"></span>
+                <div className="relative h-full p-5 bg-white border-2 border-indigo-500 rounded-lg">
                   <span className="text-blue-700">Free</span>
-                  <div class="mt-2 flex justify-between ">
-                    <h3 class="text-lg font-bold text-gray-800">Game Bets</h3>
+                  <div className="mt-2 flex justify-between ">
+                    <h3 className="text-lg font-bold text-gray-800">Game Bets</h3>
                     <span className=" rounded-md text-indigo-500 font-semibold">
                       Search
                     </span>
@@ -37,12 +37,12 @@ export default function Hockey() {
               </div>
             </Link>
             <Link to="/sign-in">
-              <div class="relative group">
-                <span class="absolute top-0 left-0 w-full h-full mt-1 ml-1 group-hover:mt-[2px] group-hover:ml-[2px] transition-all bg-indigo-500 rounded-lg"></span>
-                <div class="relative h-full p-5 bg-white border-2 border-indigo-500 rounded-lg">
+              <div className="relative group">
+                <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 group-hover:mt-[2px] group-hover:ml-[2px] transition-all bg-indigo-500 rounded-lg"></span>
+                <div className="relative h-full p-5 bg-white border-2 border-indigo-500 rounded-lg">
                   <span className="text-blue-700">Free</span>
-                  <div class="mt-2 flex justify-between ">
-                    <h3 class="text-lg font-bold text-gray-800">Player Bets</h3>
+                  <div className="mt-2 flex justify-between ">
+                    <h3 className="text-lg font-bold text-gray-800">Player Bets</h3>
                     <span className=" rounded-md text-indigo-500 font-semibold">
                       Search
                     </span>
@@ -51,12 +51,12 @@ export default function Hockey() {
               </div>
             </Link>
             <Link to="/sign-in">
-              <div class="relative group">
-                <span class="absolute top-0 left-0 w-full h-full mt-1 ml-1 group-hover:mt-[2px] group-hover:ml-[2px] transition-all bg-indigo-500 rounded-lg"></span>
-                <div class="relative h-full p-5 bg-white border-2 border-indigo-500 rounded-lg">
+              <div className="relative group">
+                <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 group-hover:mt-[2px] group-hover:ml-[2px] transition-all bg-indigo-500 rounded-lg"></span>
+                <div className="relative h-full p-5 bg-white border-2 border-indigo-500 rounded-lg">
                   <span className="text-purple-700">Premium</span>
-                  <div class="mt-2 flex justify-between ">
-                    <h3 class="text-lg font-bold text-gray-800">Game Bets</h3>
+                  <div className="mt-2 flex justify-between ">
+                    <h3 className="text-lg font-bold text-gray-800">Game Bets</h3>
                     <span className=" rounded-md text-purple-500 font-semibold">
                       Search
                     </span>
@@ -65,12 +65,12 @@ export default function Hockey() {
               </div>
             </Link>
             <Link to="/sign-in">
-              <div class="relative group">
-                <span class="absolute top-0 left-0 w-full h-full mt-1 ml-1 group-hover:mt-[2px] group-hover:ml-[2px] transition-all bg-indigo-500 rounded-lg"></span>
-                <div class="relative h-full p-5 bg-white border-2 border-indigo-500 rounded-lg">
+              <div className="relative group">
+                <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 group-hover:mt-[2px] group-hover:ml-[2px] transition-all bg-indigo-500 rounded-lg"></span>
+                <div className="relative h-full p-5 bg-white border-2 border-indigo-500 rounded-lg">
                   <span className="text-purple-700">Premium</span>
-                  <div class="mt-2 flex justify-between ">
-                    <h3 class="text-lg font-bold text-gray-800">Game Bets</h3>
+                  <div className="mt-2 flex justify-between ">
+                    <h3 className="text-lg font-bold text-gray-800">Game Bets</h3>
                     <span className=" rounded-md text-purple-500 font-semibold">
                       Search
                     </span>

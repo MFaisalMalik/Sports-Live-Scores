@@ -50,20 +50,20 @@ export default function SignIn() {
   return (
     <>
       {userLoggedIn && navigate("/")}
-      <div class="min-h-screen bg-blue-100 py-6 flex flex-col justify-center sm:py-12">
-        <div class="relative py-3 sm:max-w-xl sm:mx-auto">
-          <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-900 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-          <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
-            <div class="max-w-md mx-auto">
+      <div className="min-h-screen bg-blue-100 py-6 flex flex-col justify-center sm:py-12">
+        <div className="relative py-3 sm:max-w-md sm:mx-auto">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-900 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+          <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+            <div className="max-w-md mx-auto">
               <div>
-                <h1 class="text-2xl font-semibold">Login</h1>
+                <h1 className="text-2xl font-semibold">Login</h1>
               </div>
-              <div class="divide-y divide-gray-200">
+              <div className="divide-y divide-gray-200">
                 <form
                   onSubmit={handleSubmit}
-                  class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7"
+                  className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7"
                 >
-                  <div class="relative">
+                  <div className="relative">
                     <input
                       autocomplete="off"
                       id="email"
@@ -72,17 +72,17 @@ export default function SignIn() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       disabled={isSigningIn}
-                      class="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600"
+                      className="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600"
                       placeholder="Email address"
                     />
                     <label
                       for="email"
-                      class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm"
+                      className="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm"
                     >
                       Email Address
                     </label>
                   </div>
-                  <div class="relative">
+                  <div className="relative">
                     <input
                       autocomplete="off"
                       id="password"
@@ -91,30 +91,35 @@ export default function SignIn() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       disabled={isSigningIn}
-                      class="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600"
+                      className="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600"
                       placeholder="Password"
                     />
                     <label
                       for="password"
-                      class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm"
+                      className="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm"
                     >
                       Password
                     </label>
                   </div>
 
                   <span className="text-sm">
-                    Forgot Password? <Link className="text-blue-700" to="/reset-password">reset!</Link>
+                    Forgot Password?{" "}
+                    <Link className="text-blue-700" to="/reset-password">
+                      reset!
+                    </Link>
                   </span>
 
                   {errorMessage && (
-                    <span className="block text-sm text-red-500 ">{errorMessage}</span>
+                    <span className="block text-sm text-red-500 ">
+                      {errorMessage}
+                    </span>
                   )}
 
-                  <div class="relative">
+                  <div className="relative">
                     <button
                       type="submit"
                       disabled={isSigningIn}
-                      class="bg-blue-600 text-white rounded-md px-4 py-1"
+                      className="bg-blue-600 text-white rounded-md px-4 py-1"
                     >
                       Login
                     </button>
@@ -124,13 +129,24 @@ export default function SignIn() {
             </div>
 
             <span className="text-sm">
-              Not a Member? <Link className="text-blue-700" to="/sign-up">Register Now!</Link>
+              Not a Member?{" "}
+              <Link className="text-blue-700" to="/sign-up">
+                Register Now!
+              </Link>
             </span>
 
-            <div class="mt-4 w-full flex justify-center">
-              <button class="flex items-center bg-white border border-gray-300 rounded-lg shadow-md px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+            {/* OR Divider */}
+            <div className="inline-flex items-center justify-center w-full">
+              <hr className="w-64 h-px my-8 bg-gray-200 border-0 " />
+              <span className="absolute px-3 font-medium text-gray-600 -translate-x-1/2 bg-white left-1/2 ">
+                or
+              </span>
+            </div>
+
+            <div className=" w-full flex justify-center">
+              <button className="flex items-center bg-white border border-gray-300 rounded-lg shadow-md px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                 <svg
-                  class="h-6 w-6 mr-2"
+                  className="h-6 w-6 mr-2"
                   xmlns="http://www.w3.org/2000/svg"
                   width="800px"
                   height="800px"

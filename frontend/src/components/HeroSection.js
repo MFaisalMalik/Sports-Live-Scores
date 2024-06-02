@@ -15,17 +15,17 @@ function HeroSection() {
             <ChevronDownIcon className="w-6 h-6" />
           </a>
           <div className="max-w-3xl">
-            <h1 class="mb-6 text-3xl font-extrabold leading-none tracking-normal text-white md:text-6xl md:tracking-tight">
+            <h1 className="mb-6 text-3xl font-extrabold leading-none tracking-normal text-white md:text-6xl md:tracking-tight">
               Utilize{" "}
-              <span class="block w-full text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-purple-400 lg:inline">
+              <span className="block w-full text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-purple-400 lg:inline">
                 AI-driven insights
               </span>{" "}
               to transform data into{" "}
-              <span class="block w-full text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-yellow-400 lg:inline">
+              <span className="block w-full text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-yellow-400 lg:inline">
                 winning strategies.
               </span>
             </h1>
-            <p class="px-0 mb-6 text-lg font-semibold text-center text-gray-200 md:text-xl lg:px-24">
+            <p className="px-0 mb-6 text-lg font-semibold text-center text-gray-200 md:text-xl lg:px-24">
               Take the uncertainty out of your betting with our expertly
               researched picks across MLB, NBA, NHL, and NFL.
             </p>

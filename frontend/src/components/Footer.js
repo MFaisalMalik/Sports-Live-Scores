@@ -7,19 +7,19 @@ function Footer() {
   return (
     <div className="footer-container">
       <section className="footer-subscription">
-        <p className="footer-subscription-heading">
+        <p className="footer-subscription-heading px-4">
           Get exclusive updates! Subscribe to our newsletter now.
         </p>
         <p className="text-white/80 mt-2 text-xs md:text-sm">Unsubscribe at any time.</p>
-        <div className="mt-4">
+        <div className="mt-4 mx-auto max-w-max">
           <form className="flex">
             <input
-              className="rounded-l text-gray-800 py-2 px-3 placeholder:text-base outline-none"
+              className="rounded-l text-gray-800 py-2 px-3 placeholder:text-base outline-none max-w-64"
               name="email"
               type="email"
               placeholder="john@example.com"
             />
-            <button type="submit" className="cursor-pointer bg-transparent px-4 py-2 text-white hover:text-white/90 font-bold rounded-r outline-none border border-white">
+            <button type="submit" className="cursor-pointer bg-transparent text-xs sm:text-base px-4 py-2 text-white hover:text-white/90 font-bold rounded-r outline-none border border-white">
               Subscribe
             </button>
           </form>
