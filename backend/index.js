@@ -19,4 +19,3 @@ app.use('/api/subscription', subscriptionRoutes);
 app.listen(config.port, () =>
   console.log(`Server is live @ ${config.port}`),
 );
-console.log(config.hostUrl)

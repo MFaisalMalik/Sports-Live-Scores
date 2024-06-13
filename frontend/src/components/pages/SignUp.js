@@ -33,7 +33,7 @@ export default function SignUp() {
 
     try {
       const user = { name, email };
-      await axios.post("http://localhost:5001/api/user", user);
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/user`, user);
       await doCreateUserWithEmailAndPassword(email, password);
     } catch (error) {
       setErrorMessage(error.response?.data || error.message);

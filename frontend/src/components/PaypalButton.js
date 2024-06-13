@@ -6,7 +6,7 @@ export default function PayPalButton({subscriptionType}) {
         e.preventDefault();
 
         try {
-            const response = await axios.get(`http://localhost:5001/api/subscription/subscribe/${subscriptionType}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/subscription/subscribe/${subscriptionType}`);
 
             if (response.status === 200 || response.status === 201) {
                 const approvalUrl = response.data.approveLink;
