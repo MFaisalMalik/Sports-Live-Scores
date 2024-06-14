@@ -1,5 +1,5 @@
-import dotenv from 'dotenv';
-import assert from 'assert';
+import dotenv from "dotenv";
+import assert from "assert";
 
 dotenv.config();
 
@@ -16,9 +16,11 @@ const {
   PAYPAL_SECRET_KEY,
   PAYPAL_MONTHLY_PLAN_ID,
   PAYPAL_ANNUAL_PLAN_ID,
+  PAYPAL_WEBHOOK_ID,
+  PAYPAL_API_URL,
 } = process.env;
 
-assert(PORT, 'Port is required');
+assert(PORT, "Port is required");
 
 export default {
   port: PORT,
@@ -35,5 +37,6 @@ export default {
   paypalSecretKey: PAYPAL_SECRET_KEY,
   paypalMonthlyPlanId: PAYPAL_MONTHLY_PLAN_ID,
   paypalAnnualPlanId: PAYPAL_ANNUAL_PLAN_ID,
-
+  paypalWebHookId: PAYPAL_WEBHOOK_ID,
+  paypalApiUrl: PAYPAL_API_URL,
 };

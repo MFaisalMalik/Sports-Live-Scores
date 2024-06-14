@@ -1,5 +1,4 @@
 import fetch from "node-fetch";
-import crypto from "crypto";
 import config from "../config.js";
 
 const subscriptionPlanId = {
@@ -39,8 +38,9 @@ export const subscribe = async (req, res) => {
     const token = Buffer.from(
       config.paypaClientId + ":" + config.paypalSecretKey
     ).toString("base64");
+    
     const response = await fetch(
-      "https://api-m.sandbox.paypal.com/v1/billing/subscriptions",
+      `${config.paypalApiUrl}/v1/billing/subscriptions`,
       {
         method: "post",
         body: JSON.stringify(setSubscriptionPayload(planId)),
@@ -66,25 +66,51 @@ export const subscribe = async (req, res) => {
   }
 };
 
-export const handlePayment = async (req, res) => {
+async function verifyWebhook(req) {
+  const auth = Buffer.from(
+    `${config.paypaClientId}:${config.paypalSecretKey}`
+  ).toString("base64");
+
+  const webhookEvent = req.body;
+
   try {
-    const authHeader = req.headers["auth-as-paypal-signature"];
-    if (!authHeader) {
-      return res
-        .status(401)
-        .send("Unauthorized: Missing authentication header");
-    }
+    const response = await fetch(
+      `${config.paypalApiUrl}/v1/notifications/verify-webhook-signature`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Basic ${auth}`,
+        },
+        body: JSON.stringify({
+          auth_algo: req.headers["paypal-auth-algo"],
+          cert_url: req.headers["paypal-cert-url"],
+          transmission_id: req.headers["paypal-transmission-id"],
+          transmission_sig: req.headers["paypal-transmission-sig"],
+          transmission_time: req.headers["paypal-transmission-time"],
+          webhook_id: config.paypalWebHookId,
+          webhook_event: webhookEvent,
+        }),
+      }
+    );
 
-    const secret = process.env.PAYPAL_WEBHOOK_SECRET;
-    const hashedData = crypto
-      .createHmac("sha256", secret)
-      .update(req.rawBody)
-      .digest("base64");
+    const data = await response.json();
+    return data.verification_status === "SUCCESS";
+  } catch (error) {
+    console.error("Error verifying PayPal webhook:", error.message);
+    return false;
+  }
+}
 
-    if (hashedData !== authHeader) {
-      return res.status(403).send("Forbidden: Invalid signature");
-    }
+export const handlePayment = async (req, res) => {
+  const isValid = await verifyWebhook(req);
 
+  if (!isValid) {
+    console.error("Invalid webhook signature");
+    res.status(400).send("Invalid webhook signature");
+  }
+
+  try {
     const data = JSON.parse(req.body);
 
     if (data.event_type !== "PAYMENT.SALE.COMPLETED") {
