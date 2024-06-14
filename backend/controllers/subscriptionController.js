@@ -60,3 +60,7 @@ export const subscribe = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+export const handlePayment = async (req, res) => {
+    console.log(req);
+}
