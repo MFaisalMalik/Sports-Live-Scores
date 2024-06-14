@@ -6,9 +6,10 @@ const subscriptionPlanId = {
   annual: config.paypalAnnualPlanId,
 };
 
-const setSubscriptionPayload = (subscriptionPlanId) => {
+const setSubscriptionPayload = (subscriptionPlanId, userId) => {
   let subscriptionPayload = {
     plan_id: subscriptionPlanId,
+    custom_id: userId,
     application_context: {
       brand_name: "Premium Monthly Package",
       locale: "en-US",
@@ -25,6 +26,8 @@ const setSubscriptionPayload = (subscriptionPlanId) => {
 
 export const subscribe = async (req, res) => {
   const { subscriptionType } = req.params;
+  const userId = req.query;
+
   if (!subscriptionType) {
     return res.status(400).send("Missing subscription type information");
   }
@@ -43,7 +46,7 @@ export const subscribe = async (req, res) => {
       `${config.paypalApiUrl}/v1/billing/subscriptions`,
       {
         method: "post",
-        body: JSON.stringify(setSubscriptionPayload(planId)),
+        body: JSON.stringify(setSubscriptionPayload(planId, userId)),
         headers: {
           Authorization: `Basic ${token}`,
           "Content-Type": "application/json",
@@ -59,6 +62,7 @@ export const subscribe = async (req, res) => {
     const approveLink = session.links.find(
       (link) => link.rel === "approve"
     ).href;
+
     res.send({ approveLink });
   } catch (error) {
     console.error(error);
@@ -123,7 +127,8 @@ export const handlePayment = async (req, res) => {
     }
 
     const transactionId = data.resource.id;
-    const payerId = data.payer.payer_info.payer_id;
+    const userId = data.resource.custom_id
+    console.log(userId);
     const amount = data.resource.amount.total;
     const currency = data.resource.amount.currency;
 
