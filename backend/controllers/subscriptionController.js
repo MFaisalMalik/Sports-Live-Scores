@@ -1,5 +1,14 @@
 import fetch from "node-fetch";
 import config from "../config.js";
+import firebase from "../firebase.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  Timestamp,
+} from "firebase/firestore";
+
+const db = getFirestore(firebase);
 
 const subscriptionPlanId = {
   monthly: config.paypalMonthlyPlanId,
@@ -26,7 +35,7 @@ const setSubscriptionPayload = (subscriptionPlanId, userId) => {
 
 export const subscribe = async (req, res) => {
   const { subscriptionType } = req.params;
-  const userId = req.query;
+  const { uid } = req.query;
 
   if (!subscriptionType) {
     return res.status(400).send("Missing subscription type information");
@@ -41,12 +50,12 @@ export const subscribe = async (req, res) => {
     const token = Buffer.from(
       config.paypaClientId + ":" + config.paypalSecretKey
     ).toString("base64");
-    
+
     const response = await fetch(
       `${config.paypalApiUrl}/v1/billing/subscriptions`,
       {
         method: "post",
-        body: JSON.stringify(setSubscriptionPayload(planId, userId)),
+        body: JSON.stringify(setSubscriptionPayload(planId, uid)),
         headers: {
           Authorization: `Basic ${token}`,
           "Content-Type": "application/json",
@@ -67,6 +76,37 @@ export const subscribe = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const handlePayment = async (req, res) => {
+  const isValid = await verifyWebhook(req);
+
+  if (!isValid) {
+    console.error("Invalid webhook signature");
+    res.status(400).send("Invalid webhook signature");
+  }
+
+  try {
+    const data = req.body;
+
+    if (data.event_type !== "PAYMENT.SALE.COMPLETED") {
+      console.log(
+        "Ignoring webhook with event type:",
+        data.event_type,
+        data.id
+      );
+      return res.sendStatus(200);
+    }
+
+    activateSubscription(data);
+    // Trigger success actions in your React frontend (optional)
+    // You can emit an event or send a separate message to your frontend for handling success
+
+    return res.sendStatus(200);
+  } catch (error) {
+    console.error("Error processing PayPal webhook:", error);
+    res.status(500).send("Internal Server Error");
   }
 };
 
@@ -106,41 +146,33 @@ async function verifyWebhook(req) {
   }
 }
 
-export const handlePayment = async (req, res) => {
-  const isValid = await verifyWebhook(req);
-
-  if (!isValid) {
-    console.error("Invalid webhook signature");
-    res.status(400).send("Invalid webhook signature");
-  }
-
+const activateSubscription = async (data) => {
   try {
-    const data = JSON.parse(req.body);
+    const subscriptionStartDate = Timestamp.fromDate(data.resource.amount.create_time);
 
-    if (data.event_type !== "PAYMENT.SALE.COMPLETED") {
-      console.log(
-        "Ignoring webhook with event type:",
-        data.event_type,
-        data.id
-      );
-      return res.sendStatus(200);
+    let subscriptionEndDate = new Date(subscriptionStartDate);
+    if (subscriptionType === "monthly") {
+      subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 1);
+    } else if (subscriptionType === "annual") {
+      subscriptionEndDate.setFullYear(subscriptionEndDate.getFullYear() + 1);
     }
 
-    const transactionId = data.resource.id;
-    const userId = data.resource.custom_id
-    console.log(userId);
-    const amount = data.resource.amount.total;
-    const currency = data.resource.amount.currency;
+    subscriptionEndDate = Timestamp.fromDate(subscriptionEndDate);
 
-    // Update Firebase database (assuming `updateSubscriptionStatus` exists)
-    // await updateSubscriptionStatus(transactionId, "active");
+    const payload = {
+      transactionId: data.resource.id,
+      userId: data.resource.custom_id,
+      amount: data.resource.amount.total,
+      currency: data.resource.amount.currency,
+      subscriptionStartDate,
+      subscriptionEndDate,
+    };
 
-    // Trigger success actions in your React frontend (optional)
-    // You can emit an event or send a separate message to your frontend for handling success
-
-    return res.sendStatus(200);
+    console.log(payload);
+    const subscriptionCollection = collection(db, "subscriptions");
+    await addDoc(subscriptionCollection, JSON.stringify(payload));
+    res.status(200).send("Subscription activated successfully");
   } catch (error) {
-    console.error("Error processing PayPal webhook:", error);
-    res.status(500).send("Internal Server Error");
+    res.status(400).send(error.message);
   }
 };
