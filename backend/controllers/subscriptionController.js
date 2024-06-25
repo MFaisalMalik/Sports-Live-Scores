@@ -10,15 +10,23 @@ import {
 
 const db = getFirestore(firebase);
 
+const auth = Buffer.from(
+  `${config.paypaClientId}:${config.paypalSecretKey}`
+).toString("base64");
+
 const subscriptionPlanId = {
   monthly: config.paypalMonthlyPlanId,
   annual: config.paypalAnnualPlanId,
 };
 
-const setSubscriptionPayload = (subscriptionPlanId, userId) => {
+const setSubscriptionPayload = (
+  subscriptionPlanId,
+  userId,
+  subscriptionType
+) => {
   let subscriptionPayload = {
     plan_id: subscriptionPlanId,
-    custom_id: userId,
+    custom_id: `${userId},${subscriptionType}`,
     application_context: {
       brand_name: "Premium Monthly Package",
       locale: "en-US",
@@ -47,17 +55,15 @@ export const subscribe = async (req, res) => {
   }
 
   try {
-    const token = Buffer.from(
-      config.paypaClientId + ":" + config.paypalSecretKey
-    ).toString("base64");
-
     const response = await fetch(
       `${config.paypalApiUrl}/v1/billing/subscriptions`,
       {
         method: "post",
-        body: JSON.stringify(setSubscriptionPayload(planId, uid)),
+        body: JSON.stringify(
+          setSubscriptionPayload(planId, uid, subscriptionType)
+        ),
         headers: {
-          Authorization: `Basic ${token}`,
+          Authorization: `Basic ${auth}`,
           "Content-Type": "application/json",
         },
       }
@@ -79,7 +85,7 @@ export const subscribe = async (req, res) => {
   }
 };
 
-export const handlePayment = async (req, res) => {
+export const handlePaymentWebhook = async (req, res) => {
   const isValid = await verifyWebhook(req);
 
   if (!isValid) {
@@ -89,20 +95,12 @@ export const handlePayment = async (req, res) => {
 
   try {
     const data = req.body;
-
     if (data.event_type !== "PAYMENT.SALE.COMPLETED") {
-      console.log(
-        "Ignoring webhook with event type:",
-        data.event_type,
-        data.id
-      );
+      console.log("Ignoring webhook with event type:", data.event_type);
       return res.sendStatus(200);
     }
 
     activateSubscription(data);
-    // Trigger success actions in your React frontend (optional)
-    // You can emit an event or send a separate message to your frontend for handling success
-
     return res.sendStatus(200);
   } catch (error) {
     console.error("Error processing PayPal webhook:", error);
@@ -111,10 +109,6 @@ export const handlePayment = async (req, res) => {
 };
 
 async function verifyWebhook(req) {
-  const auth = Buffer.from(
-    `${config.paypaClientId}:${config.paypalSecretKey}`
-  ).toString("base64");
-
   const webhookEvent = req.body;
 
   try {
@@ -147,32 +141,31 @@ async function verifyWebhook(req) {
 }
 
 const activateSubscription = async (data) => {
-  try {
-    const subscriptionStartDate = Timestamp.fromDate(data.resource.amount.create_time);
+  const payload = createSubscriptionPayload(data);
 
-    let subscriptionEndDate = new Date(subscriptionStartDate);
-    if (subscriptionType === "monthly") {
-      subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 1);
-    } else if (subscriptionType === "annual") {
-      subscriptionEndDate.setFullYear(subscriptionEndDate.getFullYear() + 1);
-    }
+  const subscriptionCollection = collection(db, "subscriptions");
+  await addDoc(subscriptionCollection, payload);
+  console.log("Subscription activated successfully");
+};
 
-    subscriptionEndDate = Timestamp.fromDate(subscriptionEndDate);
+const createSubscriptionPayload = (data) => {
+  const [userId, subscriptionType] = data.resource.custom.split(",");
+  let subscriptionStartDate = new Date(data.resource.create_time);
+  let subscriptionEndDate = new Date(subscriptionStartDate);
 
-    const payload = {
-      transactionId: data.resource.id,
-      userId: data.resource.custom_id,
-      amount: data.resource.amount.total,
-      currency: data.resource.amount.currency,
-      subscriptionStartDate,
-      subscriptionEndDate,
-    };
-
-    console.log(payload);
-    const subscriptionCollection = collection(db, "subscriptions");
-    await addDoc(subscriptionCollection, JSON.stringify(payload));
-    res.status(200).send("Subscription activated successfully");
-  } catch (error) {
-    res.status(400).send(error.message);
+  if (subscriptionType === "monthly") {
+    subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 1);
+  } else if (subscriptionType === "annual") {
+    subscriptionEndDate.setFullYear(subscriptionEndDate.getFullYear() + 1);
   }
+
+  const payload = {
+    subscriptionId: data.resource.billing_agreement_id,
+    subscriptionType,
+    userId,
+    amount: data.resource.amount.total,
+    currency: data.resource.amount.currency,
+    subscriptionStartDate: Timestamp.fromDate(subscriptionStartDate),
+    subscriptionEndDate: Timestamp.fromDate(subscriptionEndDate),
+  };
 };
