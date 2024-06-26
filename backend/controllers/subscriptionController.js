@@ -5,9 +5,13 @@ import {
   getFirestore,
   collection,
   addDoc,
+  updateDoc,
+  getDocs,
+  doc,
   Timestamp,
+  where,
+  query,
 } from "firebase/firestore";
-import { query } from "express";
 
 const db = getFirestore(firebase);
 
@@ -147,19 +151,18 @@ const verifyWebhook = async (req) => {
 const activateSubscription = async (data) => {
   const payload = createSubscriptionPayload(data);
 
-  const subscriptionRef = db
-    .collection("subscriptions")
-    .where("userId", "==", payload.userId);
-  
-  const snapshot = await subscriptionRef.get();
+  const subscriptionsCollection = collection(db, "subscriptions");
+  const querySnapshot = await getDocs(
+    query(subscriptionsCollection, where("userId", "==", payload.userId))
+  );
 
-  if (snapshot.empty) {
-    const subscriptionCollection = collection(db, "subscriptions");
-    await addDoc(subscriptionCollection, payload);
+  if (querySnapshot.empty) {
+    await addDoc(subscriptionsCollection, payload);
     console.log("Subscription activated successfully");
   } else {
-    const docId = snapshot.docs[0].id;
-    await db.collection("subscriptions").doc(docId).update(payload);
+    const docId = querySnapshot.docs[0].id;
+    const subscriptionDoc = doc(db, "subscriptions", docId);
+    await updateDoc(subscriptionDoc, payload);
     console.log("Updated subscription for userId: ", payload.userId);
   }
 };
@@ -184,4 +187,6 @@ const createSubscriptionPayload = (data) => {
     subscriptionStartDate: Timestamp.fromDate(subscriptionStartDate),
     subscriptionEndDate: Timestamp.fromDate(subscriptionEndDate),
   };
+
+  return payload;
 };
