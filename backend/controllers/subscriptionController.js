@@ -147,9 +147,21 @@ const verifyWebhook = async (req) => {
 const activateSubscription = async (data) => {
   const payload = createSubscriptionPayload(data);
 
-  const subscriptionCollection = collection(db, "subscriptions");
-  await addDoc(subscriptionCollection, payload);
-  console.log("Subscription activated successfully");
+  const subscriptionRef = db
+    .collection("subscriptions")
+    .where("userId", "==", payload.userId);
+  
+  const snapshot = await subscriptionRef.get();
+
+  if (snapshot.empty) {
+    const subscriptionCollection = collection(db, "subscriptions");
+    await addDoc(subscriptionCollection, payload);
+    console.log("Subscription activated successfully");
+  } else {
+    const docId = snapshot.docs[0].id;
+    await db.collection("subscriptions").doc(docId).update(payload);
+    console.log("Updated subscription for userId: ", payload.userId);
+  }
 };
 
 const createSubscriptionPayload = (data) => {
