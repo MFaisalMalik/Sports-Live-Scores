@@ -7,6 +7,7 @@ import {
   addDoc,
   Timestamp,
 } from "firebase/firestore";
+import { query } from "express";
 
 const db = getFirestore(firebase);
 
@@ -21,20 +22,24 @@ const subscriptionPlanId = {
 
 const setSubscriptionPayload = (
   subscriptionPlanId,
-  userId,
-  subscriptionType
+  subscriptionType,
+  query
 ) => {
+  const { uid, return_url, cancel_url } = query;
+
   let subscriptionPayload = {
     plan_id: subscriptionPlanId,
-    custom_id: `${userId},${subscriptionType}`,
+    custom_id: `${uid},${subscriptionType}`,
     application_context: {
-      brand_name: "Premium Monthly Package",
+      brand_name: `Premium ${subscriptionType} Package`,
       locale: "en-US",
       user_action: "SUBSCRIBE_NOW",
       payment_method: {
         payer_selected: "PAYPAL",
         payee_preferred: "IMMEDIATE_PAYMENT_REQUIRED",
       },
+      return_url: return_url,
+      cancel_url: cancel_url,
     },
   };
 
@@ -43,7 +48,6 @@ const setSubscriptionPayload = (
 
 export const subscribe = async (req, res) => {
   const { subscriptionType } = req.params;
-  const { uid } = req.query;
 
   if (!subscriptionType) {
     return res.status(400).send("Missing subscription type information");
@@ -60,7 +64,7 @@ export const subscribe = async (req, res) => {
       {
         method: "post",
         body: JSON.stringify(
-          setSubscriptionPayload(planId, uid, subscriptionType)
+          setSubscriptionPayload(planId, subscriptionType, req.query)
         ),
         headers: {
           Authorization: `Basic ${auth}`,
@@ -108,7 +112,7 @@ export const handlePaymentWebhook = async (req, res) => {
   }
 };
 
-async function verifyWebhook(req) {
+const verifyWebhook = async (req) => {
   const webhookEvent = req.body;
 
   try {
@@ -138,7 +142,7 @@ async function verifyWebhook(req) {
     console.error("Error verifying PayPal webhook:", error.message);
     return false;
   }
-}
+};
 
 const activateSubscription = async (data) => {
   const payload = createSubscriptionPayload(data);

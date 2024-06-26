@@ -2,12 +2,22 @@ import React from "react";
 import axios from "axios";
 import { auth } from "../firebase/firebase";
 
-export default function PayPalButton({ subscriptionType }) {
-  
-  const createSubscription = async (userId) => {
+export default function PayPalButton({
+  subscriptionType,
+  return_url,
+  cancel_url,
+}) {
+  const createSubscription = async (uid) => {
+    const params = {
+      uid,
+      return_url,
+      cancel_url,
+    };
+
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/subscription/subscribe/${subscriptionType}?uid=${userId}`
+        `${process.env.REACT_APP_API_URL}/api/subscription/subscribe/${subscriptionType}`,
+        {params}
       );
 
       if (response.status === 200 || response.status === 201) {
