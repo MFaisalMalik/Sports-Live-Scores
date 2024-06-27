@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import slugify from "slugify";
 
-export default function BlogCard({ img, title, date }) {
+export default function BlogCard({ image, title, slug, date }) {
   const monthNames = [
     "Jan",
     "Feb",
@@ -25,7 +25,7 @@ export default function BlogCard({ img, title, date }) {
     <div
       className="relative rounded-xl overflow-hidden border flex items-end justify-start w-full text-left bg-center bg-cover h-96"
       style={{
-        backgroundImage: `url(${img})`,
+        backgroundImage: `url(${image || '/images/no-image-available-icon-vector.jpg'})`,
       }}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/70 "></div>
@@ -42,7 +42,7 @@ export default function BlogCard({ img, title, date }) {
       <h2 className="z-10 p-5">
         <Link
           rel="noopener noreferrer"
-          to={`/blogs/${slugify(title)}`}
+          to={`/blogs/${slug}`}
           className="font-medium text-white text-md hover:underline"
         >
           {" "}

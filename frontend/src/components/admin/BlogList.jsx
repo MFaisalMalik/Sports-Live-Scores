@@ -1,64 +1,114 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import allBlogs from "../../utils/allBlogs.json";
-import slugify from "slugify";
-import { notify } from "../../utils/notify";
+import { backendHost } from "../../utils";
+import { Loader } from "../../pages/LiveScores";
+import { toast } from "react-toastify";
+import LoaderSpinner from "../LoaderSpinner";
 
 export default function BlogList() {
-  const [blogs, setBlogs] = useState(allBlogs);
+  const [blogs, setBlogs] = useState([]);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(null);
 
-  function handleDeleteBlog(index) {
-    let filteredBlogs = blogs.filter((_, blogIndex) => index !== blogIndex);
-    setBlogs(filteredBlogs);
-    notify("Post Deleted Successful!", 'success')
+  async function handleDeleteBlog(slug, i) {
+    setCurrentIndex(i);
+    setDeleteLoading(true);
+    try {
+      await fetch(`${backendHost}/api/blogs/delete`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ slug: slug }),
+      }).then(async (res) => {
+        setDeleteLoading(false);
+        toast.success("Blog deleted sucessfully!");
+        fetchData();
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("Delete Error!");
+      setDeleteLoading(false);
+    }
   }
+
+  async function fetchData() {
+    await fetch(`${backendHost}/api/blogs`, {
+      method: "GET",
+    })
+      .then(async (response) => {
+        const data = await response.json();
+        setBlogs(data)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <div className="max-w-xl rounded-xl shadow-lg p-4 bg-white">
       <div className="flex items-center justify-between">
-        <h1 className="block text-xl font-extrabold leading-none tracking-normal text-transparent md:text-2xl md:tracking-tight bg-clip-text bg-gradient-to-r from-blue-800 to-purple-700">
+        <h1 className="block text-xl font-extrabold text-transparent md:text-2xl bg-clip-text bg-gradient-to-r from-blue-800 to-purple-700">
           Blogs
         </h1>
         <Link
           to="/admin/add-new-blog"
-          className="rounded border-2 border-blue-500 py-1 px-2 text-blue-500 font-semibold"
+          className="rounded-lg border border-blue-500 py-1 px-2 text-blue-500 font-medium"
         >
           + Add New
         </Link>
       </div>
 
       <div className="mt-4 flex flex-col gap-6">
-        {blogs.map((item, i) => (
-          <div key={i} className="flex gap-4">
-            <div className="min-w-32 h-20 overflow-hidden">
-              <img
-                className="w-full h-full border rounded-lg object-fit object-cover"
-                src={item.img}
-                alt={item.title}
-              />
-            </div>
-            <div className="truncate">
-              <h3 className="truncate font-semibold text-gray-600">
-                {item.title}
-              </h3>
-              <div className="mt-2 flex gap-x-2">
-                <Link
-                  to={`/admin/edit-blog/${slugify(item.title)}`}
-                  className="flex items-center text-gray-400 p-1 rounded-lg hover:bg-gray-100 max-w-max"
-                >
-                  <EditIcon className="w-4 h-4 mr-2" />
-                  <span className="text-sm">Edit</span>
-                </Link>
-                <button
-                  onClick={() => handleDeleteBlog(i)}
-                  className="flex items-center text-red-400 p-1 rounded-lg hover:bg-gray-100 max-w-max"
-                >
-                  <DeleteIcon className="w-4 h-4 mr-2" />
-                  <span className="text-sm">Delete</span>
-                </button>
+        {blogs.length > 0 ? (
+          blogs.map((item, i) => (
+            <div key={i} className="flex gap-4">
+              <div className="min-w-32 h-20 overflow-hidden">
+                <img
+                  className="w-full h-full border rounded-lg object-fit object-cover"
+                  src={
+                    item.image
+                      ? item.image
+                      : "/images/no-image-available-icon-vector.jpg"
+                  }
+                  alt={item.title}
+                />
+              </div>
+              <div className="truncate">
+                <h3 className="truncate font-semibold text-gray-600">
+                  {item.title}
+                </h3>
+                <div className="mt-2 flex gap-x-2">
+                  <Link
+                    to={`/admin/edit-blog/${item.slug}`}
+                    className="flex items-center text-gray-400 p-1 rounded-lg hover:bg-gray-100 max-w-max"
+                  >
+                    <EditIcon className="w-4 h-4 mr-2" />
+                    <span className="text-sm">Edit</span>
+                  </Link>
+                  <button
+                    onClick={() => handleDeleteBlog(item.slug, i)}
+                    className="flex items-center text-red-400 p-1 rounded-lg hover:bg-gray-100 max-w-max"
+                  >
+                    <DeleteIcon className="w-4 h-4 mr-2" />
+                    <span className="text-sm mr-2">Delete</span>
+                    {currentIndex === i && deleteLoading && (
+                      <LoaderSpinner loaderStyle="size-4 stroke-red-500" size={4} color="red-500" />
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
+          ))
+        ) : (
+          <div className="py-10">
+            <Loader />
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

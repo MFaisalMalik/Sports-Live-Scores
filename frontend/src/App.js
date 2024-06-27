@@ -2,30 +2,31 @@ import React from "react";
 import Navbar from "./components/Navbar";
 import "./App.css";
 import 'react-toastify/dist/ReactToastify.css';
-import Home from "./components/pages/Home";
+import Home from "./pages/Home";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Blogs from "./components/pages/Blogs";
-import SignUp from "./components/pages/SignUp";
-import LiveScores from "./components/pages/LiveScores";
-import SignIn from "./components/pages/SignIn";
-import Football from "./components/pages/Football";
-import Baseball from "./components/pages/Baseball";
-import Basketball from "./components/pages/Basketball";
-import Hockey from "./components/pages/Hockey";
-import Packages from "./components/pages/Packages";
-import BaseballGameStats from "./components/pages/BaseballGameStats";
-import BasketballGameStats from "./components/pages/BasketballGameStats";
-import HockeyGameStats from "./components/pages/HockeyGameStats";
-import FootballGameStats from "./components/pages/FootballGameStats";
+import Blogs from "./pages/Blogs";
+import SignUp from "./pages/SignUp";
+import LiveScores from "./pages/LiveScores";
+import SignIn from "./pages/SignIn";
+import Football from "./pages/Football";
+import Baseball from "./pages/Baseball";
+import Basketball from "./pages/Basketball";
+import Hockey from "./pages/Hockey";
+import Packages from "./pages/Packages";
+import BaseballGameStats from "./pages/BaseballGameStats";
+import BasketballGameStats from "./pages/BasketballGameStats";
+import HockeyGameStats from "./pages/HockeyGameStats";
+import FootballGameStats from "./pages/FootballGameStats";
 import { AuthProvider } from "./contexts/authContext";
 import ScrollToTop from "./components/commons/ScrollToTop";
-import Article from "./components/pages/Article";
+import Article from "./pages/Article";
 import AdminSidebar from "./components/admin/AdminSidebar";
-import Default from "./components/pages/admin/Default";
-import AddNewBlog from "./components/pages/admin/AddNewBlog";
-import EditBlog from "./components/pages/admin/EditBlog";
+import Default from "./pages/admin/Default";
+import AddNewBlog from "./pages/admin/AddNewBlog";
+import EditBlog from "./pages/admin/EditBlog";
 import { ToastContainer } from "react-toastify";
-import BettingOds from "./components/pages/BettingOdds";
+import BettingOds from "./pages/BettingOdds";
+import MatchUp from "./pages/MatchUp";
 
 function App() {
   return (
@@ -44,7 +45,7 @@ function App() {
           </Route>
           <Route path="/blogs/:blogSlug" element={<Article />} />
           <Route path="/live-scores" element={<LiveScores />} />
-          <Route path="/betting-odds" element={<BettingOds />} />
+          <Route path="/:game/odds" element={<BettingOds />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/packages" element={<Packages />} />
@@ -59,6 +60,7 @@ function App() {
           />
           <Route path="/hockey-game-stats" element={<HockeyGameStats />} />
           <Route path="/football-game-stats" element={<FootballGameStats />} />
+          <Route path="/:game/matchup/:slug/:id" element={<MatchUp />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
