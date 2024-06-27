@@ -116,6 +116,36 @@ export const handlePaymentWebhook = async (req, res) => {
   }
 };
 
+export const checkSubscriptionStatus = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const subscriptionsCollection = collection(db, "subscriptions");
+    const querySnapshot = await getDocs(
+      query(subscriptionsCollection, where("userId", "==", userId))
+    );
+
+    if (querySnapshot.empty) {
+      res.status(404).json({ message: "Inactive Subscription" });
+      return; 
+    }
+
+    const subscriptionData = querySnapshot.docs[0].data();
+    const currentTimestamp = Date.now();
+    const subscriptionEndDateMs = subscriptionData.subscriptionEndDate.seconds * 1000;
+
+    if (subscriptionEndDateMs < currentTimestamp) {
+      res.status(404).json({ message: "Inactive Subscription" });
+      return;
+    }
+
+    res.status(200).json({ message: "Active Subscription" });
+  } catch (error) {
+    console.error("Error processing PayPal webhook:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 const verifyWebhook = async (req) => {
   const webhookEvent = req.body;
 
@@ -159,12 +189,13 @@ const activateSubscription = async (data) => {
   if (querySnapshot.empty) {
     await addDoc(subscriptionsCollection, payload);
     console.log("Subscription activated successfully");
-  } else {
-    const docId = querySnapshot.docs[0].id;
-    const subscriptionDoc = doc(db, "subscriptions", docId);
-    await updateDoc(subscriptionDoc, payload);
-    console.log("Updated subscription for userId: ", payload.userId);
+    return;
   }
+
+  const docId = querySnapshot.docs[0].id;
+  const subscriptionDoc = doc(db, "subscriptions", docId);
+  await updateDoc(subscriptionDoc, payload);
+  console.log("Updated subscription for userId: ", payload.userId);
 };
 
 const createSubscriptionPayload = (data) => {
