@@ -1,11 +1,10 @@
-import dotenv from 'dotenv';
-import assert from 'assert';
+import dotenv from "dotenv";
+import assert from "assert";
 
 dotenv.config();
 
 const {
   PORT,
-  HOST,
   HOST_URL,
   API_KEY,
   AUTH_DOMAIN,
@@ -13,14 +12,18 @@ const {
   STORAGE_BUCKET,
   MESSAGING_SENDER_ID,
   APP_ID,
+  PAYPAL_CLIENT_ID,
+  PAYPAL_SECRET_KEY,
+  PAYPAL_MONTHLY_PLAN_ID,
+  PAYPAL_ANNUAL_PLAN_ID,
+  PAYPAL_WEBHOOK_ID,
+  PAYPAL_API_URL,
 } = process.env;
 
-assert(PORT, 'Port is required');
-assert(HOST, 'Host is required');
+assert(PORT, "Port is required");
 
 export default {
   port: PORT,
-  host: HOST,
   hostUrl: HOST_URL,
   firebaseConfig: {
     apiKey: API_KEY,
@@ -30,4 +33,10 @@ export default {
     messagingSenderId: MESSAGING_SENDER_ID,
     appId: APP_ID,
   },
+  paypaClientId: PAYPAL_CLIENT_ID,
+  paypalSecretKey: PAYPAL_SECRET_KEY,
+  paypalMonthlyPlanId: PAYPAL_MONTHLY_PLAN_ID,
+  paypalAnnualPlanId: PAYPAL_ANNUAL_PLAN_ID,
+  paypalWebHookId: PAYPAL_WEBHOOK_ID,
+  paypalApiUrl: PAYPAL_API_URL,
 };
