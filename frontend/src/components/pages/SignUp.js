@@ -32,9 +32,10 @@ export default function SignUp() {
     setIsRegistering(true);
 
     try {
-      const user = { name, email };
-      await axios.post("http://localhost:5001/api/user", user);
-      await doCreateUserWithEmailAndPassword(email, password);
+      const userCredential = await doCreateUserWithEmailAndPassword(email, password);
+      const uid = userCredential.user.uid
+      const user = { name, email, uid};
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/user`, user);
     } catch (error) {
       setErrorMessage(error.response?.data || error.message);
       setIsRegistering(false);
