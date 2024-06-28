@@ -1,11 +1,13 @@
 import express from 'express';
 
 import {
-  getGamesStats
+  getGamesStatsFree,
+  getGamesStatsPremium
 } from '../controllers/gamesController.js';
 
 const router = express.Router();
 
-router.get('/', getGamesStats);
+router.get('/free/:gameType', getGamesStatsFree);
+router.get('/premium/:gameType', getGamesStatsPremium);
 
 export default router;
