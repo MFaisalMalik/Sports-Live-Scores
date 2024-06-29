@@ -35,7 +35,7 @@ export default function SignUp() {
       const userCredential = await doCreateUserWithEmailAndPassword(email, password);
       const uid = userCredential.user.uid
       const user = { name, email, uid};
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/user`, user);
+      await axios.post(`${process.env.REACT_APP_API_HOST}/api/user`, user);
     } catch (error) {
       setErrorMessage(error.response?.data || error.message);
       setIsRegistering(false);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { backendHost } from "../../utils";
+import { apiHost } from "../../utils";
 import { Loader } from "../../pages/LiveScores";
 import { toast } from "react-toastify";
 import LoaderSpinner from "../LoaderSpinner";
@@ -14,7 +14,7 @@ export default function BlogList() {
     setCurrentIndex(i);
     setDeleteLoading(true);
     try {
-      await fetch(`${backendHost}/api/blogs/delete`, {
+      await fetch(`${apiHost}/api/blogs/delete`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -33,7 +33,7 @@ export default function BlogList() {
   }
 
   async function fetchData() {
-    await fetch(`${backendHost}/api/blogs`, {
+    await fetch(`${apiHost}/api/blogs`, {
       method: "GET",
     })
       .then(async (response) => {

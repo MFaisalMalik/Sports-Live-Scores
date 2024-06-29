@@ -3,13 +3,13 @@ import BlogCard from "../components/BlogCard";
 import allBlogs from "../utils/allBlogs.json";
 import { Link } from "react-router-dom";
 import Footer from "../components/Footer2";
-import { backendHost } from "../utils";
+import { apiHost } from "../utils";
 
 export default function Blogs() {
   const [blogs, setBlogs] = useState([]);
 
   async function fetchData() {
-    await fetch(`${backendHost}/api/blogs`, {
+    await fetch(`${apiHost}/api/blogs`, {
       method: "GET",
     })
       .then(async (response) => {

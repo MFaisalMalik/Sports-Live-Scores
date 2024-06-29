@@ -26,7 +26,7 @@ export default function GameTable(props) {
 
   useEffect(() => {
     const fetchGameStats = async () => {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/games`);
+      const response = await fetch(`${process.env.REACT_APP_API_HOST}/api/games`);
 
       if (response.ok) {
         const json = await response.json();

@@ -4,7 +4,7 @@ import allBlogs from "../utils/allBlogs.json";
 import slugify from "slugify";
 import BlogCard from "../components/BlogCard";
 import Footer from "../components/Footer2";
-import { backendHost } from "../utils";
+import { apiHost } from "../utils";
 import Markdown from "react-markdown";
 
 export default function Article() {
@@ -13,7 +13,7 @@ export default function Article() {
   const [blogs, setBlogs] = useState();
 
   useEffect(() => {
-    fetch(`${backendHost}/api/blogs/${blogSlug}`, {
+    fetch(`${apiHost}/api/blogs/${blogSlug}`, {
       method: "GET",
     })
       .then(async (res) => {
@@ -23,7 +23,7 @@ export default function Article() {
       .catch((error) => {
         console.log(error);
       });
-    fetch(`${backendHost}/api/blogs`, {
+    fetch(`${apiHost}/api/blogs`, {
       method: "GET",
     })
       .then(async (res) => {

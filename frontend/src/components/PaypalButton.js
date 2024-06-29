@@ -16,7 +16,7 @@ export default function PayPalButton({
 
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/subscription/subscribe/${subscriptionType}`,
+        `${process.env.REACT_APP_API_HOST}/api/subscription/subscribe/${subscriptionType}`,
         {params}
       );
 

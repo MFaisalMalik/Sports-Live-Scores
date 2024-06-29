@@ -5,7 +5,7 @@ import RichTextEditor from "../../components/admin/RichTextEditor2";
 import { useNavigate, useParams } from "react-router-dom";
 import allBlogs from "../../utils/allBlogs.json";
 import slugify from "slugify";
-import { backendHost } from "../../utils";
+import { apiHost } from "../../utils";
 import { Loader } from "../LiveScores";
 import LoaderSpinner from "../../components/LoaderSpinner";
 import { toast } from "react-toastify";
@@ -51,7 +51,7 @@ export default function EditBlog() {
   // }, [article?.content, article?.img, article?.title, blogSlug]);
 
   useEffect(() => {
-    fetch(`${backendHost}/api/blogs/article`, {
+    fetch(`${apiHost}/api/blogs/article`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -82,7 +82,7 @@ export default function EditBlog() {
     }
     setLoading(true);
     try {
-      await fetch(`${backendHost}/api/blogs`, {
+      await fetch(`${apiHost}/api/blogs`, {
         method: "PUT",
         body: formData,
       })

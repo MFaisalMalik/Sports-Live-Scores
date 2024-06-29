@@ -5,7 +5,7 @@ import RichTextEditor from "../../components/admin/RichTextEditor2";
 import slugify from "slugify";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { backendHost } from "../../utils";
+import { apiHost } from "../../utils";
 import LoaderSpinner from "../../components/LoaderSpinner";
 
 export default function AddNewBlog() {
@@ -52,7 +52,7 @@ export default function AddNewBlog() {
     if (slugAvailable) {
       setLoading(true);
       try {
-        await fetch(`${backendHost}/api/blogs`, {
+        await fetch(`${apiHost}/api/blogs`, {
           method: "POST",
           body: formData,
         })
@@ -83,7 +83,7 @@ export default function AddNewBlog() {
     const checkSlugAvailability = async () => {
       if (slug.length > 0) {
         setSlugLoading(true);
-        await fetch(`${backendHost}/api/blogs/slugs`, {
+        await fetch(`${apiHost}/api/blogs/slugs`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

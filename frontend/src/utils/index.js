@@ -1,1 +1,1 @@
-export const backendHost = process.env.REACT_APP_BACKEND_HOST_URL
+export const apiHost = process.env.REACT_APP_API_HOST
