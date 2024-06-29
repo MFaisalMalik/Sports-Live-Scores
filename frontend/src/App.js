@@ -12,7 +12,7 @@ import Football from "./pages/Football";
 import Baseball from "./pages/Baseball";
 import Basketball from "./pages/Basketball";
 import Hockey from "./pages/Hockey";
-import Packages from "./pages/Packages";
+import Pricing from "./pages/Pricing";
 import BaseballGameStats from "./pages/BaseballGameStats";
 import BasketballGameStats from "./pages/BasketballGameStats";
 import HockeyGameStats from "./pages/HockeyGameStats";
@@ -48,7 +48,7 @@ function App() {
           <Route path="/:game/odds" element={<BettingOds />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/packages" element={<Packages />} />
+          <Route path="/pricing" element={<Pricing />} />
           <Route path="/football" element={<Football />} />
           <Route path="/baseball" element={<Baseball />} />
           <Route path="/basketball" element={<Basketball />} />

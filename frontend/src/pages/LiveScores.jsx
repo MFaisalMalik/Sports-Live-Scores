@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
+import Footer from "../components/Footer2";
 
 export default function LiveScores() {
   const [football, setFootball] = useState([]);
@@ -89,6 +90,7 @@ export default function LiveScores() {
     ],
   };
   return (
+    <>
     <main className="bg-blue-100 min-h-screen">
       <div className="container mx-auto px-4 md:px-8 lg:px-12 py-10">
         <div className="mt-10">
@@ -202,6 +204,8 @@ export default function LiveScores() {
         </div>
       </div>
     </main>
+    <Footer />
+    </>
   );
 }
 

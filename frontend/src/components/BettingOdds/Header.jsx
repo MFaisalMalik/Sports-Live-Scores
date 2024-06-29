@@ -5,14 +5,18 @@ import React from "react";
 
 export default function Header(props) {
   const {gameList, oddsList, game, setGame, odds, setOdds} = props
- 
+  const date = new Date().toLocaleDateString('en-US', {
+    month: 'short',
+    day: "2-digit",
+    year: "numeric"
+  })
   return (
     <div className="max-w-screen-2xl mx-auto px-4 py-10">
       <h1 className="text-3xl font-black text-left">
         {game} Odds
       </h1>
       <p className="font-semibold text-sm">
-        <time dateTime="June 01, 2024">June 01, 2024 </time> Odds
+        <time dateTime={date}>{date} </time> Odds
       </p>
       <div className="mt-6 flex items-center gap-x-4 w-full overflow-x-scroll scrollbar-hide">
         <select

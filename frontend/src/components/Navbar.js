@@ -127,6 +127,15 @@ function Navbar() {
                     Betting Odds
                   </Link>
                 </li>
+                <li className="nav-item">
+                  <Link
+                    to="/pricing"
+                    className="flex items-center justify-center text-white font-semibold px-4 cursor-pointer py-2 h-full lg:hover:border-b-4 border-white transition-all"
+                    onClick={closeMobileMenu}
+                  >
+                    Pricing
+                  </Link>
+                </li>
 
                 {userLoggedIn ? (
                   <Link
@@ -153,7 +162,7 @@ function Navbar() {
                       Log In
                     </Link>
                     <Link
-                      to="/packages"
+                      to="/pricing"
                       id="nav-links-mobile-sign-up"
                       className="nav-links-mobile font-semibold"
                       onClick={closeMobileMenu}
@@ -187,7 +196,7 @@ function Navbar() {
                     <Button
                       name="sign-up"
                       buttonStyle="btn--outline"
-                      to="/packages"
+                      to="/pricing"
                     >
                       Sign Up
                     </Button>
