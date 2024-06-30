@@ -24,11 +24,9 @@ export default function GameTable() {
 
   useEffect(() => {
     const fetchGameStats = async () => {
-      // let url = `${process.env.REACT_APP_API_HOST}/api/games;
-      console.log(process.env.REACT_APP_API_HOST)
-      let url = `http://localhost:5000/api/games/${requestType}/${gamesCodes[gameType] || "MLB"}`;
+      let url = `${process.env.REACT_APP_API_HOST}/api/games/${requestType}/${gamesCodes[gameType] || "MLB"}`;
 
-      if (requestType === "premium") {
+      if (requestType === "premium" && auth.currentUser) {
         const userId = auth.currentUser.uid;
         url += `?userId=${userId}`;
       }
