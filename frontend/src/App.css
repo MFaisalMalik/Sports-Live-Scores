@@ -68,55 +68,6 @@
   font-size: 100px;
 }
 
-.football {
-  background-image: url('/public/images/football-cover.jpg');
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  justify-content: flex-start;
-  color: #fff;
-  font-size: 90px;
-  padding-left: 40px;
-  height: 400px;
-}
-
-.baseball {
-  background-image: url('/public/images/baseball-cover.jpg');
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  justify-content: flex-start;
-  color: #fff;
-  font-size: 100px;
-  padding-left: 40px;
-  height: 400px;
-}
-
-.basketball {
-  background-image: url('/public/images/basketball-cover.jpg');
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  justify-content: flex-start;
-  color: #fff;
-  font-size: 80px;
-  padding-left: 50px;
-  height: 400px;
-}
-
-.hockey {
-  background-image: url('/public/images/hockey-cover.jpg');
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  justify-content: flex-start;
-  color: #fff;
-  font-size: 100px;
-  padding-left: 40px;
-  padding-bottom: 50px;
-  height: 400px;
-}
-
 
 @media (max-width: 768px) {
   .football {
