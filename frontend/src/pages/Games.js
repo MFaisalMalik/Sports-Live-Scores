@@ -29,18 +29,22 @@ export default function Games() {
           </h2>
           <div className="grid gap-x-4 gap-y-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             <GameNPlayerCard
-              link={`/game-stats/${gameType}/free`}
+              link={`/games-stats/${gameType}/free`}
               requestType="Free"
               bet="Game"
             />
-            <GameNPlayerCard link="/sign-in" requestType="Free" bet="Player" />
             <GameNPlayerCard
-              link={`/game-stats/${gameType}/premium`}
+              link={`/players-stats/${gameType}/free`}
+              requestType="Free"
+              bet="Player"
+            />
+            <GameNPlayerCard
+              link={`/games-stats/${gameType}/premium`}
               requestType="Premium"
               bet="Game"
             />
             <GameNPlayerCard
-              link="/sign-in"
+              link={`/players-stats/${gameType}/premium`}
               requestType="Premium"
               bet="Player"
             />
