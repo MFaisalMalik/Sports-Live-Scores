@@ -53,7 +53,6 @@ export default function FileUploadField(props) {
           <input
             onChange={onChange}
             disabled={disabled}
-            multiple
             type={type}
             id={id}
             placeholder={placeholder}

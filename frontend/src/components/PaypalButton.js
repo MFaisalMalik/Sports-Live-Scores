@@ -16,7 +16,7 @@ export default function PayPalButton({
 
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/subscription/subscribe/${subscriptionType}`,
+        `${process.env.REACT_APP_API_HOST}/api/subscription/subscribe/${subscriptionType}`,
         {params}
       );
 
@@ -46,7 +46,7 @@ export default function PayPalButton({
     <button
       id="custom-paypal-button"
       onClick={handleSubmit}
-      className="bg-[#FEC33A] text-[#002F86] px-7 py-3 rounded-full font-medium focus:outline-none focus:ring focus:ring-offset-2 focus:ring-blue-500 flex items-center"
+      className="bg-[#FEC33A] text-[#002F86] px-7 py-3 w-full sm:w-auto rounded-full font-medium focus:outline-none focus:ring focus:ring-offset-2 focus:ring-blue-500 flex items-center justify-center sm:justify-normal"
     >
       <img
         src="\images\PayPal_Monogram_Full_Color_RGB.ico"

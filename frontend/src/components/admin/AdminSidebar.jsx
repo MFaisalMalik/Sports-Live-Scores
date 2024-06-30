@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { useNavigate, useResolvedPath } from "react-router-dom";
 export default function AdminSidebar() {
   const [show, setShow] = useState(true);
@@ -78,20 +78,22 @@ export default function AdminSidebar() {
                       aria-label="Overview"
                       className="cursor-pointer mt-10"
                     >
-                      <svg
-                        width={20}
-                        height={20}
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M2.5 2.5H9.16667V9.16667H2.5V2.5ZM2.5 10.8333H9.16667V17.5H2.5V10.8333ZM10.8333 2.5H17.5V9.16667H10.8333V2.5ZM10.8333 10.8333H17.5V17.5H10.8333V10.8333ZM12.5 4.16667V7.5H15.8333V4.16667H12.5ZM12.5 12.5V15.8333H15.8333V12.5H12.5ZM4.16667 4.16667V7.5H7.5V4.16667H4.16667ZM4.16667 12.5V15.8333H7.5V12.5H4.16667Z"
-                          fill="#9CA3AF"
-                        />
-                      </svg>
+                      <Link to="/admin/default">
+                        <svg
+                          width={20}
+                          height={20}
+                          viewBox="0 0 20 20"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M2.5 2.5H9.16667V9.16667H2.5V2.5ZM2.5 10.8333H9.16667V17.5H2.5V10.8333ZM10.8333 2.5H17.5V9.16667H10.8333V2.5ZM10.8333 10.8333H17.5V17.5H10.8333V10.8333ZM12.5 4.16667V7.5H15.8333V4.16667H12.5ZM12.5 12.5V15.8333H15.8333V12.5H12.5ZM4.16667 4.16667V7.5H7.5V4.16667H4.16667ZM4.16667 12.5V15.8333H7.5V12.5H4.16667Z"
+                            fill="#9CA3AF"
+                          />
+                        </svg>
+                      </Link>
                     </li>
-                    <li
+                    {/* <li
                       tabIndex={0}
                       role="button"
                       aria-label="People"
@@ -204,14 +206,14 @@ export default function AdminSidebar() {
                           fill="#9CA3AF"
                         />
                       </svg>
-                    </li>
+                    </li> */}
                   </ul>
                   {show && (
-                    <div className="w-full mt-10">
-                      <p className="text-base leading-4 pl-3 cursor-pointer text-gray-400">
-                        Overview
-                      </p>
-                      <p className="text-base leading-4 pl-3 cursor-pointer pt-7 text-gray-400">
+                    <ul className="w-full mt-10">
+                      <li className="text-base leading-4 pl-3 cursor-pointer text-gray-400">
+                        <Link to="/admin/default">Dashboard</Link>
+                      </li>
+                      {/* <p className="text-base leading-4 pl-3 cursor-pointer pt-7 text-gray-400">
                         People
                       </p>
                       <p className="text-base leading-4 pl-3 cursor-pointer pt-7 text-gray-400">
@@ -228,8 +230,8 @@ export default function AdminSidebar() {
                       </p>
                       <p className="text-base leading-4 pl-3 cursor-pointer pt-7 text-gray-400">
                         Notifications
-                      </p>
-                    </div>
+                      </p> */}
+                    </ul>
                   )}
                 </div>
               </div>
