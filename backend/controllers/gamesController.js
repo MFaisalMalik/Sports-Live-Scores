@@ -27,13 +27,15 @@ export const getGamesStatsFree = async (req, res) => {
     );
 
     if (querySnapshot.empty) {
-      return res.status(404).json({ error: "No Data" });
+      return res.status(200).json({ data: [] });
     }
 
     const gameStats = querySnapshot.docs[0].data();
-    res.status(200).json({ data: gameStats });
+    gameStats["id"] = querySnapshot.docs[0].id;
+
+    res.status(200).json({ data: [gameStats] });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -64,12 +66,14 @@ export const getGamesStatsPremium = async (req, res) => {
     );
 
     if (querySnapshot.empty) {
-      return res.status(404).json({ error: "No Data" });
+      return res.status(200).json({ data: [] });
     }
 
-    const gameStats = querySnapshot.docs.map((doc) => doc.data());
+    const gameStats = querySnapshot.docs.map((doc) => {
+      return { ...doc.data(), id: doc.id };
+    });
     res.status(200).json({ data: gameStats });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };

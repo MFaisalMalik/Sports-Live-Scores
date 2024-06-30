@@ -1,22 +1,16 @@
 import React from "react";
 import Navbar from "./components/Navbar";
 import "./App.css";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import Home from "./pages/Home";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Blogs from "./pages/Blogs";
 import SignUp from "./pages/SignUp";
 import LiveScores from "./pages/LiveScores";
 import SignIn from "./pages/SignIn";
-import Football from "./pages/Football";
-import Baseball from "./pages/Baseball";
-import Basketball from "./pages/Basketball";
-import Hockey from "./pages/Hockey";
 import Pricing from "./pages/Pricing";
-import BaseballGameStats from "./pages/BaseballGameStats";
-import BasketballGameStats from "./pages/BasketballGameStats";
-import HockeyGameStats from "./pages/HockeyGameStats";
-import FootballGameStats from "./pages/FootballGameStats";
+import Games from "./pages/Games";
+import GameTable from "./components/GameTable";
 import { AuthProvider } from "./contexts/authContext";
 import ScrollToTop from "./components/commons/ScrollToTop";
 import Article from "./pages/Article";
@@ -49,17 +43,8 @@ function App() {
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/pricing" element={<Pricing />} />
-          <Route path="/football" element={<Football />} />
-          <Route path="/baseball" element={<Baseball />} />
-          <Route path="/basketball" element={<Basketball />} />
-          <Route path="/hockey" element={<Hockey />} />
-          <Route path="/baseball-game-stats" element={<BaseballGameStats />} />
-          <Route
-            path="/basketball-game-stats"
-            element={<BasketballGameStats />}
-          />
-          <Route path="/hockey-game-stats" element={<HockeyGameStats />} />
-          <Route path="/football-game-stats" element={<FootballGameStats />} />
+          <Route path="/games/:gameType" element={<Games />} />
+          <Route path="/game-stats/:gameType/:requestType" element={<GameTable />} />
           <Route path="/:game/matchup/:slug/:id" element={<MatchUp />} />
         </Routes>
       </BrowserRouter>
