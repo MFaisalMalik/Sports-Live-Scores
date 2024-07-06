@@ -2,8 +2,9 @@ import React from "react";
 import "../App.css";
 import Footer from "../components/Footer2";
 import "./GamePages.css";
-import { Link, useParams, useNavigate, useResolvedPath } from "react-router-dom";
+import { useParams, useNavigate, useResolvedPath } from "react-router-dom";
 import { auth } from "../firebase/firebase";
+import GameNPlayerCard from "../components/GameNPlayerCard";
 
 export default function Games() {
   const { gameType } = useParams();
@@ -45,74 +46,26 @@ export default function Games() {
             Ready to Make Your Move? Explore Bets!
           </h2>
           <div className="grid gap-x-4 gap-y-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-            <Link to={getLink("gameState","football", "free")}>
-              <div className="relative group">
-                <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 group-hover:mt-[2px] group-hover:ml-[2px] transition-all bg-indigo-500 rounded-lg"></span>
-                <div className="relative h-full p-5 bg-white border-2 border-indigo-500 rounded-lg">
-                  <span className="text-blue-700">Free</span>
-                  <div className="mt-2 flex justify-between ">
-                    <h3 className="text-lg font-bold text-gray-800">
-                      Game Bets
-                    </h3>
-                    <span className=" rounded-md text-indigo-500 font-semibold">
-                      Search
-                    </span>
-                  </div>
-                  <p className="mt-2 text-gray-400 font-medium text-sm p-2 bg-blue-50 rounded-lg">10 teams bets /week</p>
-                </div>
-              </div>
-            </Link>
-            <Link to={getLink("playerState", gameType, "free")}>
-              <div className="relative group">
-                <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 group-hover:mt-[2px] group-hover:ml-[2px] transition-all bg-indigo-500 rounded-lg"></span>
-                <div className="relative h-full p-5 bg-white border-2 border-indigo-500 rounded-lg">
-                  <span className="text-blue-700">Free</span>
-                  <div className="mt-2 flex justify-between ">
-                    <h3 className="text-lg font-bold text-gray-800">
-                      Player Bets
-                    </h3>
-                    <span className=" rounded-md text-indigo-500 font-semibold">
-                      Search
-                    </span>
-                  </div>
-                  <p className="mt-2 text-gray-400 font-medium text-sm p-2 bg-blue-50 rounded-lg">10 players bets /week</p>
-                </div>
-              </div>
-            </Link>
-            <Link to={getLink("gameState",gameType, "premium")}>
-              <div className="relative group">
-                <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 group-hover:mt-[2px] group-hover:ml-[2px] transition-all bg-indigo-500 rounded-lg"></span>
-                <div className="relative h-full p-5 bg-white border-2 border-indigo-500 rounded-lg">
-                  <span className="text-purple-700">Premium</span>
-                  <div className="mt-2 flex justify-between ">
-                    <h3 className="text-lg font-bold text-gray-800">
-                      Game Bets
-                    </h3>
-                    <span className=" rounded-md text-purple-500 font-semibold">
-                      Search
-                    </span>
-                  </div>
-                  <p className="mt-2 text-gray-400 font-medium text-sm p-2 bg-blue-50 rounded-lg">unlimited teams bets</p>
-                </div>
-              </div>
-            </Link>
-            <Link to={getLink("playerState",gameType, "premium")}>
-              <div className="relative group">
-                <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 group-hover:mt-[2px] group-hover:ml-[2px] transition-all bg-indigo-500 rounded-lg"></span>
-                <div className="relative h-full p-5 bg-white border-2 border-indigo-500 rounded-lg">
-                  <span className="text-purple-700">Premium</span>
-                  <div className="mt-2 flex justify-between ">
-                    <h3 className="text-lg font-bold text-gray-800">
-                      Player Bets
-                    </h3>
-                    <span className=" rounded-md text-purple-500 font-semibold">
-                      Search
-                    </span>
-                  </div>
-                  <p className="mt-2 text-gray-400 font-medium text-sm p-2 bg-blue-50 rounded-lg">unlimited players bets</p>
-                </div>
-              </div>
-            </Link>
+            <GameNPlayerCard
+              link={`/games-stats/${gameType}/free`}
+              requestType="Free"
+              bet="Game"
+            />
+            <GameNPlayerCard
+              link={`/players-stats/${gameType}/free`}
+              requestType="Free"
+              bet="Player"
+            />
+            <GameNPlayerCard
+              link={`/games-stats/${gameType}/premium`}
+              requestType="Premium"
+              bet="Game"
+            />
+            <GameNPlayerCard
+              link={`/players-stats/${gameType}/premium`}
+              requestType="Premium"
+              bet="Player"
+            />
           </div>
         </div>
       </section>

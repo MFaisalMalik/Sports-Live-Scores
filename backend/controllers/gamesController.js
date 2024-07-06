@@ -13,7 +13,7 @@ const db = getFirestore(firebase);
 
 const gameTypes = ["MLB", "NFL", "NBA", "NHL"];
 
-export const getGamesStatsFree = async (req, res) => {
+const getFreeStats = async (req, res, statsType) => {
   try {
     const { gameType } = req.params;
 
@@ -21,25 +21,25 @@ export const getGamesStatsFree = async (req, res) => {
       return res.status(422).json({ error: "Invalid game parameter" });
     }
 
-    const gameCollection = collection(db, "Game Collection");
+    const statsCollection = collection(db, `${statsType} Collection`);
     const querySnapshot = await getDocs(
-      query(gameCollection, where("Type", "==", gameType))
+      query(statsCollection, where("Type", "==", gameType))
     );
 
     if (querySnapshot.empty) {
       return res.status(200).json({ data: [] });
     }
 
-    const gameStats = querySnapshot.docs[0].data();
-    gameStats["id"] = querySnapshot.docs[0].id;
+    const stats = querySnapshot.docs[0].data();
+    stats["id"] = querySnapshot.docs[0].id;
 
-    res.status(200).json({ data: [gameStats] });
+    res.status(200).json({ data: [stats] });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-export const getGamesStatsPremium = async (req, res) => {
+const getPremiumStats = async (req, res, statsType) => {
   try {
     const { userId } = req.query;
     const { gameType } = req.params;
@@ -60,20 +60,36 @@ export const getGamesStatsPremium = async (req, res) => {
       return res.status(401).json({ error: "Inactive Subscription" });
     }
 
-    const gameCollection = collection(db, "Game Collection");
+    const statsCollection = collection(db, `${statsType} Collection`);
     const querySnapshot = await getDocs(
-      query(gameCollection, where("Type", "==", gameType))
+      query(statsCollection, where("Type", "==", gameType))
     );
 
     if (querySnapshot.empty) {
       return res.status(200).json({ data: [] });
     }
 
-    const gameStats = querySnapshot.docs.map((doc) => {
+    const stats = querySnapshot.docs.map((doc) => {
       return { ...doc.data(), id: doc.id };
     });
-    res.status(200).json({ data: gameStats });
+    res.status(200).json({ data: stats });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+};
+
+export const getGamesStatsFree = async (req, res) => {
+  getFreeStats(req, res, "Game");
+};
+
+export const getGamesStatsPremium = async (req, res) => {
+  getPremiumStats(req, res, "Game");
+};
+
+export const getPlayersStatsFree = async (req, res) => {
+  getFreeStats(req, res, "Player");
+};
+
+export const getPlayersStatsPremium = async (req, res) => {
+  getPremiumStats(req, res, "Player");
 };

@@ -10,7 +10,8 @@ import LiveScores from "./pages/LiveScores";
 import SignIn from "./pages/SignIn";
 import Pricing from "./pages/Pricing";
 import Games from "./pages/Games";
-import GameTable from "./components/GameTable";
+import GameTable from "./pages/GameTable";
+import PlayerTable from "./pages/PlayerTable";
 import { AuthProvider } from "./contexts/authContext";
 import ScrollToTop from "./components/commons/ScrollToTop";
 import Article from "./pages/Article";
@@ -49,10 +50,11 @@ function App() {
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/games/:gameType" element={<Games />} />
             <Route
-              path="/game-stats/:gameType/:requestType"
+              path="/games-stats/:gameType/:requestType"
               element={<GameTable />}
             />
-            <Route path="/:game/matchup/:slug/:id" element={<MatchUp />} />
+            <Route path="/players-stats/:gameType/:requestType" element={<PlayerTable />} />
+          <Route path="/:game/matchup/:slug/:id" element={<MatchUp />} />
           </Routes>
         </BrowserRouter>
       </ModalContextProvider>
