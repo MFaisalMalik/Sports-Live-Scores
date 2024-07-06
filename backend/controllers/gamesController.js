@@ -21,9 +21,9 @@ const getFreeStats = async (req, res, statsType) => {
       return res.status(422).json({ error: "Invalid game parameter" });
     }
 
-    const collection = collection(db, `${statsType} Collection`);
+    const statsCollection = collection(db, `${statsType} Collection`);
     const querySnapshot = await getDocs(
-      query(collection, where("Type", "==", gameType))
+      query(statsCollection, where("Type", "==", gameType))
     );
 
     if (querySnapshot.empty) {
@@ -60,9 +60,9 @@ const getPremiumStats = async (req, res, statsType) => {
       return res.status(401).json({ error: "Inactive Subscription" });
     }
 
-    const collection = collection(db, `${statsType} Collection`);
+    const statsCollection = collection(db, `${statsType} Collection`);
     const querySnapshot = await getDocs(
-      query(collection, where("Type", "==", gameType))
+      query(statsCollection, where("Type", "==", gameType))
     );
 
     if (querySnapshot.empty) {
