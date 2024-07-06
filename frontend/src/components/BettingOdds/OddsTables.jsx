@@ -99,7 +99,7 @@ export default function OddsTables({ game }) {
   ) : (
     <div className="max-w-screen-2xl mx-auto px-4">
       <div className="w-full">
-        <div className="overflow-scroll scrollbar-hide pb-10">
+        <div className="w-full max-h-screen overflow-y-auto scrollbar-hide pb-10">
           {loading ? (
             <div className="">
               <Loader />
@@ -131,7 +131,7 @@ export default function OddsTables({ game }) {
 
 const TableHead = ({ tableHeadRef }) => {
   return (
-    <div ref={tableHeadRef} className={clsx("flex items-center w-max sticky")}>
+    <div ref={tableHeadRef} className={clsx("flex items-center w-max sticky top-0 z-20")}>
       <span className="sticky left-0 z-10 bg-blue-50 w-[140px] md:w-[300px] h-14"></span>
       <div className="flex gap-x-4 bg-blue-50 pr-2 py-2">
         <div className="w-28 md:w-32 h-12 md:h-10 font-black text-xs md:text-sm py-2 rounded-lg bg-gray-200 flex items-center justify-center">

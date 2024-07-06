@@ -5,12 +5,14 @@ import "./Pricing.css";
 import { Link } from "react-router-dom";
 import PayPalButton from "../components/PaypalButton";
 import Footer from "../components/Footer2";
+import { siteHost } from "../utils";
 
 const packages = [
   {
     name: "Free",
     price: 0,
     duration: "1 Week Pass",
+    type: "weekly",
     features: [
       "Unlimited feedback",
       "One manager",
@@ -27,6 +29,7 @@ const packages = [
     name: "Premium",
     price: 19.99,
     duration: "1 Month Pass",
+    type: "monthly",
     primaryColorClass: "text-purple-700",
     tag: "Most popular",
     features: [
@@ -41,6 +44,7 @@ const packages = [
     name: "Premium Gold",
     price: 199.99,
     duration: "1 Year Pass",
+    type: "annually",
     primaryColorClass: "text-pink-700",
     features: [
       "Unlimited feedback",
@@ -51,6 +55,7 @@ const packages = [
     ],
   },
 ];
+
 
 function Pricing() {
   return (
@@ -96,7 +101,7 @@ function Pricing() {
                       </Link>
                     ) : (
                       <div className="mt-4">
-                        <PayPalButton />
+                        <PayPalButton subscriptionType={item.type} cancel_url={`${siteHost}/cancel-subscription`} return_url={`${siteHost}/success-subscription`} />
                       </div>
                     )}
                   </div>

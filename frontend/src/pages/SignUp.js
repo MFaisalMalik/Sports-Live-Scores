@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./SignIn_SignUp.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,6 +11,7 @@ import {
 export default function SignUp() {
   const navigate = useNavigate();
   const { userLoggedIn } = useAuth();
+
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -42,9 +43,15 @@ export default function SignUp() {
     }
   };
 
+  useEffect(()=> {
+    if (userLoggedIn) {
+      navigate('/')
+    }
+  }, [navigate, userLoggedIn])
+
   return (
     <>
-      {userLoggedIn && navigate("/")}
+      
       <div className="min-h-screen bg-blue-100 py-6 flex flex-col justify-center sm:py-12">
         <div className="relative py-3 sm:max-w-md sm:mx-auto">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-900 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
@@ -60,7 +67,7 @@ export default function SignUp() {
                 >
                   <div className="relative">
                     <input
-                      autocomplete="off"
+                      autoComplete="off"
                       id="name"
                       name="name"
                       type="text"
@@ -71,7 +78,7 @@ export default function SignUp() {
                       placeholder="Name"
                     />
                     <label
-                      For="name"
+                      htmlFor="name"
                       className="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm"
                     >
                       Name
@@ -79,7 +86,7 @@ export default function SignUp() {
                   </div>
                   <div className="relative">
                     <input
-                      autocomplete="off"
+                      autoComplete="off"
                       id="email"
                       name="email"
                       type="email"
@@ -90,7 +97,7 @@ export default function SignUp() {
                       placeholder="Email"
                     />
                     <label
-                      For="email"
+                      htmlFor="email"
                       className="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm"
                     >
                       Email
@@ -98,7 +105,7 @@ export default function SignUp() {
                   </div>
                   <div className="relative">
                     <input
-                      autocomplete="off"
+                      autoComplete="off"
                       id="password"
                       name="password"
                       type="password"
@@ -108,7 +115,7 @@ export default function SignUp() {
                       placeholder="Password"
                     />
                     <label
-                      For="password"
+                      htmlFor="password"
                       className="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm"
                     >
                       Password
@@ -125,7 +132,7 @@ export default function SignUp() {
                       placeholder="Confirm Password"
                     />
                     <label
-                      For="confirm-password"
+                      htmlFor="confirm-password"
                       className="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm"
                     >
                       Confirm Password

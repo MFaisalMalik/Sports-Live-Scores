@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import "./SignIn_SignUp.css";
 import {
   doSignInWithEmailAndPassword,
@@ -10,8 +10,9 @@ import { useAuth } from "../contexts/authContext";
 
 export default function SignIn() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirect = searchParams.get("redirect");
   const { userLoggedIn } = useAuth();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSigningIn, setIsSigningIn] = useState(false);
@@ -20,15 +21,15 @@ export default function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (isSigningIn) return;
-
     setIsSigningIn(true);
-
-    await doSignInWithEmailAndPassword(email, password).catch((error) => {
+    try {
+      await doSignInWithEmailAndPassword(email, password);
+      navigate(redirect ? redirect : "/");
+    } catch (error) {
       setErrorMessage(error.message);
       setIsSigningIn(false);
-    });
+    }
   };
 
   // const onGoogleSignIn = (e) => {
@@ -46,10 +47,14 @@ export default function SignIn() {
   //       setIsSigningInGoogle(false);
   //     })
   // }
+  useEffect(() => {
+    if (userLoggedIn) {
+      navigate("/");
+    }
+  }, [navigate, userLoggedIn]);
 
   return (
     <>
-      {userLoggedIn && navigate("/")}
       <div className="min-h-screen bg-blue-100 py-6 flex flex-col justify-center sm:py-12">
         <div className="relative py-3 sm:max-w-md sm:mx-auto">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-900 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
@@ -65,7 +70,7 @@ export default function SignIn() {
                 >
                   <div className="relative">
                     <input
-                      autocomplete="off"
+                      autoComplete="off"
                       id="email"
                       name="email"
                       type="email"
@@ -76,7 +81,7 @@ export default function SignIn() {
                       placeholder="Email address"
                     />
                     <label
-                      For="email"
+                      htmlFor="email"
                       className="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm"
                     >
                       Email Address
@@ -84,7 +89,7 @@ export default function SignIn() {
                   </div>
                   <div className="relative">
                     <input
-                      autocomplete="off"
+                      autoComplete="off"
                       id="password"
                       name="password"
                       type="password"
@@ -95,7 +100,7 @@ export default function SignIn() {
                       placeholder="Password"
                     />
                     <label
-                      For="password"
+                      htmlFor="password"
                       className="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm"
                     >
                       Password

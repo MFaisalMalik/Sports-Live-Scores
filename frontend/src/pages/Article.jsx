@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import allBlogs from "../utils/allBlogs.json";
-import slugify from "slugify";
+import { useParams } from "react-router-dom";
 import BlogCard from "../components/BlogCard";
 import Footer from "../components/Footer2";
 import { apiHost } from "../utils";
@@ -35,11 +33,11 @@ export default function Article() {
       });
   }, [blogSlug]);
 
-  useEffect(() => {
-    if (article?.content) {
-      console.log(article?.content);
-    }
-  }, [article]);
+  // useEffect(() => {
+  //   if (article?.content) {
+  //     console.log(article?.content);
+  //   }
+  // }, [article]);
 
   return (
     <>
@@ -54,7 +52,7 @@ export default function Article() {
         )}
         <div className="max-w-3xl mx-auto mt-20">
           <div className="mt-3 bg-white flex flex-col justify-between leading-normal">
-            <div className="bg-white rounded-none md:rounded-xl relative top-0 -mt-32 p-8 pt-10">
+            <div className="bg-white rounded-none lg:rounded-xl relative top-0 lg:px-8">
               <h1 className="text-gray-900 font-bold text-3xl mb-5">
                 {article?.title}
               </h1>

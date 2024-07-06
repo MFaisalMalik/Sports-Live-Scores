@@ -2,11 +2,29 @@ import React from "react";
 import "../App.css";
 import Footer from "../components/Footer2";
 import "./GamePages.css";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate, useResolvedPath } from "react-router-dom";
+import { auth } from "../firebase/firebase";
 
 export default function Games() {
   const { gameType } = useParams();
   const imageUrl = `/images/${gameType}-cover.jpg`;
+  // const navigate = useNavigate()
+  const { pathname } = useResolvedPath()
+
+  const getLink = (state, game, type) => {
+    const link = `/game-stats/${gameType}/${type}`
+    if (type === 'free'){
+      return link
+    } else {
+      if (auth.currentUser) {
+        return link
+      } else {
+        return `/sign-in?redirect=${pathname}`
+      }
+    }
+  }
+
+
   return (
     <>
       <div
@@ -27,7 +45,7 @@ export default function Games() {
             Ready to Make Your Move? Explore Bets!
           </h2>
           <div className="grid gap-x-4 gap-y-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-            <Link to={`/game-stats/${gameType}/free`}>
+            <Link to={getLink("gameState","football", "free")}>
               <div className="relative group">
                 <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 group-hover:mt-[2px] group-hover:ml-[2px] transition-all bg-indigo-500 rounded-lg"></span>
                 <div className="relative h-full p-5 bg-white border-2 border-indigo-500 rounded-lg">
@@ -40,10 +58,11 @@ export default function Games() {
                       Search
                     </span>
                   </div>
+                  <p className="mt-2 text-gray-400 font-medium text-sm p-2 bg-blue-50 rounded-lg">10 teams bets /week</p>
                 </div>
               </div>
             </Link>
-            <Link to="/sign-in">
+            <Link to={getLink("playerState", gameType, "free")}>
               <div className="relative group">
                 <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 group-hover:mt-[2px] group-hover:ml-[2px] transition-all bg-indigo-500 rounded-lg"></span>
                 <div className="relative h-full p-5 bg-white border-2 border-indigo-500 rounded-lg">
@@ -56,10 +75,11 @@ export default function Games() {
                       Search
                     </span>
                   </div>
+                  <p className="mt-2 text-gray-400 font-medium text-sm p-2 bg-blue-50 rounded-lg">10 players bets /week</p>
                 </div>
               </div>
             </Link>
-            <Link to={`/game-stats/${gameType}/premium`}>
+            <Link to={getLink("gameState",gameType, "premium")}>
               <div className="relative group">
                 <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 group-hover:mt-[2px] group-hover:ml-[2px] transition-all bg-indigo-500 rounded-lg"></span>
                 <div className="relative h-full p-5 bg-white border-2 border-indigo-500 rounded-lg">
@@ -72,10 +92,11 @@ export default function Games() {
                       Search
                     </span>
                   </div>
+                  <p className="mt-2 text-gray-400 font-medium text-sm p-2 bg-blue-50 rounded-lg">unlimited teams bets</p>
                 </div>
               </div>
             </Link>
-            <Link to="/sign-in">
+            <Link to={getLink("playerState",gameType, "premium")}>
               <div className="relative group">
                 <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 group-hover:mt-[2px] group-hover:ml-[2px] transition-all bg-indigo-500 rounded-lg"></span>
                 <div className="relative h-full p-5 bg-white border-2 border-indigo-500 rounded-lg">
@@ -88,6 +109,7 @@ export default function Games() {
                       Search
                     </span>
                   </div>
+                  <p className="mt-2 text-gray-400 font-medium text-sm p-2 bg-blue-50 rounded-lg">unlimited players bets</p>
                 </div>
               </div>
             </Link>

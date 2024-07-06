@@ -284,7 +284,7 @@ export default function Footer() {
           <div className="mt-16 border-t border-gray-400/30 pt-8 sm:mt-20 lg:mt-24">
             <div className="text-md text-center text-white">
               Copyright © {new Date().getFullYear()} . Crafted with
-              <span className="text-gray-50"> ♥ </span> by [Team](change later)
+              <span className="text-gray-50"> ♥ </span> by [Team]
             </div>
           </div>
         </div>

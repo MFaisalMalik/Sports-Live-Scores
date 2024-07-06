@@ -1,12 +1,20 @@
 import React from "react";
 import axios from "axios";
 import { auth } from "../firebase/firebase";
+import { useNavigate, useResolvedPath } from "react-router-dom";
+import { toast } from "react-toastify";
+import { ModalContext } from "../contexts/modalContext";
 
 export default function PayPalButton({
   subscriptionType,
   return_url,
   cancel_url,
 }) {
+  const navigate = useNavigate();
+  const { pathname } = useResolvedPath();
+  const {toggleModal} = ModalContext()
+
+
   const createSubscription = async (uid) => {
     const params = {
       uid,
@@ -17,7 +25,7 @@ export default function PayPalButton({
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_API_HOST}/api/subscription/subscribe/${subscriptionType}`,
-        {params}
+        { params }
       );
 
       if (response.status === 200 || response.status === 201) {
@@ -35,10 +43,18 @@ export default function PayPalButton({
     e.preventDefault();
 
     const user = auth.currentUser;
-    if (user) {
+    if (user && user.emailVerified) {
       await createSubscription(user.uid);
+    } else if (user && !user.emailVerified) {
+      toast.warning("Please verify your email.");
+      setTimeout(()=> {
+        toggleModal()
+      }, 1000)
     } else {
-      console.error("No user is logged in");
+      toast.warning("Please Login first!");
+      setTimeout(() => {
+        navigate(`/sign-in?redirect=${pathname}`);
+      }, 500);
     }
   };
 

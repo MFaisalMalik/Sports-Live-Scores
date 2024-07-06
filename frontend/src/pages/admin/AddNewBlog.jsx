@@ -20,8 +20,6 @@ export default function AddNewBlog() {
   const [slugLoading, setSlugLoading] = useState(false);
   const [slugAvailable, setSlugAvailable] = useState(true);
 
-  console.log(content);
-
   function imagesUploadHandler(files) {
     setImages([...files]);
     // if (e.target.files.length > 2) alert('You can only upload maximum two [2] images');

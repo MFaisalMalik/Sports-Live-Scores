@@ -21,33 +21,41 @@ import EditBlog from "./pages/admin/EditBlog";
 import { ToastContainer } from "react-toastify";
 import BettingOds from "./pages/BettingOdds";
 import MatchUp from "./pages/MatchUp";
+import { ModalContextProvider } from "./contexts/modalContext";
+import Modal from "./components/commons/EmailVerifyModal";
 
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Navbar />
-        <ScrollToTop />
-        <ToastContainer />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/blogs" element={<Blogs />} />
-          <Route path="/admin" element={<AdminSidebar />}>
-            <Route path="default" element={<Default />} />
-            <Route path="add-new-blog" element={<AddNewBlog />} />
-            <Route path="edit-blog/:blogSlug" element={<EditBlog />} />
-          </Route>
-          <Route path="/blogs/:blogSlug" element={<Article />} />
-          <Route path="/live-scores" element={<LiveScores />} />
-          <Route path="/:game/odds" element={<BettingOds />} />
-          <Route path="/sign-in" element={<SignIn />} />
-          <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/pricing" element={<Pricing />} />
-          <Route path="/games/:gameType" element={<Games />} />
-          <Route path="/game-stats/:gameType/:requestType" element={<GameTable />} />
-          <Route path="/:game/matchup/:slug/:id" element={<MatchUp />} />
-        </Routes>
-      </BrowserRouter>
+      <ModalContextProvider>
+        <BrowserRouter>
+          <Navbar />
+          <ScrollToTop />
+          <ToastContainer />
+          <Modal />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/blogs" element={<Blogs />} />
+            <Route path="/admin" element={<AdminSidebar />}>
+              <Route path="default" element={<Default />} />
+              <Route path="add-new-blog" element={<AddNewBlog />} />
+              <Route path="edit-blog/:blogSlug" element={<EditBlog />} />
+            </Route>
+            <Route path="/blogs/:blogSlug" element={<Article />} />
+            <Route path="/live-scores" element={<LiveScores />} />
+            <Route path="/:game/odds" element={<BettingOds />} />
+            <Route path="/sign-in" element={<SignIn />} />
+            <Route path="/sign-up" element={<SignUp />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/games/:gameType" element={<Games />} />
+            <Route
+              path="/game-stats/:gameType/:requestType"
+              element={<GameTable />}
+            />
+            <Route path="/:game/matchup/:slug/:id" element={<MatchUp />} />
+          </Routes>
+        </BrowserRouter>
+      </ModalContextProvider>
     </AuthProvider>
   );
 }

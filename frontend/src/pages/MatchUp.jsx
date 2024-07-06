@@ -4,6 +4,7 @@ import Filters from "../components/matchup/Filters";
 import GameOdds from "../components/matchup/GameOdds";
 import { useParams } from "react-router-dom";
 import { Loader } from "./LiveScores";
+import RelatedArticles from "../components/matchup/RelatedArticles";
 export default function MatchUp() {
   const { game, slug, id } = useParams();
   const [HeadTOHead, setHeadToHead] = useState();
@@ -111,6 +112,7 @@ export default function MatchUp() {
       <section className="max-w-4xl mx-auto">
         <Filters selectedFilter={selectedFilter} changeFilter={setFilter} />
         <GameOdds oddsLoading={oddsLoading} notFound={notFound} game={game} eventInfo={eventInfo} odds={odds} />
+        <RelatedArticles />
       </section>
     </main>
   );

@@ -7,35 +7,26 @@ import "./Navbar.css";
 import CrossIcon from "./commons/CrossIcon";
 import BarsIcon from "./commons/BarsIcon";
 import clsx from "clsx";
+import UserDropdown from "./UserDropdown";
 
 function Navbar() {
   const { userLoggedIn } = useAuth();
   const navigate = useNavigate();
-  const { pathname } = useResolvedPath()
+  const { pathname } = useResolvedPath();
 
   const [click, setClick] = useState(false);
-  const [button, setButton] = useState(true);
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
 
-  const showButton = () => {
-    if (window.innerWidth <= 960) {
-      setButton(false);
-    } else {
-      setButton(true);
-    }
-  };
-
-  useEffect(() => {
-    showButton();
-  }, []);
-
-  window.addEventListener("resize", showButton);
-
   return (
     <>
-      <nav className={clsx("h-20 flex items-center text-xl top-0 z-40 pl-4 pr-4 w-full bg-[var(--navbar-color)]", pathname.includes("/odds") ? "relative" : "sticky")}>
+      <nav
+        className={clsx(
+          "h-20 flex items-center text-xl top-0 z-40 pl-4 pr-4 w-full bg-[var(--navbar-color)]",
+          pathname.includes("/odds") ? "relative" : "sticky"
+        )}
+      >
         <div className="container mx-auto lg:px-6 flex justify-between items-center h-full w-full max-w-screen-2xl">
           <Link
             to="/"
@@ -55,7 +46,11 @@ function Navbar() {
             <div className="menu-container flex items-center">
               <ul className={click ? "nav-menu active" : "nav-menu"}>
                 <li className="nav-item">
-                  <Link to="/" className="flex items-center justify-center text-white font-semibold px-4 cursor-pointer py-2 h-full lg:hover:border-b-4 border-white transition-all" onClick={closeMobileMenu}>
+                  <Link
+                    to="/"
+                    className="flex items-center justify-center text-white font-semibold px-4 cursor-pointer py-2 h-full lg:hover:border-b-4 border-white transition-all"
+                    onClick={closeMobileMenu}
+                  >
                     Home
                   </Link>
                 </li>
@@ -89,20 +84,36 @@ function Navbar() {
                       </svg>
                     </span>
                   </div>
-                  <div className="scale-y-0 origin-top max-h-0 opacity-0 transition-all overflow-hidden lg:absolute lg:z-50 flex w-full lg:w-40 flex-col bg-gray-100 py-1 px-4 text-gray-800 shadow-xl group-hover:scale-y-100 group-hover:max-h-none group-hover:opacity-100">
-                    <Link to="/football" onClick={closeMobileMenu} className="my-2 block border-b border-gray-100 py-1 font-semibold text-gray-500 hover:text-black md:mx-2">
+                  <div className="scale-y-0 origin-top max-h-0 opacity-0 transition-all overflow-hidden lg:absolute lg:z-50 flex w-full lg:w-52 flex-col bg-[var(--navbar-color)] py-1 px-2 rounded-b-xl shadow-xl group-hover:scale-y-100 group-hover:max-h-none group-hover:opacity-100">
+                    <Link
+                      to="games/football"
+                      onClick={closeMobileMenu}
+                      className="my-2 block border-b border-gray-600 py-1 font-semibold text-gray-500 hover:text-white/50 md:mx-2"
+                    >
                       Footbal
                     </Link>
 
-                    <Link to="/baseball" onClick={closeMobileMenu} className="my-2 block border-b border-gray-100 py-1 font-semibold text-gray-500 hover:text-black md:mx-2">
+                    <Link
+                      to="games/baseball"
+                      onClick={closeMobileMenu}
+                      className="my-2 block border-b border-gray-600 py-1 font-semibold text-gray-500 hover:text-white/50 md:mx-2"
+                    >
                       Baseball
                     </Link>
 
-                    <Link to="/basketBall" onClick={closeMobileMenu} className="my-2 block border-b border-gray-100 py-1 font-semibold text-gray-500 hover:text-black md:mx-2">
+                    <Link
+                      to="games/basketBall"
+                      onClick={closeMobileMenu}
+                      className="my-2 block border-b border-gray-600 py-1 font-semibold text-gray-500 hover:text-white/50 md:mx-2"
+                    >
                       BasketBall
                     </Link>
 
-                    <Link to="/hockey" onClick={closeMobileMenu} className="my-2 block border-b border-gray-100 py-1 font-semibold text-gray-500 hover:text-black md:mx-2">
+                    <Link
+                      to="games/hockey"
+                      onClick={closeMobileMenu}
+                      className="my-2 block py-1 font-semibold text-gray-500 hover:text-white/50 md:mx-2"
+                    >
                       Hockey
                     </Link>
                   </div>
@@ -136,78 +147,43 @@ function Navbar() {
                     Pricing
                   </Link>
                 </li>
-
-                {userLoggedIn ? (
-                  <Link
-                    to="/"
-                    id="nav-links-mobile-sign-out"
-                    className="nav-links-mobile font-semibold"
-                    onClick={() => {
-                      doSignOut().then(() => {
-                        navigate("/", true);
-                        closeMobileMenu();
-                      });
-                    }}
-                  >
-                    Sign Out
-                  </Link>
-                ) : (
-                  <>
-                    <Link
-                      to="/sign-in"
-                      id="nav-links-mobile-sign-in"
-                      className="nav-links-mobile font-semibold"
-                      onClick={closeMobileMenu}
-                    >
-                      Log In
-                    </Link>
-                    <Link
-                      to="/pricing"
-                      id="nav-links-mobile-sign-up"
-                      className="nav-links-mobile font-semibold"
-                      onClick={closeMobileMenu}
-                    >
-                      Sign Up
-                    </Link>
-                  </>
-                )}
               </ul>
 
-              {button &&
-                (userLoggedIn ? (
+              {userLoggedIn ? (
+                <UserDropdown />
+              ) : (
+                <>
                   <Button
-                    name="sign-out"
+                    name="sign-in"
                     buttonStyle="btn--outline"
-                    onClick={() => {
-                      doSignOut().then(() => navigate("/", true));
-                    }}
+                    extraClass="!border-none flex items-center !text-orange-500"
+                    onClick={closeMobileMenu}
+                    to="/sign-in"
                   >
-                    SIGN OUT
+                    Log In
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="size-5 ml-1 "
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                      />
+                    </svg>
                   </Button>
-                ) : (
-                  <>
-                    <Button
-                      name="sign-in"
-                      buttonStyle="btn--outline"
-                      to="/sign-in"
-                    >
-                      Log In
-                    </Button>
-                    <Button
-                      name="sign-up"
-                      buttonStyle="btn--outline"
-                      to="/pricing"
-                    >
-                      Sign Up
-                    </Button>
-                  </>
-                ))}
+                </>
+              )}
             </div>
             <div className="lg:hidden ml-3" onClick={handleClick}>
               {click ? (
-                <CrossIcon className="w-8 h-8 text-white" />
+                <CrossIcon className="w-8 h-8 text-white cursor-pointer" />
               ) : (
-                <BarsIcon className="w-8 h-8 text-white" />
+                <BarsIcon className="w-8 h-8 text-white cursor-pointer" />
               )}
             </div>
           </div>
