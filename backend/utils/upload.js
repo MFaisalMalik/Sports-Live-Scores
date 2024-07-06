@@ -1,9 +1,13 @@
 import multer, { diskStorage } from 'multer';
-import { extname as _extname } from 'path';
+import path, { extname as _extname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+const __dirname = path.dirname(__filename);
 
 // Set up storage engine
 const storage = diskStorage({
-    destination: './uploads/',
+    destination: path.join(__dirname, '../uploads/'),
     filename: function (req, file, cb) {
         cb(null, file.fieldname + '-' + Date.now() + _extname(file.originalname));
     }
