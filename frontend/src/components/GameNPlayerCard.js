@@ -14,6 +14,7 @@ export default function GameNPlayerCard(props) {
               Search
             </span>
           </div>
+          <p className="mt-2 text-gray-400 font-medium text-sm p-2 bg-blue-50 rounded-lg">{props.tagline}</p>
         </div>
       </div>
     </Link>
