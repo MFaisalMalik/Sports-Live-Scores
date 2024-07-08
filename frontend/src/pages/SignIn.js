@@ -16,7 +16,7 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSigningIn, setIsSigningIn] = useState(false);
-  // const [isSigningInGoogle, setIsSigningInGoogle] = useState(false);
+  const [isSigningInGoogle, setIsSigningInGoogle] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e) => {
@@ -32,21 +32,19 @@ export default function SignIn() {
     }
   };
 
-  // const onGoogleSignIn = (e) => {
-  //   e.preventDefault();
+  const onGoogleSignIn = (e) => {
+    e.preventDefault();
 
-  //   if (isSigningIn)
-  //     return;
+    if (isSigningIn) return;
 
-  //   setIsSigningIn(true);
-  //   setIsSigningInGoogle(true);
-  //   doSignInWithGoogle()
-  //     .catch(error => {
-  //       setErrorMessage(error.message)
-  //       setIsSigningIn(false);
-  //       setIsSigningInGoogle(false);
-  //     })
-  // }
+    setIsSigningIn(true);
+    setIsSigningInGoogle(true);
+    doSignInWithGoogle().catch((error) => {
+      setErrorMessage(error.message);
+      setIsSigningIn(false);
+      setIsSigningInGoogle(false);
+    });
+  };
   useEffect(() => {
     if (userLoggedIn) {
       navigate("/");
@@ -149,7 +147,7 @@ export default function SignIn() {
             </div>
 
             <div className=" w-full flex justify-center">
-              <button className="flex items-center bg-white border border-gray-300 rounded-lg shadow-md px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+              <button onClick={onGoogleSignIn} className="flex items-center bg-white border border-gray-300 rounded-lg shadow-md px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                 <svg
                   className="h-6 w-6 mr-2"
                   xmlns="http://www.w3.org/2000/svg"

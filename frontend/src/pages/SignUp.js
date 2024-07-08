@@ -5,13 +5,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/authContext";
 import {
   doCreateUserWithEmailAndPassword,
-  doSendEmailVerification,
+  doSignInWithGoogle,
 } from "../firebase/auth";
 
 export default function SignUp() {
   const navigate = useNavigate();
   const { userLoggedIn } = useAuth();
-
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -33,9 +32,12 @@ export default function SignUp() {
     setIsRegistering(true);
 
     try {
-      const userCredential = await doCreateUserWithEmailAndPassword(email, password);
-      const uid = userCredential.user.uid
-      const user = { name, email, uid};
+      const userCredential = await doCreateUserWithEmailAndPassword(
+        email,
+        password
+      );
+      const uid = userCredential.user.uid;
+      const user = { name, email, uid };
       await axios.post(`${process.env.REACT_APP_API_HOST}/api/user`, user);
     } catch (error) {
       setErrorMessage(error.response?.data || error.message);
@@ -43,15 +45,22 @@ export default function SignUp() {
     }
   };
 
-  useEffect(()=> {
+  const onGoogleSignIn = (e) => {
+    e.preventDefault();
+
+    doSignInWithGoogle().catch((error) => {
+      setErrorMessage(error.message);
+    });
+  };
+
+  useEffect(() => {
     if (userLoggedIn) {
-      navigate('/')
+      navigate("/");
     }
-  }, [navigate, userLoggedIn])
+  }, [navigate, userLoggedIn]);
 
   return (
     <>
-      
       <div className="min-h-screen bg-blue-100 py-6 flex flex-col justify-center sm:py-12">
         <div className="relative py-3 sm:max-w-md sm:mx-auto">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-900 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
@@ -173,7 +182,7 @@ export default function SignUp() {
             </div>
 
             <div className="w-full flex justify-center">
-              <button className="flex items-center bg-white border border-gray-300 rounded-lg shadow-md px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+              <button onClick={onGoogleSignIn} className="flex items-center bg-white border border-gray-300 rounded-lg shadow-md px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                 <svg
                   className="h-6 w-6 mr-2"
                   xmlns="http://www.w3.org/2000/svg"

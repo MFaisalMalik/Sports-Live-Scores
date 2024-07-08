@@ -16,7 +16,7 @@ export default function HeadToHead(props) {
     <div className="bg-white">
       
       <div className="max-w-4xl mx-auto px-4 md:px-8 lg:px-12">
-        <div className="flex md:gap-x-12 justify-center items-center bg-white p-8">
+        <div className="flex gap-x-4 md:gap-x-12 justify-center items-center bg-white py-8 px-4 md:px-8">
           <div className="w-2/3 flex items-center gap-x-2 md:gap-x-6 justify-end">
             <div className="flex flex-col items-end">
               {homeTeam.venue && (
@@ -51,7 +51,7 @@ export default function HeadToHead(props) {
               </div>
             )}
           </div>
-          <div className="">
+          <div className="w-1/3">
             <p className="whitespace-nowrap text-center text-[10px] md:text-xs text-gray-600 font-medium">
               {new Date(startTimestamp * 1000).toLocaleDateString("en-US", {
                 day: "2-digit",

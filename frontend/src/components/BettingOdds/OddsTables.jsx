@@ -94,12 +94,27 @@ export default function OddsTables({ game }) {
   //   return window.removeEventListener("scroll", () => {});
   // }, []);
 
+  const elementRef = useRef(null);
+
+  useEffect(() => {
+    const checkIfTouchedTop = () => {
+      if (elementRef.current?.getBoundingClientRect().top <= 0){
+        setTableStick(true)
+      } else {
+        setTableStick(false)
+      }
+    };
+
+    window.addEventListener('scroll', checkIfTouchedTop);
+    return () => window.removeEventListener('scroll', checkIfTouchedTop);
+  }, []);
+
   return noDataFound ? (
     <h2 className="text-center font-medium">(No Data Found, check other games)</h2>
   ) : (
     <div className="max-w-screen-2xl mx-auto px-4">
       <div className="w-full">
-        <div className="w-full max-h-screen overflow-y-auto scrollbar-hide pb-10">
+        <div ref={elementRef} style={{ maxHeight: tableSticked ? "100vh" : "max-content"}} className="w-full overflow-y-auto scrollbar-hide pb-10">
           {loading ? (
             <div className="">
               <Loader />
@@ -108,7 +123,6 @@ export default function OddsTables({ game }) {
             odds.offers.length > 0 && (
               <>
                 <TableHead
-                  tableSticked={tableSticked}
                   tableHeadRef={tableHeadRef}
                 />
                 {odds.offers.map((item) => (
@@ -239,12 +253,12 @@ const Match = ({ data, game, eventIds }) => {
               LIVE
             </span> */}
           </div>
-          <Link
-            to="/mlb/matchup/team-vs-team"
+          {/* <Link
+            to={`/mlb/matchup/team-vs-team/${matchInfo.id}`}
             className="text-blue-700 font-bold"
           >
             View Matchup
-          </Link>
+          </Link> */}
         </div>
       </div>
     </div>

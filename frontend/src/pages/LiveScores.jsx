@@ -21,38 +21,100 @@ export default function LiveScores() {
     "ice-hockey": "NHL",
   };
 
-  useEffect(() => {
+  // function getdata(interval) {
+  //   const days = getDays();
+  //   console.log(interval);
+  //   [
+  //     ["american-football", setnflLoading, setFootball, football],
+  //     ["basketball", setnbaLoading, setBasketball, basketball],
+  //     ["baseball", setmlbLoading, setBaseball, baseball],
+  //     ["ice-hockey", setnhlLoading, setHockey, hockey],
+  //   ].map(([game, loader, seter, gameState]) => {
+  //     days.map(async (day, i) => {
+  //       return fetch(
+  //         `https://www.sofascore.com/api/v1/sport/${game}/scheduled-events/${day}`
+  //       )
+  //         .then((res) => {
+  //           return res.json();
+  //         })
+  //         .then((data) => {
+  //           loader(false);
+  //           if (data.events.length > 0) {
+  //             seter((prevState) => [
+  //               ...prevState,
+  //               ...data.events.filter((item) =>
+  //                 item.tournament.name.includes(GameCodes[game])
+  //               ),
+  //             ]);
+  //           }
+  //         })
+  //         .catch((error) => {
+  //           loader(false);
+  //           console.log(error);
+  //         });
+  //     });
+  //   });
+  // }
+
+  const getdata = async () => {
     const days = getDays();
-    
-    [
-      ["american-football", setnflLoading, setFootball, football],
-      ["basketball", setnbaLoading, setBasketball, basketball],
-      ["baseball", setmlbLoading, setBaseball, baseball],
-      ["ice-hockey", setnhlLoading, setHockey, hockey],
-    ].map(([game, loader, setter, gameState]) => {
-      days.map(async (day, i) => {
-        return fetch(
-          `https://www.sofascore.com/api/v1/sport/${game}/scheduled-events/${day}`
-        )
-          .then((res) => {
-            return res.json();
-          })
+    const fetchData = async (game, loader, seter) => {
+      // seter([]); // Clear previous data
+      const promises = days.map((day, index) =>
+        fetch(`https://www.sofascore.com/api/v1/sport/${game}/scheduled-events/${day}`)
+          .then((res) => res.json())
           .then((data) => {
             loader(false);
             if (data.events.length > 0) {
-              setter((prevState) => [
-                ...prevState,
-                ...data.events.filter((item) =>
-                  item.tournament.name.includes(GameCodes[game])
-                ),
-              ]);
+              seter((prevState) => {
+                if (prevState.length === 0){
+                  return data.events.filter((item) =>
+                    item.tournament.name.includes(GameCodes[game])
+                  )
+                }
+                if (prevState.length !== 0 && index === 0) {
+                  return data.events.filter((item) =>
+                    item.tournament.name.includes(GameCodes[game])
+                  )
+                }
+                if (prevState.length !== 0 && index !== 0) {
+                  return [
+                    ...prevState,
+                    ...data.events.filter((item) =>
+                      item.tournament.name.includes(GameCodes[game])
+                    ),
+                  ]
+                }
+              } );
             }
-          }).catch((error)=> {
-            loader(false)
+          })
+          .catch((error) => {
+            loader(false);
             console.log(error);
           })
-      });
-    });
+      );
+      await Promise.all(promises);
+    };
+
+    await Promise.all([
+      fetchData("american-football", setnflLoading, setFootball),
+      fetchData("basketball", setnbaLoading, setBasketball),
+      fetchData("baseball", setmlbLoading, setBaseball),
+      fetchData("ice-hockey", setnhlLoading, setHockey),
+    ]);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getdata();
+      const interval = setInterval(async () => {
+        await getdata();
+      }, 5000);
+
+      return () => clearInterval(interval); // Cleanup interval on component unmount
+    };
+
+    fetchData();
   }, []);
 
   var settings = {
@@ -89,122 +151,129 @@ export default function LiveScores() {
       },
     ],
   };
+
+  function compare(a, b) {
+    if (a.status.type === "onprogress") {
+      return -1;
+    }
+    return 1;
+  }
   return (
     <>
-    <main className="bg-blue-100 min-h-screen">
-      <div className="container mx-auto px-4 md:px-8 lg:px-12 py-10">
-        <div className="mt-10">
-          <h2 className="text-2xl md:text-4xl font-semibold text-center flex items-center mx-auto max-w-max">
-            NFL{" "}
-            <img
-              className="size-12 ml-2 object-contain"
-              src="/images/nfl.png"
-              alt="nfl-logo"
-            />{" "}
-          </h2>
-          <div className="max-w-5xl mx-auto rounded-lg mt-4">
-            <div className="w-full">
-              {nflLoading ? (
-                <Loader />
-              ) : !nflLoading && football.length < 1 ? (
-                <div className="text-center text-sm font-bold text-gray-500">
-                  There are no events at the moment.
-                </div>
-              ) : (
-                <Slider {...settings}>
-                  {football.map((item, i) => {
-                    return <SingleMatch key={i} game="nfl" {...item} />;
-                  })}
-                </Slider>
-              )}
+      <main className="bg-blue-100 min-h-screen">
+        <div className="container mx-auto px-4 md:px-8 lg:px-12 py-10">
+          <div className="mt-10">
+            <h2 className="text-2xl md:text-4xl font-semibold text-center flex items-center mx-auto max-w-max">
+              NFL{" "}
+              <img
+                className="size-12 ml-2 object-contain"
+                src="/images/nfl.png"
+                alt="nfl-logo"
+              />{" "}
+            </h2>
+            <div className="max-w-5xl mx-auto rounded-lg mt-4">
+              <div className="w-full">
+                {nflLoading ? (
+                  <Loader />
+                ) : !nflLoading && football.length < 1 ? (
+                  <div className="text-center text-sm font-bold text-gray-500">
+                    There are no events at the moment.
+                  </div>
+                ) : (
+                  <Slider {...settings}>
+                    {football?.sort(compare)?.map((item, i) => {
+                      return <SingleMatch key={i} game="nfl" {...item} />;
+                    })}
+                  </Slider>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-        <div className="mt-12">
-          <h2 className="text-2xl md:text-4xl font-semibold text-center flex items-center mx-auto max-w-max">
-            MLB{" "}
-            <img
-              className="size-12 ml-2 object-contain"
-              src="/images/mlb.png"
-              alt="mlb-logo"
-            />{" "}
-          </h2>
-          <div className="max-w-5xl mx-auto rounded-lg mt-4">
-            <div className="w-full">
-              {mlbLoading ? (
-                <Loader />
-              ) : !mlbLoading && baseball.length < 1 ? (
-                <div className="text-center text-sm font-bold text-gray-500">
-                  There are no events at the moment.
-                </div>
-              ) : (
-                <Slider {...settings}>
-                  {baseball.map((item, i) => {
-                    return <SingleMatch key={i} game="mlb" {...item} />;
-                  })}
-                </Slider>
-              )}
+          <div className="mt-12">
+            <h2 className="text-2xl md:text-4xl font-semibold text-center flex items-center mx-auto max-w-max">
+              MLB{" "}
+              <img
+                className="size-12 ml-2 object-contain"
+                src="/images/mlb.png"
+                alt="mlb-logo"
+              />{" "}
+            </h2>
+            <div className="max-w-5xl mx-auto rounded-lg mt-4">
+              <div className="w-full">
+                {mlbLoading ? (
+                  <Loader />
+                ) : !mlbLoading && baseball.length < 1 ? (
+                  <div className="text-center text-sm font-bold text-gray-500">
+                    There are no events at the moment.
+                  </div>
+                ) : (
+                  <Slider {...settings}>
+                    {baseball?.sort(compare)?.map((item, i) => {
+                      return <SingleMatch key={i} game="mlb" {...item} />;
+                    })}
+                  </Slider>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-        <div className="mt-12">
-          <h2 className="text-2xl md:text-4xl font-semibold text-center flex items-center mx-auto max-w-max">
-            NBA{" "}
-            <img
-              className="size-12 ml-2 object-contain"
-              src="/images/nba.png"
-              alt="nba-logo"
-            />{" "}
-          </h2>
+          <div className="mt-12">
+            <h2 className="text-2xl md:text-4xl font-semibold text-center flex items-center mx-auto max-w-max">
+              NBA{" "}
+              <img
+                className="size-12 ml-2 object-contain"
+                src="/images/nba.png"
+                alt="nba-logo"
+              />{" "}
+            </h2>
 
-          <div className="max-w-5xl mx-auto rounded-lg mt-4">
-            <div className="w-full">
-              {nbaLoading ? (
-                <Loader />
-              ) : !nbaLoading && basketball.length < 1 ? (
-                <div className="text-center text-sm font-bold text-gray-500">
-                  There are no events at the moment.
-                </div>
-              ) : (
-                <Slider {...settings}>
-                  {basketball.map((item, i) => {
-                    return <SingleMatch key={i} game="nba" {...item} />;
-                  })}
-                </Slider>
-              )}
+            <div className="max-w-5xl mx-auto rounded-lg mt-4">
+              <div className="w-full">
+                {nbaLoading ? (
+                  <Loader />
+                ) : !nbaLoading && basketball.length < 1 ? (
+                  <div className="text-center text-sm font-bold text-gray-500">
+                    There are no events at the moment.
+                  </div>
+                ) : (
+                  <Slider {...settings}>
+                    {basketball?.sort(compare)?.map((item, i) => {
+                      return <SingleMatch key={i} game="nba" {...item} />;
+                    })}
+                  </Slider>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="mt-12">
+            <h2 className="text-2xl md:text-4xl font-semibold text-center flex items-center mx-auto max-w-max">
+              NHL{" "}
+              <img
+                className="size-16 ml-2 object-contain"
+                src="/images/nhl.png"
+                alt="nhl-logo"
+              />{" "}
+            </h2>
+            <div className="max-w-5xl mx-auto rounded-lg mt-4">
+              <div className="w-full">
+                {nhlLoading ? (
+                  <Loader />
+                ) : !nhlLoading && hockey.length < 1 ? (
+                  <div className="text-center text-sm font-bold text-gray-500">
+                    There are no events at the moment.
+                  </div>
+                ) : (
+                  <Slider {...settings}>
+                    {hockey?.sort(compare)?.map((item, i) => {
+                      return <SingleMatch key={i} game="nhl" {...item} />;
+                    })}
+                  </Slider>
+                )}
+              </div>
             </div>
           </div>
         </div>
-        <div className="mt-12">
-          <h2 className="text-2xl md:text-4xl font-semibold text-center flex items-center mx-auto max-w-max">
-            NHL{" "}
-            <img
-              className="size-16 ml-2 object-contain"
-              src="/images/nhl.png"
-              alt="nhl-logo"
-            />{" "}
-          </h2>
-          <div className="max-w-5xl mx-auto rounded-lg mt-4">
-            <div className="w-full">
-              {nhlLoading ? (
-                <Loader />
-              ) : !nhlLoading && hockey.length < 1 ? (
-                <div className="text-center text-sm font-bold text-gray-500">
-                  There are no events at the moment.
-                </div>
-              ) : (
-                <Slider {...settings}>
-                  {hockey.map((item, i) => {
-                    return <SingleMatch key={i} game="nhl" {...item} />;
-                  })}
-                </Slider>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-    <Footer />
+      </main>
+      <Footer />
     </>
   );
 }
@@ -273,7 +342,7 @@ const SingleMatch = (props) => {
   return (
     <div className="px-2">
       <div className="p-4 group relative shadow-sm bg-blue-50 rounded-md">
-        <div className="absolute inset-0 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto bg-white/10 backdrop-blur-[2px] transition duration-300 flex items-center justify-center">
+        <div className="absolute inset-0 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto rounded-md bg-white/10 backdrop-blur-[2px] transition duration-300 flex items-center justify-center">
           <Link
             to={`/${game}/matchup/${slug}/${id}`}
             className="bg-blue-600 text-white text-xs font-semibold py-2 px-4 rounded-lg"
@@ -299,8 +368,11 @@ const SingleMatch = (props) => {
               )}
             </div>
           </div>
+
           <div className="ml-10">
-            <span className="text-xs whitespace-nowrap">BOS -6.5</span>
+            <span className="text-xs whitespace-nowrap">
+              {homeScore.current || "n/a"}
+            </span>
           </div>
         </div>
         <div className="mt-1 flex justify-between items-center">
@@ -320,23 +392,37 @@ const SingleMatch = (props) => {
             </div>
           </div>
           <div className="ml-10">
-            <span className="text-xs whitespace-nowrap">O/U 214.5</span>
+            <span className="text-xs whitespace-nowrap">
+              {awayScore.current || "n/a"}
+            </span>
           </div>
         </div>
         <div className="mt-1 flex justify-between items-center">
           <div className="flex items-center">
-            <span className="whitespace-nowrap text-xs font-semibold">
-              {new Date(startTimestamp * 1000).toLocaleDateString("en-US", {
-                month: "short",
-                day: "2-digit",
-              })}
-              {", "}
-              {new Date(startTimestamp * 1000).toLocaleTimeString("en-US", {
-                hour12: true,
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </span>
+            {status.type === "onprogress" ? (
+              <div className="flex items-center gap-x-1">
+                <div className="flex justify-center items-center">
+                  <div className="size-1.5 absolute animate-ping bg-blue-400 rounded-full" />
+                  <div className="relative size-1 bg-blue-500 rounded-full" />
+                </div>
+                <span className="whitespace-nowrap text-xs font-bold text-blue-500">
+                  LIVE
+                </span>
+              </div>
+            ) : (
+              <span className="whitespace-nowrap text-xs font-semibold">
+                {new Date(startTimestamp * 1000).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "2-digit",
+                })}
+                {", "}
+                {new Date(startTimestamp * 1000).toLocaleTimeString("en-US", {
+                  hour12: true,
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </span>
+            )}
           </div>
           <div className="ml-10">
             <span className="whitespace-nowrap text-xs font-bold">
@@ -360,7 +446,7 @@ export const Loader = () => {
 };
 
 export function getDays() {
-  const days = [0].map((item) => {
+  const days = [0, 1].map((item) => {
     let today = new Date();
     return new Date(today.setDate(today.getDate() + item))
       .toISOString()
