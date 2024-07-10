@@ -65,15 +65,19 @@ export const updateBlog = (req, res, next) => {
           content: req.body.content,
         };
         //   // Upload image to storage and get image url first
-        const imageURL = await uploadImage(data.image);
-        if (imageURL) {
-          await saveBlog({ ...data, image: imageURL, date: new Date().toLocaleDateString() })
-            .then(() => {
-              res.status(200).send({ statusCode: 200, message: "sucess" });
-            })
-            .catch(() => {
-              res.status(400).send(error.message);
-            });
+        try {
+          const imageURL = await uploadImage(data.image)
+          if (imageURL) {
+            await saveBlog({ ...data, image: imageURL, date: new Date().toLocaleDateString() })
+              .then(() => {
+                res.status(200).send({ statusCode: 200, message: "sucess" });
+              })
+              .catch((error) => {
+                res.status(400).send(error.message);
+              });
+          }
+        } catch (error) {
+          res.status(500).send(error.message)
         }
       } else {
         let data = { ...req.body, date: new Date().toLocaleDateString() };

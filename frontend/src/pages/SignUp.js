@@ -48,9 +48,13 @@ export default function SignUp() {
   const onGoogleSignIn = (e) => {
     e.preventDefault();
 
-    doSignInWithGoogle().catch((error) => {
+    doSignInWithGoogle().then( async (userInfo) => {
+      const uid = userInfo.uid;
+      const user = { name, email, uid };
+      await axios.post(`${process.env.REACT_APP_API_HOST}/api/user`, user);
+    }).catch((error) => {
       setErrorMessage(error.message);
-    });
+    })
   };
 
   useEffect(() => {

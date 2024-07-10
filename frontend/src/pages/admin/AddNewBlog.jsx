@@ -55,6 +55,7 @@ export default function AddNewBlog() {
           body: formData,
         })
           .then((response) => {
+            console.log(response);
             if (response.ok) {
               toast.success("Blog published Successfully!!");
             } else {
