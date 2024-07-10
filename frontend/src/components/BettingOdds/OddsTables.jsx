@@ -28,6 +28,7 @@ export default function OddsTables({ game }) {
       {
         headers: {
           "x-api-key": "3Qloi2Pj8b6HJ0jmSVoW77vBm3EkfqnD1XUo526p",
+          "Access-Control-Allow-Origin": '*'
         },
       }
     )
@@ -55,6 +56,7 @@ export default function OddsTables({ game }) {
       fetch(`https://api.bettingpros.com/v3/events?sport=${game}`, {
         headers: {
           "x-api-key": "3Qloi2Pj8b6HJ0jmSVoW77vBm3EkfqnD1XUo526p",
+          "Access-Control-Allow-Origin": "*"
         },
       })
         .then((res) => {
