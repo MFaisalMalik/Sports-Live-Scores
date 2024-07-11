@@ -15,48 +15,48 @@ import upload from "../utils/upload.js";
 const storage = getStorage();
 const db = getFirestore(firebase);
 
-export const publishBlog = (req, res, next) => {
-  upload(req, res, async (err) => {
-    if (err) {
-      res.status(400).send(err);
-    } else {
-      if (req.file) {
-        let data = {
-          image: req.file,
-          slug: req.body.slug,
-          title: req.body.title,
-          content: req.body.content,
-        };
-        //   // Upload image to storage and get image url first
-        const imageURL = await uploadImage(data.image);
-        if (imageURL) {
-          await saveBlog({ ...data, image: imageURL, date: new Date().toLocaleDateString() })
-            .then(() => {
-              res.status(200).send({ statusCode: 200, message: "sucess" });
-            })
-            .catch(() => {
-              res.status(400).send(error.message);
-            });
-        }
-      } else {
+export const publishBlog = async (req, res) => {
+  // upload(req, res, async (err) => {
+  //   if (err) {
+  //     res.status(400).send(err);
+  //   } else {
+      // if (req.file) {
+      //   let data = {
+      //     image: req.file,
+      //     slug: req.body.slug,
+      //     title: req.body.title,
+      //     content: req.body.content,
+      //   };
+      //   //   // Upload image to storage and get image url first
+      //   const imageURL = await uploadImage(data.image);
+      //   if (imageURL) {
+      //     await saveBlog({ ...data, image: imageURL, date: new Date().toLocaleDateString() })
+      //       .then(() => {
+      //         res.status(200).send({ statusCode: 200, message: "sucess" });
+      //       })
+      //       .catch(() => {
+      //         res.status(400).send(error.message);
+      //       });
+      //   }
+      // } else {
         let data = { ...req.body, date: new Date().toLocaleDateString() };
         await saveBlog(data)
           .then(() => {
-            res.status(200).send({ statusCode: 200, message: "sucess" });
+            res.status(200).send({ statusCode: 200, message: "success" });
           })
           .catch((error) => {
             res.status(400).send(error.message);
           });
-      }
-    }
-  });
+      // }
+    // }
+  // });
 };
 
-export const updateBlog = (req, res, next) => {
-  upload(req, res, async (err) => {
-    if (err) {
-      res.status(400).send(`58: ${err}`);
-    } else {
+export const updateBlog = async (req, res) => {
+  // upload(req, res, async (err) => {
+  //   if (err) {
+  //     res.status(400).send(`58: ${err}`);
+  //   } else {
       if (req.file) {
         let data = {
           image: req.file,
@@ -70,7 +70,7 @@ export const updateBlog = (req, res, next) => {
           if (imageURL) {
             await saveBlog({ ...data, image: imageURL, date: new Date().toLocaleDateString() })
               .then(() => {
-                res.status(200).send({ statusCode: 200, message: "sucess" });
+                res.status(200).send({ statusCode: 200, message: "success" });
               })
               .catch((error) => {
                 res.status(400).send(`76,${error.message}`);
@@ -83,14 +83,14 @@ export const updateBlog = (req, res, next) => {
         let data = { ...req.body, date: new Date().toLocaleDateString() };
         await saveBlog(data)
           .then(() => {
-            res.status(200).send({ statusCode: 200, message: "sucess" });
+            res.status(200).send({ statusCode: 200, message: "success" });
           })
           .catch((error) => {
             res.status(400).send(`89: ${error.message}`);
           });
       }
-    }
-  })
+  //   }
+  // })
 };
 
 const uploadImage = async (file) => {
@@ -114,7 +114,7 @@ const uploadImage = async (file) => {
       });
     return imageURL;
   } catch (error) {
-    console.log("117",error);
+    console.log(error);
   }
 };
 
@@ -122,7 +122,7 @@ const saveBlog = async (data) => {
   try {
     await setDoc(doc(db, "blogs", data.slug), data);
   } catch (error) {
-    console.log(error);
+    console.log("save error",error);
   }
 };
 
