@@ -25,7 +25,7 @@ export default function BlogCard({ image, title, slug, date }) {
     <div
       className="relative rounded-xl overflow-hidden border flex items-end justify-start w-full text-left bg-center bg-cover h-96"
       style={{
-        backgroundImage: `url(${image || '/images/no-image-available-icon-vector.jpg'})`,
+        backgroundImage: `url(${image || 'https://media.istockphoto.com/id/1198931639/photo/writing-a-blog-blogger-influencer-reading-text-on-screen.jpg?s=612x612&w=0&k=20&c=4FJ_fzzZYqBoGG-RY8fcohpaOKKwnnI-ik58cPy6t-g='})`,
       }}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/70 "></div>
