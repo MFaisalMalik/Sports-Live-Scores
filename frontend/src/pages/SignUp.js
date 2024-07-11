@@ -48,13 +48,25 @@ export default function SignUp() {
   const onGoogleSignIn = (e) => {
     e.preventDefault();
 
-    doSignInWithGoogle().then( async (userInfo) => {
-      const uid = userInfo.uid;
+    doSignInWithGoogle()
+      .then(async (userCredential) => {
+        await saveUser(userCredential);
+      })
+      .catch((error) => {
+        setErrorMessage(error.message);
+      });
+  };
+
+  const saveUser = async (userCredential) => {
+    try {
+      const uid = userCredential.user.uid;
+      let name = userCredential.user.displayName;
+      let email = userCredential.user.email;
       const user = { name, email, uid };
       await axios.post(`${process.env.REACT_APP_API_HOST}/api/user`, user);
-    }).catch((error) => {
-      setErrorMessage(error.message);
-    })
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -186,7 +198,10 @@ export default function SignUp() {
             </div>
 
             <div className="w-full flex justify-center">
-              <button onClick={onGoogleSignIn} className="flex items-center bg-white border border-gray-300 rounded-lg shadow-md px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+              <button
+                onClick={onGoogleSignIn}
+                className="flex items-center bg-white border border-gray-300 rounded-lg shadow-md px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+              >
                 <svg
                   className="h-6 w-6 mr-2"
                   xmlns="http://www.w3.org/2000/svg"

@@ -7,7 +7,7 @@ const __dirname = path.dirname(__filename);
 
 // Set up storage engine
 const storage = diskStorage({
-    destination: path.join(__dirname, '../uploads/'),
+    destination: './uploads/',
     filename: function (req, file, cb) {
         cb(null, file.fieldname + '-' + Date.now() + _extname(file.originalname));
     }

@@ -7,6 +7,8 @@ import {
   doSignInWithGoogle,
 } from "../firebase/auth";
 import { useAuth } from "../contexts/authContext";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -39,12 +41,28 @@ export default function SignIn() {
 
     setIsSigningIn(true);
     setIsSigningInGoogle(true);
-    doSignInWithGoogle().catch((error) => {
-      setErrorMessage(error.message);
-      setIsSigningIn(false);
-      setIsSigningInGoogle(false);
-    });
+    doSignInWithGoogle()
+      .then(async (userCredential) => {
+        await saveUser(userCredential)
+      })
+      .catch((error) => {
+        setErrorMessage(error.message);
+        setIsSigningIn(false);
+        setIsSigningInGoogle(false);
+      });
   };
+
+  const saveUser = async (userCredential) => {
+    try {
+      const uid = userCredential.user.uid;
+        let name = userCredential.user.displayName;
+        let email = userCredential.user.email;
+        const user = { name, email, uid };
+        await axios.post(`${process.env.REACT_APP_API_HOST}/api/user`, user);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   useEffect(() => {
     if (userLoggedIn) {
       navigate("/");
@@ -147,7 +165,10 @@ export default function SignIn() {
             </div>
 
             <div className=" w-full flex justify-center">
-              <button onClick={onGoogleSignIn} className="flex items-center bg-white border border-gray-300 rounded-lg shadow-md px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+              <button
+                onClick={onGoogleSignIn}
+                className="flex items-center bg-white border border-gray-300 rounded-lg shadow-md px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+              >
                 <svg
                   className="h-6 w-6 mr-2"
                   xmlns="http://www.w3.org/2000/svg"

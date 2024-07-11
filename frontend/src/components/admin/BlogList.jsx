@@ -67,7 +67,7 @@ export default function BlogList() {
         {blogs.length > 0 ? (
           blogs.map((item, i) => (
             <div key={i} className="flex gap-4">
-              <div className="min-w-32 h-20 overflow-hidden">
+              <div className="min-w-32 w-32 h-20 overflow-hidden">
                 <img
                   className="w-full h-full border rounded-lg object-fit object-cover"
                   src={
