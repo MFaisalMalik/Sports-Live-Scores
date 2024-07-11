@@ -55,7 +55,7 @@ export const publishBlog = (req, res, next) => {
 export const updateBlog = (req, res, next) => {
   upload(req, res, async (err) => {
     if (err) {
-      res.status(400).send(err);
+      res.status(400).send(`58: ${err}`);
     } else {
       if (req.file) {
         let data = {
@@ -73,11 +73,11 @@ export const updateBlog = (req, res, next) => {
                 res.status(200).send({ statusCode: 200, message: "sucess" });
               })
               .catch((error) => {
-                res.status(400).send(error.message);
+                res.status(400).send(`76,${error.message}`);
               });
           }
         } catch (error) {
-          res.status(500).send(error.message)
+          res.status(500).send(`${error.message}`)
         }
       } else {
         let data = { ...req.body, date: new Date().toLocaleDateString() };
@@ -86,11 +86,11 @@ export const updateBlog = (req, res, next) => {
             res.status(200).send({ statusCode: 200, message: "sucess" });
           })
           .catch((error) => {
-            res.status(400).send(error.message);
+            res.status(400).send(`89: ${error.message}`);
           });
       }
     }
-  });
+  })
 };
 
 const uploadImage = async (file) => {
@@ -110,11 +110,11 @@ const uploadImage = async (file) => {
         });
       })
       .catch((error) => {
-        console.log("uploadbytes", error.message);
+        console.log(`uploadbytes: ${error.message}`);
       });
     return imageURL;
   } catch (error) {
-    console.log(error);
+    console.log("117",error);
   }
 };
 
