@@ -16,15 +16,15 @@ export default function GameTable() {
   const { gameType, requestType } = useParams();
   const [gameStats, setGameStats] = useState(null);
   const gamesCodes = {
-    Baseball: "MLB",
-    Basketball: "NBA",
-    Football: "NFL",
-    Hockey: "NHL",
+    baseball: "MLB",
+    basketball: "NBA",
+    football: "NFL",
+    hockey: "NHL",
   };
 
   useEffect(() => {
     const fetchGameStats = async () => {
-      let url = `${process.env.REACT_APP_API_HOST}/api/games/${requestType}/${gamesCodes[gameType || "MLB"]}`;
+      let url = `${process.env.REACT_APP_API_HOST}/api/games/${requestType}/${gamesCodes[gameType] || "MLB"}`;
 
       if (requestType === "premium" && auth.currentUser) {
         const userId = auth.currentUser.uid;
