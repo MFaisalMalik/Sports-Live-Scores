@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 import fs from "fs";
 import { getDownloadURL, ref, uploadBytes, getStorage } from "firebase/storage";
-import upload from "../utils/upload.js";
+// import upload from "../utils/upload.js";
 
 const storage = getStorage();
 const db = getFirestore(firebase);
