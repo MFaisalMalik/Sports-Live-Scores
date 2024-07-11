@@ -28,7 +28,6 @@ export default function OddsTables({ game }) {
       {
         headers: {
           "x-api-key": "3Qloi2Pj8b6HJ0jmSVoW77vBm3EkfqnD1XUo526p",
-          "Access-Control-Allow-Origin": "*"
         },
       }
     )
@@ -56,7 +55,6 @@ export default function OddsTables({ game }) {
       fetch(`https://api.bettingpros.com/v3/events?sport=${game}`, {
         headers: {
           "x-api-key": "3Qloi2Pj8b6HJ0jmSVoW77vBm3EkfqnD1XUo526p",
-          "Access-Control-Allow-Origin": "*"
         },
       })
         .then((res) => {
@@ -100,23 +98,29 @@ export default function OddsTables({ game }) {
 
   useEffect(() => {
     const checkIfTouchedTop = () => {
-      if (elementRef.current?.getBoundingClientRect().top <= 0){
-        setTableStick(true)
+      if (elementRef.current?.getBoundingClientRect().top <= 0) {
+        setTableStick(true);
       } else {
-        setTableStick(false)
+        setTableStick(false);
       }
     };
 
-    window.addEventListener('scroll', checkIfTouchedTop);
-    return () => window.removeEventListener('scroll', checkIfTouchedTop);
+    window.addEventListener("scroll", checkIfTouchedTop);
+    return () => window.removeEventListener("scroll", checkIfTouchedTop);
   }, []);
 
   return noDataFound ? (
-    <h2 className="text-center font-medium">(No Data Found, check other games)</h2>
+    <h2 className="text-center font-medium">
+      (No Data Found, check other games)
+    </h2>
   ) : (
     <div className="max-w-screen-2xl mx-auto px-4">
       <div className="w-full">
-        <div ref={elementRef} style={{ maxHeight: tableSticked ? "100vh" : "max-content"}} className="w-full overflow-y-auto scrollbar-hide pb-10">
+        <div
+          ref={elementRef}
+          style={{ maxHeight: tableSticked ? "100vh" : "max-content" }}
+          className="w-full overflow-y-auto scrollbar-hide pb-10"
+        >
           {loading ? (
             <div className="">
               <Loader />
@@ -124,9 +128,7 @@ export default function OddsTables({ game }) {
           ) : (
             odds.offers.length > 0 && (
               <>
-                <TableHead
-                  tableHeadRef={tableHeadRef}
-                />
+                <TableHead tableHeadRef={tableHeadRef} />
                 {odds.offers.map((item) => (
                   <Match
                     eventIds={eventIds}
@@ -147,7 +149,10 @@ export default function OddsTables({ game }) {
 
 const TableHead = ({ tableHeadRef }) => {
   return (
-    <div ref={tableHeadRef} className={clsx("flex items-center w-max sticky top-0 z-20")}>
+    <div
+      ref={tableHeadRef}
+      className={clsx("flex items-center w-max sticky top-0 z-20")}
+    >
       <span className="sticky left-0 z-10 bg-blue-50 w-[140px] md:w-[300px] h-14"></span>
       <div className="flex gap-x-4 bg-blue-50 pr-2 py-2">
         <div className="w-28 md:w-32 h-12 md:h-10 font-black text-xs md:text-sm py-2 rounded-lg bg-gray-200 flex items-center justify-center">
