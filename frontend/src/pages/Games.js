@@ -50,13 +50,13 @@ export default function Games() {
               link={`/games-stats/${gameType}/free`}
               requestType="Free"
               bet="Game"
-              tagline="10 teams bets /week"
+              tagline="1 team bets /week"
             />
             <GameNPlayerCard
               link={`/players-stats/${gameType}/free`}
               requestType="Free"
               bet="Player"
-              tagline="10 players bets /week"
+              tagline="1 player bets /week"
             />
             <GameNPlayerCard
               link={`/games-stats/${gameType}/premium`}
