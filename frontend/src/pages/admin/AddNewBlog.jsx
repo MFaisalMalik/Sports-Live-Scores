@@ -40,23 +40,23 @@ export default function AddNewBlog() {
   };
 
   const handlePublish = async () => {
-    // const formData = new FormData();
-    // formData.append("title", title);
-    // formData.append("slug", slug);
-    // formData.append("content", content);
-    // if (images.length > 0) {
-    //   formData.append("image", images[0]);
-    // }
-    const data = {title, slug, content}
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("slug", slug);
+    formData.append("content", content);
+    if (images.length > 0) {
+      formData.append("image", images[0]);
+    }
+    // const data = {title, slug, content}
     if (slugAvailable) {
       setLoading(true);
       try {
         await fetch(`${apiHost}/api/blogs`, {
           method: "POST",
-          body: JSON.stringify(data),
-          headers: {
-            "Content-Type": 'application/json',
-          }
+          body: formData,
+          // headers: {
+          //   "Content-Type": 'application/json',
+          // }
         })
           .then((response) => {
             if (response.ok) {
@@ -189,7 +189,7 @@ export default function AddNewBlog() {
             </div>
           </div>
 
-          {/* <div className="mt-4">
+          <div className="mt-4">
             <label
               htmlFor={"blog-image"}
               className="text-sm text-zinc-700 font-semibold"
@@ -206,10 +206,10 @@ export default function AddNewBlog() {
                 type="file"
               />
             )}
-          </div> */}
+          </div>
 
           {/* BlogImages Display */}
-          {/* <BlogImages images={displayImages} removeImage={removeImage} /> */}
+          <BlogImages images={displayImages} removeImage={removeImage} />
 
           <label
             htmlFor="blog-content"

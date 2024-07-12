@@ -106,7 +106,7 @@ function Navbar() {
                       onClick={closeMobileMenu}
                       className="my-2 block border-b border-gray-600 py-1 font-semibold text-gray-500 hover:text-white/50 md:mx-2"
                     >
-                      BasketBall
+                      Basketball
                     </Link>
 
                     <Link
