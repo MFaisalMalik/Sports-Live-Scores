@@ -102,7 +102,7 @@ function Navbar() {
                     </Link>
 
                     <Link
-                      to="games/basketBall"
+                      to="games/basketball"
                       onClick={closeMobileMenu}
                       className="my-2 block border-b border-gray-600 py-1 font-semibold text-gray-500 hover:text-white/50 md:mx-2"
                     >
