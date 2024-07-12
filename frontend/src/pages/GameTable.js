@@ -16,15 +16,15 @@ export default function GameTable() {
   const { gameType, requestType } = useParams();
   const [gameStats, setGameStats] = useState(null);
   const gamesCodes = {
-    Baseball: "MLB",
-    Basketball: "NBA",
-    Football: "NFL",
-    Hockey: "NHL",
+    baseball: "MLB",
+    basketball: "NBA",
+    football: "NFL",
+    hockey: "NHL",
   };
 
   useEffect(() => {
     const fetchGameStats = async () => {
-      let url = `${process.env.REACT_APP_API_HOST}/api/games/${requestType}/${gamesCodes[gameType.at(0).toLocaleLowerCase() + gameType.slice(1)] || "MLB"}`;
+      let url = `${process.env.REACT_APP_API_HOST}/api/games/${requestType}/${gamesCodes[gameType] || "MLB"}`;
 
       if (requestType === "premium" && auth.currentUser) {
         const userId = auth.currentUser.uid;
@@ -55,7 +55,7 @@ export default function GameTable() {
     <main className="">
       <div className="container mx-auto px-4 md:px-8 lg:px-12">
         <h1 className="text-3xl font-bold text-center text-gray-800 mt-6 mb-4">
-          {`${gameType}`} Game Stats
+          {`${gameType.at(0).toUpperCase() + gameType.slice(1)}`} Game Stats
         </h1>
         <div>
           <TableContainer className="table-container" component={Paper}>

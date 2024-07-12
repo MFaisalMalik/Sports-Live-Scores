@@ -2,7 +2,7 @@ import React from "react";
 import "../App.css";
 import Footer from "../components/Footer2";
 import "./GamePages.css";
-import { useParams, useNavigate, useResolvedPath } from "react-router-dom";
+import { useParams, useResolvedPath } from "react-router-dom";
 import { auth } from "../firebase/firebase";
 import GameNPlayerCard from "../components/GameNPlayerCard";
 

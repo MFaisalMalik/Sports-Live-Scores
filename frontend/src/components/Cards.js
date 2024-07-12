@@ -15,24 +15,24 @@ function Cards() {
             <CardItem
               src="images/Football.jpg"
               text="Football"
-              path="/games/Football"
+              path="/games/football"
               id="left-card"
             />
             <CardItem
               src="images/Baseball.jpg"
               text="Baseball"
-              path="/games/Baseball"
+              path="/games/baseball"
             />
             <CardItem
               src="images/Basketball.jpg"
               text="Basketball"
-              path="/games/Basketball"
+              path="/games/basketball"
               id="left-card"
             />
             <CardItem
               src="images/Hockey.jpg"
               text="Hockey"
-              path="/games/Hockey"
+              path="/games/hockey"
             />
           </ul>
         </div>
