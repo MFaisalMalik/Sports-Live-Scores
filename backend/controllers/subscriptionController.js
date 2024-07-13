@@ -127,7 +127,7 @@ export const checkSubscriptionStatus = async (req, res) => {
 
     if (querySnapshot.empty) {
       res.status(404).json({ message: "Inactive Subscription" });
-      return; 
+      return;
     }
 
     const subscriptionData = querySnapshot.docs[0].data();
@@ -143,6 +143,61 @@ export const checkSubscriptionStatus = async (req, res) => {
   } catch (error) {
     console.error("Error processing PayPal webhook:", error);
     res.status(500).send("Internal Server Error");
+  }
+};
+
+export const cancelSubscription = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const subscriptionId = await getSubscriptionId(userId);
+
+    if (!subscriptionId) {
+      return res
+        .status(404)
+        .send(`No subscription found for userId: ${userId}`);
+    }
+
+    const response = await fetch(
+      `${config.paypalApiUrl}/v1/billing/subscriptions/${subscriptionId}/cancel`,
+      {
+        method: "post",
+        headers: {
+          Authorization: `Basic ${auth}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ reason: "Not satisfied with the service" }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to cancel subscription: ${response.statusText}`);
+    }
+
+    res.status(200).send("Subscription cancelled successfully");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+const getSubscriptionId = async (userId) => {
+  try {
+    const subscriptionsCollection = collection(db, "subscriptions");
+    const q = query(subscriptionsCollection, where("userId", "==", userId));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      return null;
+    }
+    const doc = querySnapshot.docs[0];
+    return doc.data().subscriptionId;
+  } catch (error) {
+    console.error(
+      `Error fetching subscription ID for userId ${userId}:`,
+      error
+    );
+    throw error;
   }
 };
 
