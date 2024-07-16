@@ -16,10 +16,10 @@ export default function PlayerTable() {
   const { gameType, requestType } = useParams();
   const [playerStats, setPlayerStats] = useState(null);
   const gamesCodes = {
-    Baseball: "MLB",
-    Basketball: "NBA",
-    Football: "NFL",
-    Hockey: "NHL",
+    baseball: "MLB",
+    basketball: "NBA",
+    football: "NFL",
+    hockey: "NHL",
   };
 
   useEffect(() => {
@@ -73,9 +73,11 @@ export default function PlayerTable() {
                   <TableCell align="center" sx={headerCellStyles}>
                     Bet
                   </TableCell>
-                  <TableCell align="center" sx={headerCellStyles}>
-                    Market
-                  </TableCell>
+                  {gameType != "baseball" && (
+                    <TableCell align="center" sx={headerCellStyles}>
+                      Market
+                    </TableCell>
+                  )}
                   <TableCell align="center" sx={headerCellStyles}>
                     Expected Value
                   </TableCell>
@@ -103,9 +105,11 @@ export default function PlayerTable() {
                       <TableCell align="center" sx={cellStyles}>
                         {game.Bet}
                       </TableCell>
-                      <TableCell align="center" sx={cellStyles}>
-                        {game.Market}
-                      </TableCell>
+                      {gameType != "baseball" && (
+                        <TableCell align="center" sx={cellStyles}>
+                          {game.Market}
+                        </TableCell>
+                      )}
                       <TableCell align="center" sx={cellStyles}>
                         {game["Expected Value"]}
                       </TableCell>
