@@ -128,10 +128,12 @@ export default function PlayerTable() {
                     <TableCell align="center" sx={headerCellStyles}>
                       Bet
                     </TableCell>
+                    {gameType != "baseball" && (
                     <TableCell align="center" sx={headerCellStyles}>
-                      Market
-                    </TableCell>
-                    <TableCell align="center" sx={headerCellStyles}>
+                        Market
+                      </TableCell>
+                    )}
+                  <TableCell align="center" sx={headerCellStyles}>
                       Expected Value
                     </TableCell>
                     <TableCell align="center" sx={headerCellStyles}>
@@ -157,9 +159,11 @@ export default function PlayerTable() {
                       <TableCell align="center" sx={cellStyles}>
                         {game.Bet}
                       </TableCell>
-                      <TableCell align="center" sx={cellStyles}>
-                        {game.Market}
-                      </TableCell>
+                      {gameType != "baseball" && (
+                        <TableCell align="center" sx={cellStyles}>
+                          {game.Market}
+                        </TableCell>
+                      )}
                       <TableCell align="center" sx={cellStyles}>
                         {game["Expected Value"]}
                       </TableCell>
