@@ -24,6 +24,7 @@ import BettingOds from "./pages/BettingOdds";
 import MatchUp from "./pages/MatchUp";
 import { ModalContextProvider } from "./contexts/modalContext";
 import Modal from "./components/commons/EmailVerifyModal";
+import Subscription from "./pages/user/Subscription";
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function App() {
             />
             <Route path="/players-stats/:gameType/:requestType" element={<PlayerTable />} />
           <Route path="/:game/matchup/:slug/:id" element={<MatchUp />} />
+          <Route path="/user/subscription" element={<Subscription />} />
           </Routes>
         </BrowserRouter>
       </ModalContextProvider>

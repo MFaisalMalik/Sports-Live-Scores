@@ -1,15 +1,17 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useClickOutside } from "../utils/useClickOutside";
 import { Link, useNavigate } from "react-router-dom";
 import { doSignOut } from "../firebase/auth";
 import { auth } from "../firebase/firebase";
 import ShieldExclaimation from "../components/commons/ShieldExclaimation";
 import ShieldCheck from "./commons/ShieldCheck";
-import { ModalContext, ModalContextProvider } from "../contexts/modalContext";
+import { ModalContext } from "../contexts/modalContext";
+import { apiHost } from "../utils";
 
 export default function UserDropdown() {
-  const {toggleModal} = ModalContext()
-  const [open, setOpen] = useState(false)
+  const { toggleModal } = ModalContext();
+  const [open, setOpen] = useState(false);
+  const [hasSubscription, setHasSubscription] = useState(false);
   const user = auth.currentUser;
   let userName = user.displayName ? user.displayName : user.email.split("@")[0];
   userName =
@@ -27,9 +29,34 @@ export default function UserDropdown() {
   };
   useClickOutside(wrapperRef, close);
 
+  useEffect(() => {
+    async function checkSubscription() {
+      await fetch(
+        `${apiHost}/api/subscription/check-subscription/${user.uid}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then(async (res) => {
+          if (res.ok) {
+            const data = await res.json();
+            setHasSubscription(true);
+          } else {
+            setHasSubscription(false);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    checkSubscription();
+  }, [user.uid]);
+
   return (
     <>
-   
       <div ref={wrapperRef} className="relative md:ml-4">
         <label
           tabIndex="0"
@@ -83,9 +110,7 @@ export default function UserDropdown() {
               </div>
               <div className="mt-2">
                 {user.emailVerified ? (
-                  <div
-                    className="bg-green-100 py-1 px-2 w-full rounded-lg text-center text-green-600 font-medium text-xs"
-                  >
+                  <div className="bg-green-100 py-1 px-2 w-full rounded-lg text-center text-green-600 font-medium text-xs">
                     {" "}
                     <ShieldCheck className="size-4 inline stroke-2" /> Email
                     Verified
@@ -104,25 +129,29 @@ export default function UserDropdown() {
             </div>
             <div aria-label="navigation" className="py-2">
               <nav className="grid gap-1">
-                <Link
-                  to="/user/subscriptions"
-                  className="flex items-center leading-6 space-x-3 py-3 px-4 w-full text-lg text-gray-600 focus:outline-none hover:bg-gray-100 rounded-md"
-                >
-                  <svg
-                    className="w-7 h-7"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
+                {hasSubscription && (
+                  <Link
+                    to="/user/subscription"
+                    onClick={close}
+                    className="flex items-center leading-6 space-x-3 py-3 px-4 w-full text-lg text-gray-500 focus:outline-none hover:bg-gray-100 rounded-md"
                   >
-                    <path d="M3 5C3 3.89543 3.89543 3 5 3H9C10.1046 3 11 3.89543 11 5V9C11 10.1046 10.1046 11 9 11H5C3.89543 11 3 10.1046 3 9V5ZM9 5H5V9H9V5Z" />
-                    <path d="M3 15C3 13.8954 3.89543 13 5 13H9C10.1046 13 11 13.8954 11 15V19C11 20.1046 10.1046 21 9 21H5C3.89543 21 3 20.1046 3 19V15ZM9 15H5V19H9V15Z" />
-                    <path d="M13 5C13 3.89543 13.8954 3 15 3H19C20.1046 3 21 3.89543 21 5V9C21 10.1046 20.1046 11 19 11H15C13.8954 11 13 10.1046 13 9V5ZM19 5H15V9H19V5Z" />
-                    <path d="M13 15C13 13.8954 13.8954 13 15 13H19C20.1046 13 21 13.8954 21 15V19C21 20.1046 20.1046 21 19 21H15C13.8954 21 13 20.1046 13 19V15ZM19 15H15V19H19V15Z" />
-                  </svg>
-                  <span>Subscriptions</span>
-                </Link>
+                    <svg
+                      className="w-7 h-7"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M3 5C3 3.89543 3.89543 3 5 3H9C10.1046 3 11 3.89543 11 5V9C11 10.1046 10.1046 11 9 11H5C3.89543 11 3 10.1046 3 9V5ZM9 5H5V9H9V5Z" />
+                      <path d="M3 15C3 13.8954 3.89543 13 5 13H9C10.1046 13 11 13.8954 11 15V19C11 20.1046 10.1046 21 9 21H5C3.89543 21 3 20.1046 3 19V15ZM9 15H5V19H9V15Z" />
+                      <path d="M13 5C13 3.89543 13.8954 3 15 3H19C20.1046 3 21 3.89543 21 5V9C21 10.1046 20.1046 11 19 11H15C13.8954 11 13 10.1046 13 9V5ZM19 5H15V9H19V5Z" />
+                      <path d="M13 15C13 13.8954 13.8954 13 15 13H19C20.1046 13 21 13.8954 21 15V19C21 20.1046 20.1046 21 19 21H15C13.8954 21 13 20.1046 13 19V15ZM19 15H15V19H19V15Z" />
+                    </svg>
+                    <span>Subscription</span>
+                  </Link>
+                )}
                 <Link
                   to="#"
-                  className="flex items-center leading-6 space-x-3 py-3 px-4 w-full text-lg text-gray-600 focus:outline-none hover:bg-gray-100 rounded-md"
+                  onClick={close}
+                  className="flex items-center leading-6 space-x-3 py-3 px-4 w-full text-lg text-gray-500 focus:outline-none hover:bg-gray-100 rounded-md"
                 >
                   <svg
                     className="w-7 h-7"
@@ -147,7 +176,7 @@ export default function UserDropdown() {
                     navigate("/", true);
                   });
                 }}
-                className="flex items-center space-x-3 py-3 px-4 w-full leading-6 text-lg text-gray-600 focus:outline-none hover:bg-gray-100 rounded-md"
+                className="flex items-center space-x-3 py-3 px-4 w-full leading-6 text-lg text-gray-500 focus:outline-none hover:bg-gray-100 rounded-md"
               >
                 <svg
                   className="w-7 h-7"
@@ -170,4 +199,3 @@ export default function UserDropdown() {
     </>
   );
 }
-

@@ -8,8 +8,6 @@ import GameNPlayerCard from "../components/GameNPlayerCard";
 
 export default function Games() {
   const { gameType } = useParams();
-  const imageUrl = `/images/${gameType}-cover.jpg`;
-  // const navigate = useNavigate()
   const { pathname } = useResolvedPath()
 
   const getLink = (state, game, type) => {
@@ -29,8 +27,8 @@ export default function Games() {
   return (
     <>
       <div
-        className="h-[400px] bg-center bg-cover bg-no-repeat"
-        style={{ backgroundImage: `url(${imageUrl})` }}
+        className="h-[400px] bg-[var(--navbar-color)] bg-center bg-cover bg-no-repeat transition-all"
+        style={{ backgroundImage: `url(/images/${gameType}-cover.jpg)` }}
       >
         <div className="w-full h-full bg-black/20 flex items-center">
           <div className="container mx-auto px-10 ">

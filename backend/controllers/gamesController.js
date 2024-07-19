@@ -7,6 +7,10 @@ import {
   getDocs,
   where,
   query,
+  limit,
+  startAfter,
+  orderBy,
+  getCountFromServer,
 } from "firebase/firestore";
 
 const db = getFirestore(firebase);
@@ -41,7 +45,8 @@ const getFreeStats = async (req, res, statsType) => {
 
 const getPremiumStats = async (req, res, statsType) => {
   try {
-    const { userId } = req.query;
+    const { userId, page, per_page, page_action, after_this, before_this } =
+      req.query;
     const { gameType } = req.params;
 
     if (!gameTypes.includes(gameType)) {
@@ -61,18 +66,59 @@ const getPremiumStats = async (req, res, statsType) => {
     }
 
     const statsCollection = collection(db, `${statsType} Collection`);
-    const querySnapshot = await getDocs(
+    let queryRef;
+    if (page > 1) {
+      if (page_action === "NEXT") {
+        queryRef = query(
+          statsCollection,
+          where("Type", "==", gameType),
+          limit(per_page ?? 5),
+          orderBy("Win Probability"),
+          startAfter(after_this)
+        );
+      }
+      if (page_action === "PREVIOUS") {
+        queryRef = query(
+          statsCollection,
+          where("Type", "==", gameType),
+          limit(per_page ?? 5),
+          orderBy("Win Probability"),
+          startAfter(before_this)
+        );
+      }
+    } else {
+      queryRef = query(
+        statsCollection,
+        where("Type", "==", gameType),
+        limit(per_page ?? 5),
+        orderBy("Win Probability")
+      );
+    }
+    const querySnapshot = await getDocs(queryRef);
+    const countSnapshot = await getCountFromServer(
       query(statsCollection, where("Type", "==", gameType))
     );
+    const count = countSnapshot.data().count;
 
     if (querySnapshot.empty) {
-      return res.status(200).json({ data: [] });
+      return res
+        .status(200)
+        .json({
+          data: [],
+          count,
+          afterThis: after_this,
+          beforeThis: before_this,
+        });
     }
 
     const stats = querySnapshot.docs.map((doc) => {
       return { ...doc.data(), id: doc.id };
     });
-    res.status(200).json({ data: stats });
+    // console.log(querySnapshot.docs);
+    // console.log(countSnapshot.data().count);
+    const afterThis = stats[stats.length - 1].id;
+    const beforeThis = stats[0].id;
+    res.status(200).json({ data: stats, count, afterThis, beforeThis });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

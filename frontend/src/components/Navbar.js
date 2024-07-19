@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Button } from "./Button";
-import { Link, useNavigate, useResolvedPath } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useResolvedPath } from "react-router-dom";
 import { useAuth } from "../contexts/authContext";
-import { doSignOut } from "../firebase/auth";
 import "./Navbar.css";
 import CrossIcon from "./commons/CrossIcon";
 import BarsIcon from "./commons/BarsIcon";
@@ -11,7 +9,6 @@ import UserDropdown from "./UserDropdown";
 
 function Navbar() {
   const { userLoggedIn } = useAuth();
-  const navigate = useNavigate();
   const { pathname } = useResolvedPath();
 
   const [click, setClick] = useState(false);
