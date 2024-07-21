@@ -23,8 +23,11 @@ import { ToastContainer } from "react-toastify";
 import BettingOds from "./pages/BettingOdds";
 import MatchUp from "./pages/MatchUp";
 import { ModalContextProvider } from "./contexts/modalContext";
-import Modal from "./components/commons/EmailVerifyModal";
+import EmailVerifyModal from "./components/commons/EmailVerifyModal";
+import CancelSubModal from "./components/commons/CancelSubVerifyModal";
 import Subscription from "./pages/user/Subscription";
+import PaymentSuccess from "./pages/user/PaymentSuccess";
+import PaymentError from "./pages/user/PaymentError";
 
 function App() {
   return (
@@ -34,7 +37,8 @@ function App() {
           <Navbar />
           <ScrollToTop />
           <ToastContainer />
-          <Modal />
+          <EmailVerifyModal />
+          <CancelSubModal />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/blogs" element={<Blogs />} />
@@ -57,6 +61,8 @@ function App() {
             <Route path="/players-stats/:gameType/:requestType" element={<PlayerTable />} />
           <Route path="/:game/matchup/:slug/:id" element={<MatchUp />} />
           <Route path="/user/subscription" element={<Subscription />} />
+          <Route path="/success-subscription" element={<PaymentSuccess />} />
+          <Route path="/cancel-subscription" element={<PaymentError />} />
           </Routes>
         </BrowserRouter>
       </ModalContextProvider>

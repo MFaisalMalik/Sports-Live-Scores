@@ -3,13 +3,18 @@ import { createContext, useContext, useState } from "react";
 const context = createContext();
 
 export function ModalContextProvider({ children }) {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [emailModalOpen, setEmailModalOpen] = useState(false);
+  const [cancelSubModalOpen, setCancelSubModalOpen] = useState(false);
 
-  function toggleModal() {
-    setModalOpen(!modalOpen);
+  function toggleEmailModal() {
+    setEmailModalOpen(!emailModalOpen);
+  }
+
+  function toggleCancelSubModal() {
+    setCancelSubModalOpen(!cancelSubModalOpen);
   }
   return (
-    <context.Provider value={{ modalOpen, setModalOpen, toggleModal }}>
+    <context.Provider value={{ emailModalOpen, setEmailModalOpen, toggleEmailModal, cancelSubModalOpen, setCancelSubModalOpen, toggleCancelSubModal }}>
       {children}
     </context.Provider>
   );

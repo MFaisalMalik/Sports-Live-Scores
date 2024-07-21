@@ -107,14 +107,19 @@ export default function GameTable() {
     color: "#4b5563",
   };
 
- 
+  const date = new Date().toLocaleDateString('en-US', {
+    month: 'short',
+    day: "2-digit",
+    year: "numeric"
+  })
 
   return (
     <main className="min-h-screen">
       <div className="container mx-auto px-4 md:px-8 lg:px-12">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mt-6 mb-4">
+        <h1 className="text-3xl font-bold text-center text-gray-800 mt-6 mb-2">
           {`${gameType.at(0).toUpperCase() + gameType.slice(1)}`} Game Stats
         </h1>
+        <p className="text-center font-bold mb-4">{date}</p>
         <div>
           {gameStats ? (
             <TableContainer className="table-container" component={Paper}>

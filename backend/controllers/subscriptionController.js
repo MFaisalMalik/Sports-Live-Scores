@@ -7,6 +7,7 @@ import {
   addDoc,
   updateDoc,
   getDocs,
+  deleteDoc,
   doc,
   Timestamp,
   where,
@@ -93,28 +94,6 @@ export const subscribe = async (req, res) => {
   }
 };
 
-export const handlePaymentWebhook = async (req, res) => {
-  const isValid = await verifyWebhook(req);
-
-  if (!isValid) {
-    console.error("Invalid webhook signature");
-    res.status(400).send("Invalid webhook signature");
-  }
-
-  try {
-    const data = req.body;
-    if (data.event_type !== "PAYMENT.SALE.COMPLETED") {
-      console.log("Ignoring webhook with event type:", data.event_type);
-      return res.sendStatus(200);
-    }
-
-    activateSubscription(data);
-    return res.sendStatus(200);
-  } catch (error) {
-    console.error("Error processing PayPal webhook:", error);
-    res.status(500).send("Internal Server Error");
-  }
-};
 
 export const checkSubscriptionStatus = async (req, res) => {
   try {
@@ -146,6 +125,44 @@ export const checkSubscriptionStatus = async (req, res) => {
   }
 };
 
+
+export const getSubscriptionData = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const subscriptionsCollection = collection(db, "subscriptions");
+    const querySnapshot = await getDocs(
+      query(subscriptionsCollection, where("userId", "==", userId))
+    );
+
+    if (querySnapshot.empty) {
+      res.status(404).json({ message: "Inactive Subscription" });
+      return;
+    }
+
+    const subscriptionData = querySnapshot.docs[0].data();
+
+    res.status(200).json({ data: subscriptionData });
+  } catch (error) {
+    console.error("Error processing PayPal webhook:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+export const removeSubscriptionData = async (userId) => {
+  try {
+
+    const subscriptionsCollection = collection(db, "subscriptions");
+    await deleteDoc(
+      query(subscriptionsCollection, where("userId", "==", userId))
+    );
+
+    return { message: 'Subscription successfully deleted' }
+  } catch (error) {
+    return Error ("Internal Server Error")
+  }
+};
+
 export const cancelSubscription = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -172,9 +189,15 @@ export const cancelSubscription = async (req, res) => {
 
     if (!response.ok) {
       throw new Error(`Failed to cancel subscription: ${response.statusText}`);
+    } else {
+      try {
+        await removeSubscriptionData(userId)
+      } catch (error) {
+        console.log(error)
+      }
     }
 
-    res.status(200).send("Subscription cancelled successfully");
+    res.status(200).send("Subscription cancelled successfully!");
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
@@ -198,6 +221,33 @@ const getSubscriptionId = async (userId) => {
       error
     );
     throw error;
+  }
+};
+
+export const handlePaymentWebhook = async (req, res) => {
+  console.log(req.body)
+  const isValid = await verifyWebhook(req);
+
+  if (!isValid) {
+    console.error("Invalid webhook signature");
+    res.status(400).send("Invalid webhook signature");
+  }
+
+  try {
+    const data = req.body;
+    if (data.event_type !== "PAYMENT.SALE.COMPLETED") {
+      console.log("Ignoring webhook with event type:", data.event_type);
+      return res.sendStatus(200);
+    } else {
+      await activateSubscription(data).then(()=> {
+        return res.sendStatus(200);
+      }).catch(()=>{
+        return res.sendStatus(500)
+      })
+    }
+  } catch (error) {
+    console.error("Error processing PayPal webhook:", error);
+    res.status(500).send("Internal Server Error");
   }
 };
 
@@ -235,22 +285,26 @@ const verifyWebhook = async (req) => {
 
 const activateSubscription = async (data) => {
   const payload = createSubscriptionPayload(data);
-
-  const subscriptionsCollection = collection(db, "subscriptions");
-  const querySnapshot = await getDocs(
-    query(subscriptionsCollection, where("userId", "==", payload.userId))
-  );
-
-  if (querySnapshot.empty) {
-    await addDoc(subscriptionsCollection, payload);
-    console.log("Subscription activated successfully");
-    return;
+  try {
+    const subscriptionsCollection = collection(db, "subscriptions");
+    const querySnapshot = await getDocs(
+      query(subscriptionsCollection, where("userId", "==", payload.userId))
+    );
+    if (querySnapshot.empty) {
+      await addDoc(subscriptionsCollection, payload);
+      console.log("Subscription activated successfully");
+      return;
+    } else {
+      const docId = querySnapshot.docs[0].id;
+      const subscriptionDoc = doc(db, "subscriptions", docId);
+      await updateDoc(subscriptionDoc, payload);
+      console.log("Updated subscription for userId: ", payload.userId);
+      return;
+    }
+    
+  } catch (error) {
+    console.log(error)
   }
-
-  const docId = querySnapshot.docs[0].id;
-  const subscriptionDoc = doc(db, "subscriptions", docId);
-  await updateDoc(subscriptionDoc, payload);
-  console.log("Updated subscription for userId: ", payload.userId);
 };
 
 const createSubscriptionPayload = (data) => {

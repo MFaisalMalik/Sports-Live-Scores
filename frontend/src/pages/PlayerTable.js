@@ -1,11 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import React from "react";
-import {
-  useLocation,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   TableContainer,
   Table,
@@ -17,11 +12,10 @@ import {
   TablePagination,
 } from "@mui/material";
 import { auth } from "../firebase/firebase";
-import { apiHost, siteHost } from "../utils";
+import { apiHost } from "../utils";
 import { Loader } from "./LiveScores";
 
 export default function PlayerTable() {
-
   const { gameType, requestType } = useParams();
   const [playerStats, setPlayerStats] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
@@ -107,12 +101,19 @@ export default function PlayerTable() {
     .filter((num) => count >= num)
     .map((num) => num);
 
+  const date = new Date().toLocaleDateString("en-US", {
+    month: "short",
+    day: "2-digit",
+    year: "numeric",
+  });
+
   return (
     <main className="min-h-screen">
       <div className="container mx-auto px-4 md:px-8 lg:px-12">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mt-6 mb-4">
+        <h1 className="text-3xl font-bold text-center text-gray-800 mt-6 mb-2">
           {`${gameType.at(0).toUpperCase() + gameType.slice(1)}`} Player Stats
         </h1>
+        <p className="text-center font-bold mb-4">{date}</p>
         <div>
           {playerStats ? (
             <TableContainer className="table-container" component={Paper}>
@@ -129,11 +130,11 @@ export default function PlayerTable() {
                       Bet
                     </TableCell>
                     {gameType != "baseball" && (
-                    <TableCell align="center" sx={headerCellStyles}>
+                      <TableCell align="center" sx={headerCellStyles}>
                         Market
                       </TableCell>
                     )}
-                  <TableCell align="center" sx={headerCellStyles}>
+                    <TableCell align="center" sx={headerCellStyles}>
                       Expected Value
                     </TableCell>
                     <TableCell align="center" sx={headerCellStyles}>
@@ -180,21 +181,19 @@ export default function PlayerTable() {
                   ))}
                 </TableBody>
               </Table>
-              {
-                requestType === "premium" && (
-                  <TablePagination
-                    rowsPerPage={rowsPerPage}
-                    count={count}
-                    page={currentPage}
-                    onPageChange={(_, page) => handlePageChange(page)}
-                    rowsPerPageOptions={perPageOptions}
-                    onRowsPerPageChange={({ target }) =>
-                      setRowsPerPage(target.value)
-                    }
-                    component="div"
-                  />
-                )
-              }
+              {requestType === "premium" && (
+                <TablePagination
+                  rowsPerPage={rowsPerPage}
+                  count={count}
+                  page={currentPage}
+                  onPageChange={(_, page) => handlePageChange(page)}
+                  rowsPerPageOptions={perPageOptions}
+                  onRowsPerPageChange={({ target }) =>
+                    setRowsPerPage(target.value)
+                  }
+                  component="div"
+                />
+              )}
             </TableContainer>
           ) : (
             <div>

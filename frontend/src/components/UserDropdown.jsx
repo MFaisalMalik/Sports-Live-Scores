@@ -9,7 +9,7 @@ import { ModalContext } from "../contexts/modalContext";
 import { apiHost } from "../utils";
 
 export default function UserDropdown() {
-  const { toggleModal } = ModalContext();
+  const { toggleEmailModal } = ModalContext();
   const [open, setOpen] = useState(false);
   const [hasSubscription, setHasSubscription] = useState(false);
   const user = auth.currentUser;
@@ -117,7 +117,7 @@ export default function UserDropdown() {
                   </div>
                 ) : (
                   <button
-                    onClick={toggleModal}
+                    onClick={toggleEmailModal}
                     className="bg-red-100 py-1 px-2 w-full rounded-lg text-center text-red-600 font-medium text-xs"
                   >
                     {" "}

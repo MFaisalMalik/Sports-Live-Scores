@@ -5,9 +5,13 @@ import Footer from "../components/Footer2";
 
 export default function LiveScores() {
   const [football, setFootball] = useState([]);
+  const [footballDisplay, setFootballDisplay] = useState([]);
   const [basketball, setBasketball] = useState([]);
+  const [basketballDisplay, setBasketballDisplay] = useState([]);
   const [baseball, setBaseball] = useState([]);
+  const [baseballDisplay, setBaseballDisplay] = useState([]);
   const [hockey, setHockey] = useState([]);
+  const [hockeyDisplay, setHockeyDisplay] = useState([]);
 
   const [nflLoading, setnflLoading] = useState(true);
   const [nbaLoading, setnbaLoading] = useState(true);
@@ -110,12 +114,32 @@ export default function LiveScores() {
       const interval = setInterval(async () => {
         await getdata();
       }, 5000);
-
       return () => clearInterval(interval); // Cleanup interval on component unmount
     };
 
     fetchData();
   }, []);
+
+
+  useEffect(()=> {
+    if (footballDisplay.length === 0) {
+      setFootballDisplay(football)
+    }
+  }, [football])
+
+  useEffect(()=> {
+    if (baseballDisplay.length === 0) {
+      setBaseballDisplay(baseball)
+    }
+  }, [baseball])
+
+  useEffect(()=> {
+
+  }, [basketball])
+
+  useEffect(()=> {
+
+  }, [hockey])
 
   var settings = {
     infinite: false,
@@ -123,7 +147,6 @@ export default function LiveScores() {
     slidesToShow: 4,
     slidesToScroll: 1,
     initialSlide: 0,
-    autoPlay: true,
     className: "relative px-4 lg:px-0",
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
@@ -153,11 +176,12 @@ export default function LiveScores() {
   };
 
   function compare(a, b) {
-    if (a.status.type === "onprogress") {
+    if (a?.status?.type === "onprogress") {
       return -1;
     }
     return 1;
   }
+
   return (
     <>
       <main className="bg-blue-100 min-h-screen">
@@ -181,7 +205,9 @@ export default function LiveScores() {
                   </div>
                 ) : (
                   <Slider {...settings}>
-                    {football?.sort(compare)?.map((item, i) => {
+                    {footballDisplay?.sort(compare)?.map((item, i) => {
+                      // let newItem = football?.sort(compare)[i]
+                      // console.log(newItem);
                       return <SingleMatch key={i} game="nfl" {...item} />;
                     })}
                   </Slider>
@@ -208,8 +234,14 @@ export default function LiveScores() {
                   </div>
                 ) : (
                   <Slider {...settings}>
-                    {baseball?.sort(compare)?.map((item, i) => {
-                      return <SingleMatch key={i} game="mlb" {...item} />;
+                    {baseballDisplay?.sort(compare)?.map((item, i) => {
+                      let data = item
+                      let newItem = baseball.length > 1 && baseball.sort(compare)[i]
+                      
+                      if (JSON.stringify(item) !== JSON.stringify(newItem)){
+                        data = newItem
+                      }
+                      return <SingleMatch key={i} game="mlb" {...data} />;
                     })}
                   </Slider>
                 )}
@@ -354,16 +386,16 @@ const SingleMatch = (props) => {
           <div className="flex items-center">
             <img
               className="w-6 h-6"
-              src={`https://api.sofascore.app/api/v1/team/${homeTeam.id}/image`}
+              src={`https://api.sofascore.app/api/v1/team/${homeTeam?.id}/image`}
               alt=""
             />
             <div className="whitespace-nowrap">
               <p className="text-sm font-bold ml-1 inline">
                 {homeTeam?.nameCode}
               </p>
-              {status.description === "Ended" && (
+              {status?.description === "Ended" && (
                 <span className="ml-2 text-gray-500 text-xs font-semibold">
-                  {homeScore.display}
+                  {homeScore?.display}
                 </span>
               )}
             </div>
@@ -371,7 +403,7 @@ const SingleMatch = (props) => {
 
           <div className="ml-10">
             <span className="text-xs whitespace-nowrap">
-              {homeScore.current || "n/a"}
+              {homeScore?.current || "n/a"}
             </span>
           </div>
         </div>
@@ -379,27 +411,27 @@ const SingleMatch = (props) => {
           <div className="flex items-center">
             <img
               className="w-6 h-6"
-              src={`https://api.sofascore.app/api/v1/team/${awayTeam.id}/image`}
+              src={`https://api.sofascore.app/api/v1/team/${awayTeam?.id}/image`}
               alt=""
             />
             <div className="whitespace-nowrap flex items-center">
               <p className="text-sm font-bold ml-1">{awayTeam?.nameCode}</p>
-              {status.description === "Ended" && (
+              {status?.description === "Ended" && (
                 <span className="ml-2 text-gray-500 text-xs font-semibold">
-                  {awayScore.display}
+                  {awayScore?.display}
                 </span>
               )}
             </div>
           </div>
           <div className="ml-10">
             <span className="text-xs whitespace-nowrap">
-              {awayScore.current || "n/a"}
+              {awayScore?.current || "n/a"}
             </span>
           </div>
         </div>
         <div className="mt-1 flex justify-between items-center">
           <div className="flex items-center">
-            {status.type === "onprogress" ? (
+            {status?.type === "onprogress" ? (
               <div className="flex items-center gap-x-1">
                 <div className="flex justify-center items-center">
                   <div className="size-1.5 absolute animate-ping bg-blue-400 rounded-full" />
@@ -426,7 +458,7 @@ const SingleMatch = (props) => {
           </div>
           <div className="ml-10">
             <span className="whitespace-nowrap text-xs font-bold">
-              {status.description}
+              {status?.description}
             </span>
           </div>
         </div>

@@ -12,7 +12,7 @@ export default function PayPalButton({
 }) {
   const navigate = useNavigate();
   const { pathname } = useResolvedPath();
-  const {toggleModal} = ModalContext()
+  const {toggleEmailModal} = ModalContext()
 
 
   const createSubscription = async (uid) => {
@@ -48,7 +48,7 @@ export default function PayPalButton({
     } else if (user && !user.emailVerified) {
       toast.warning("Please verify your email.");
       setTimeout(()=> {
-        toggleModal()
+        toggleEmailModal()
       }, 1000)
     } else {
       toast.warning("Please Login first!");

@@ -1,27 +1,41 @@
-import { sendEmailVerification } from "firebase/auth";
 import { toast } from "react-toastify";
 import { auth } from "../../firebase/firebase";
 import { ModalContext } from "../../contexts/modalContext";
+import { apiHost } from "../../utils";
 
-export default function EmailVerifyModal () {
-  const user = auth.currentUser
-  const {emailModalOpen, toggleEmailModal} = ModalContext()
+export default function CancelSubModal() {
+  const user = auth.currentUser;
+  const { cancelSubModalOpen, toggleCancelSubModal } = ModalContext();
 
-
-  const sendVerfication = () => {
-    try {
-      sendEmailVerification(user)
-      toast.success("Link Sent! Please check your email.")
-      toggleEmailModal()
-    } catch (error) {
-      console.log(error);
-      toast.error(error.message)
-    }
-  }
- 
+  const cancleSubscription = () => {
+    fetch(`${apiHost}/api/subscription/unsubscribe/${user.uid}`)
+      .then((response) => {
+        if (response.ok) {
+          console.log(response);
+          toast.success(response.message);
+          toggleCancelSubModal();
+        }
+        else {
+          toast.error("something went wrong.")
+          toggleCancelSubModal();
+          console.log(response)
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(error.message);
+        toggleCancelSubModal();
+      });
+  };
 
   return (
-    <div className={`fixed z-50 inset-0 overflow-y-auto transition ${emailModalOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}>
+    <div
+      className={`fixed z-50 inset-0 overflow-y-auto transition ${
+        cancelSubModalOpen
+          ? "opacity-100 pointer-events-auto"
+          : "opacity-0 pointer-events-none"
+      }`}
+    >
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div className="fixed inset-0 transition-opacity" aria-hidden="true">
           <div className="absolute inset-0 bg-gray-800/75"></div>
@@ -35,7 +49,7 @@ export default function EmailVerifyModal () {
         </span>
 
         <div
-          className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6"
+          className="inline-block align-middle bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6"
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-headline"
@@ -44,7 +58,7 @@ export default function EmailVerifyModal () {
             <button
               type="button"
               data-behavior="cancel"
-              onClick={toggleEmailModal}
+              onClick={toggleCancelSubModal}
               className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               <span className="sr-only">Close</span>
@@ -66,9 +80,9 @@ export default function EmailVerifyModal () {
             </button>
           </div>
           <div className="sm:flex sm:items-start">
-            <button className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-amber-100 sm:mx-0 sm:h-10 sm:w-10">
+            <span className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
               <svg
-                className="h-6 w-6 text-amber-600"
+                className="h-6 w-6 text-red-600"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -82,16 +96,20 @@ export default function EmailVerifyModal () {
                   d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
                 />
               </svg>
-            </button>
+            </span>
             <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
               <h3
-                className="text-lg leading-6 font-medium text-gray-900"
+                className="text-lg leading-6 font-medium text-red-600"
                 id="modal-headline"
               >
-                Email Verification.
+                Cancel subscription.
               </h3>
               <div className="mt-2">
-                <p className="text-sm text-gray-500">We will send a verification link to {user?.email}.</p>
+                <p className="text-sm text-gray-500">
+                  Are you really sure want to{" "}
+                  <span className="text-red-500">cancel</span> your
+                  subscription?
+                </p>
               </div>
             </div>
           </div>
@@ -99,22 +117,22 @@ export default function EmailVerifyModal () {
             <button
               type="button"
               data-behavior="send"
-              onClick={sendVerfication}
-              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+              onClick={cancleSubscription}
+              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
             >
-              Send
+              Yes
             </button>
             <button
               type="button"
               data-behavior="cancel"
-              onClick={toggleEmailModal}
-              className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:w-auto sm:text-sm"
+              onClick={toggleCancelSubModal}
+              className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:w-auto sm:text-sm"
             >
-              Cancel
+              No
             </button>
           </div>
         </div>
       </div>
     </div>
   );
-};
+}

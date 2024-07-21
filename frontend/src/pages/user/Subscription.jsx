@@ -1,23 +1,60 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { auth } from "../../firebase/firebase";
+import { apiHost } from "../../utils";
+import formatDate from "../../utils/formatData";
+import { ModalContext } from "../../contexts/modalContext";
 
 export default function Subscription() {
+  const [data, setData] = useState();
+  const { toggleCancelSubModal } = ModalContext();
+
+  async function fetchData() {
+    await fetch(`${apiHost}/api/subscription/data/${auth.currentUser.uid}`)
+      .then(async (response) => {
+        const result = await response.json();
+        setData(result.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+
+  async function cancleSubscription() {
+    toggleCancelSubModal()
+  }
+ 
   return (
     <main className="bg-blue-100 min-h-screen">
       <div className="container mx-auto px-4 md:px-8 lg:px-12 py-16">
         <div className="p-4">
+          <h1 className="text-2xl text-center leading-8 font-extrabold text-gray-900 sm:text-3xl sm:leading-9">Subscription</h1>
           <div className="max-w-lg mx-auto rounded-lg overflow-hidden lg:max-w-none lg:flex my-10 shadow-blue border-4 border-blue-400">
             <div className="py-8 px-6 text-center bg-gray-50 lg:flex-shrink-0 lg:flex lg:flex-col lg:justify-center lg:p-12">
               <p className="text-xl leading-6 font-medium text-gray-900 lg:max-w-xs lg:mx-auto mb-0 lg:mb-6">
                 A single payment for your entire team
               </p>
               <div className="my-10 lg:my-6 flex items-baseline justify-center text-5xl leading-none font-extrabold text-gray-900">
-                <span className="font-brown">$19</span>
+                <span className="font-brown">${data?.amount ?? "00"}</span>
                 <span className="text-xl leading-7 font-medium text-gray-500 font-ttnorms">
-                  /month
+                  {data?.subscriptionType === "monthly" ? "/month" : "/year"}
                 </span>
               </div>
-              <div className="lg:mt-6">
+              {data?.subscriptionStartDate && (
+                <div className="text-sm text-gray-600">
+                  <p>
+                    <span className="font-medium">Started on : </span>
+                    {formatDate(data?.subscriptionStartDate.seconds * 1000)}
+                  </p>
+                  <p><span className="font-medium">End Date: </span> {formatDate(data?.subscriptionEndDate.seconds *1000)}</p>
+                </div>
+              )}
+              <div className="mt-6">
                 <div className="rounded-md shadow">
                   <Link
                     to="/pricing"
@@ -29,9 +66,6 @@ export default function Subscription() {
               </div>
             </div>
             <div className="bg-white px-6 py-8 lg:flex-shrink-1 lg:p-12">
-              <h3 className="text-2xl text-left leading-8 font-extrabold text-gray-900 sm:text-3xl sm:leading-9">
-                Subscription
-              </h3>
               <p className="mt-6 text-left font-ttnorms leading-8 text-gray-500 text-lg">
                 The Team subscription grants your entire As a subscriber to our
                 website, you'll have access to a wide range of exclusive
@@ -127,7 +161,7 @@ export default function Subscription() {
                   <div className="flex-1 border-t-2 border-gray-200"></div>
                 </div>
                 <div className="mt-8">
-                  <button className="flex items-center justify-center px-4 py-2 leading-6 font-medium rounded-md focus:outline-none focus:ring ring-red-200 transition duration-200 ease-in-out shadow-red border-2 border-red-500 bg-white hover:bg-red-500 hover:shadow-red-hover text-red-500 hover:text-white text-lg relative z-20">
+                  <button onClick={cancleSubscription} className="flex items-center justify-center px-4 py-2 leading-6 font-medium rounded-md focus:outline-none focus:ring ring-red-200 transition duration-200 ease-in-out shadow-red border-2 border-red-500 bg-white hover:bg-red-500 hover:shadow-red-hover text-red-500 hover:text-white text-lg relative z-20">
                     Cancel subscription
                   </button>
                 </div>
