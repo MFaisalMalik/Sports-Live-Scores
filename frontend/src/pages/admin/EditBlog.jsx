@@ -73,22 +73,22 @@ export default function EditBlog() {
       });
   }, [blogSlug]);
   const handleSave = async () => {
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("slug", blogSlug);
-    formData.append("content", content);
-    if (images.length > 0) {
-      formData.append("image", images[0]);
-    }
-    // const data = {title, slug: blogSlug, content}
+    // const formData = new FormData();
+    // formData.append("title", title);
+    // formData.append("slug", blogSlug);
+    // formData.append("content", content);
+    // if (images.length > 0) {
+    //   formData.append("image", images[0]);
+    // }
+    const data = {title, slug: blogSlug, content}
     setLoading(true);
     try {
       await fetch(`${apiHost}/api/blogs`, {
         method: "PUT",
-        body: formData,
-        // headers: {
-        //   "Content-Type": 'application/json',
-        // },
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": 'application/json',
+        },
       })
         .then((response) => {
           if (response.ok) {
@@ -132,7 +132,7 @@ export default function EditBlog() {
               />
             </div>
             {/* Image Field */}
-            <div className="mt-4">
+            {/* <div className="mt-4">
               <label
                 htmlFor={"blog-image"}
                 className="text-sm text-zinc-700 font-semibold"
@@ -149,12 +149,12 @@ export default function EditBlog() {
                   type="file"
                 />
               )}
-            </div>
+            </div> */}
 
             {/* BlogImages */}
-            {images.length > 0 && (
+            {/* {images.length > 0 && (
               <BlogImages images={displayImages} removeImage={removeImage} />
-            )}
+            )} */}
 
             {/* Contents details */}
             <label

@@ -10,35 +10,35 @@ import {
 } from "firebase/firestore";
 import fs from "fs";
 import { getDownloadURL, ref, uploadBytes, getStorage } from "firebase/storage";
-import upload from "../utils/upload.js";
+// import upload from "../utils/upload.js";
 
 const storage = getStorage();
 const db = getFirestore(firebase);
 
 export const publishBlog = async (req, res) => {
-  upload(req, res, async (err) => {
-    if (err) {
-      res.status(400).send(err);
-    } else {
-      if (req.file) {
-        let data = {
-          image: req.file,
-          slug: req.body.slug,
-          title: req.body.title,
-          content: req.body.content,
-        };
-        //   // Upload image to storage and get image url first
-        const imageURL = await uploadImage(data.image);
-        if (imageURL) {
-          await saveBlog({ ...data, image: imageURL, date: new Date().toLocaleDateString() })
-            .then(() => {
-              res.status(200).send({ statusCode: 200, message: "sucess" });
-            })
-            .catch(() => {
-              res.status(400).send(error.message);
-            });
-        }
-      } else {
+  // upload(req, res, async (err) => {
+  //   if (err) {
+  //     res.status(400).send(err);
+  //   } else {
+      // if (req.file) {
+      //   let data = {
+      //     image: req.file,
+      //     slug: req.body.slug,
+      //     title: req.body.title,
+      //     content: req.body.content,
+      //   };
+      //   //   // Upload image to storage and get image url first
+      //   const imageURL = await uploadImage(data.image);
+      //   if (imageURL) {
+      //     await saveBlog({ ...data, image: imageURL, date: new Date().toLocaleDateString() })
+      //       .then(() => {
+      //         res.status(200).send({ statusCode: 200, message: "sucess" });
+      //       })
+      //       .catch(() => {
+      //         res.status(400).send(error.message);
+      //       });
+      //   }
+      // } else {
         let data = { ...req.body, date: new Date().toLocaleDateString() };
         await saveBlog(data)
           .then(() => {
@@ -47,39 +47,39 @@ export const publishBlog = async (req, res) => {
           .catch((error) => {
             res.status(400).send(error.message);
           });
-      }
-    }
-  });
+      // }
+  //   }
+  // });
 };
 
 export const updateBlog = async (req, res) => {
-  upload(req, res, async (err) => {
-    if (err) {
-      res.status(400).send(`58: ${err}`);
-    } else {
-      if (req.file) {
-        let data = {
-          image: req.file,
-          slug: req.body.slug,
-          title: req.body.title,
-          content: req.body.content,
-        };
-        //   // Upload image to storage and get image url first
-        try {
-          const imageURL = await uploadImage(data.image)
-          if (imageURL) {
-            await saveBlog({ ...data, image: imageURL, date: new Date().toLocaleDateString() })
-              .then(() => {
-                res.status(200).send({ statusCode: 200, message: "success" });
-              })
-              .catch((error) => {
-                res.status(400).send(`76,${error.message}`);
-              });
-          }
-        } catch (error) {
-          res.status(500).send(`${error.message}`)
-        }
-      } else {
+  // upload(req, res, async (err) => {
+  //   if (err) {
+  //     res.status(400).send(`58: ${err}`);
+  //   } else {
+  //     if (req.file) {
+  //       let data = {
+  //         image: req.file,
+  //         slug: req.body.slug,
+  //         title: req.body.title,
+  //         content: req.body.content,
+  //       };
+  //       //   // Upload image to storage and get image url first
+  //       try {
+  //         const imageURL = await uploadImage(data.image)
+  //         if (imageURL) {
+  //           await saveBlog({ ...data, image: imageURL, date: new Date().toLocaleDateString() })
+  //             .then(() => {
+  //               res.status(200).send({ statusCode: 200, message: "success" });
+  //             })
+  //             .catch((error) => {
+  //               res.status(400).send(`76,${error.message}`);
+  //             });
+  //         }
+  //       } catch (error) {
+  //         res.status(500).send(`${error.message}`)
+  //       }
+  //     } else {
         let data = { ...req.body, date: new Date().toLocaleDateString() };
         await saveBlog(data)
           .then(() => {
@@ -88,9 +88,9 @@ export const updateBlog = async (req, res) => {
           .catch((error) => {
             res.status(400).send(`89: ${error.message}`);
           });
-      }
-    }
-  })
+  //     }
+  //   }
+  // })
 };
 
 const uploadImage = async (file) => {
