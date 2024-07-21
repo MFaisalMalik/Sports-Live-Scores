@@ -94,7 +94,6 @@ export const subscribe = async (req, res) => {
   }
 };
 
-
 export const checkSubscriptionStatus = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -111,7 +110,8 @@ export const checkSubscriptionStatus = async (req, res) => {
 
     const subscriptionData = querySnapshot.docs[0].data();
     const currentTimestamp = Date.now();
-    const subscriptionEndDateMs = subscriptionData.subscriptionEndDate.seconds * 1000;
+    const subscriptionEndDateMs =
+      subscriptionData.subscriptionEndDate.seconds * 1000;
 
     if (subscriptionEndDateMs < currentTimestamp) {
       res.status(404).json({ message: "Inactive Subscription" });
@@ -124,7 +124,6 @@ export const checkSubscriptionStatus = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
-
 
 export const getSubscriptionData = async (req, res) => {
   try {
@@ -142,66 +141,63 @@ export const getSubscriptionData = async (req, res) => {
 
     const subscriptionData = querySnapshot.docs[0].data();
 
-    res.status(200).json({ data: subscriptionData });
+    res.status(200).json({ data: {...subscriptionData, id: querySnapshot.docs[0].id},  });
   } catch (error) {
     console.error("Error processing PayPal webhook:", error);
     res.status(500).send("Internal Server Error");
   }
 };
 
-export const removeSubscriptionData = async (userId) => {
+export const removeSubscriptionData = async (docId) => {
+  const docRef = doc(db, "subscriptions", docId);
   try {
-
-    const subscriptionsCollection = collection(db, "subscriptions");
-    await deleteDoc(
-      query(subscriptionsCollection, where("userId", "==", userId))
-    );
-
-    return { message: 'Subscription successfully deleted' }
+    await deleteDoc(docRef);
+    return { message: "Subscription successfully cencelled!" }
   } catch (error) {
-    return Error ("Internal Server Error")
+    return("Internal Server Error");
   }
 };
 
 export const cancelSubscription = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const subscriptionId = await getSubscriptionId(userId);
+  const { userId, docId } = req.params;
 
-    if (!subscriptionId) {
-      return res
-        .status(404)
-        .send(`No subscription found for userId: ${userId}`);
-    }
-
-    const response = await fetch(
-      `${config.paypalApiUrl}/v1/billing/subscriptions/${subscriptionId}/cancel`,
-      {
-        method: "post",
-        headers: {
-          Authorization: `Basic ${auth}`,
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({ reason: "Not satisfied with the service" }),
+  await getSubscriptionId(userId)
+    .then(async (subscriptionId) => {
+      if (!subscriptionId) {
+        res.status(404).send(`No subscription found for userId: ${userId}`);
+        return;
       }
-    );
 
-    if (!response.ok) {
-      throw new Error(`Failed to cancel subscription: ${response.statusText}`);
-    } else {
-      try {
-        await removeSubscriptionData(userId)
-      } catch (error) {
-        console.log(error)
+      const response = await fetch(
+        `${config.paypalApiUrl}/v1/billing/subscriptions/${subscriptionId}/cancel`,
+        {
+          method: "post",
+          headers: {
+            Authorization: `Basic ${auth}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({ reason: "Not satisfied with the service" }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to cancel subscription: ${response.statusText}`
+        );
+      } else {
+        try {
+          await removeSubscriptionData(docId);
+          res.status(200).send("Subscription cancelled successfully!");
+        } catch (error) {
+          console.log(error);
+        }
       }
-    }
-
-    res.status(200).send("Subscription cancelled successfully!");
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Internal Server Error");
-  }
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    });
 };
 
 const getSubscriptionId = async (userId) => {
@@ -225,7 +221,7 @@ const getSubscriptionId = async (userId) => {
 };
 
 export const handlePaymentWebhook = async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   const isValid = await verifyWebhook(req);
 
   if (!isValid) {
@@ -239,11 +235,13 @@ export const handlePaymentWebhook = async (req, res) => {
       console.log("Ignoring webhook with event type:", data.event_type);
       return res.sendStatus(200);
     } else {
-      await activateSubscription(data).then(()=> {
-        return res.sendStatus(200);
-      }).catch(()=>{
-        return res.sendStatus(500)
-      })
+      await activateSubscription(data)
+        .then(() => {
+          return res.sendStatus(200);
+        })
+        .catch(() => {
+          return res.sendStatus(500);
+        });
     }
   } catch (error) {
     console.error("Error processing PayPal webhook:", error);
@@ -301,9 +299,8 @@ const activateSubscription = async (data) => {
       console.log("Updated subscription for userId: ", payload.userId);
       return;
     }
-    
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
 

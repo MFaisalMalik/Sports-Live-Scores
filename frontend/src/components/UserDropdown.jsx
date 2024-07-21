@@ -32,17 +32,11 @@ export default function UserDropdown() {
   useEffect(() => {
     async function checkSubscription() {
       await fetch(
-        `${apiHost}/api/subscription/check-subscription/${user.uid}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        `${apiHost}/api/subscription/check-subscription/${user.uid}`
       )
         .then(async (res) => {
           if (res.ok) {
-            const data = await res.json();
+            // const data = await res.json();
             setHasSubscription(true);
           } else {
             setHasSubscription(false);

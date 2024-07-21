@@ -5,24 +5,30 @@ import "./GamePages.css";
 import { useParams, useResolvedPath } from "react-router-dom";
 import { auth } from "../firebase/firebase";
 import GameNPlayerCard from "../components/GameNPlayerCard";
+import { ModalContext } from "../contexts/modalContext";
 
 export default function Games() {
   const { gameType } = useParams();
-  const { pathname } = useResolvedPath()
+  const { pathname } = useResolvedPath();
+  const { subscriptionData } = ModalContext();
 
-  const getLink = (state, game, type) => {
-    const link = `/game-stats/${gameType}/${type}`
-    if (type === 'free'){
-      return link
-    } else {
+  const getLink = (stats, type) => {
+    const link = `/${stats}/${gameType}/${type}`;
+    if (type === "free") {
+      return link;
+    }
+    if (type === "premium") {
       if (auth.currentUser) {
-        return link
+        if (subscriptionData) {
+          return link;
+        } else {
+          return `/pricing?redirect${pathname}`
+        }
       } else {
-        return `/sign-in?redirect=${pathname}`
+        return `/sign-in?redirect=${pathname}`;
       }
     }
-  }
-
+  };
 
   return (
     <>
@@ -45,25 +51,25 @@ export default function Games() {
           </h2>
           <div className="grid gap-x-4 gap-y-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             <GameNPlayerCard
-              link={`/games-stats/${gameType}/free`}
+              link={getLink("games-stats","free")}
               requestType="Free"
               bet="Game"
               tagline="1 team bets /week"
             />
             <GameNPlayerCard
-              link={`/players-stats/${gameType}/free`}
+              link={getLink("players-stats","free")}
               requestType="Free"
               bet="Player"
               tagline="1 player bets /week"
             />
             <GameNPlayerCard
-              link={`/games-stats/${gameType}/premium`}
+              link={getLink("games-stats","premium")}
               requestType="Premium"
               bet="Game"
               tagline="unlimited teams bets"
             />
             <GameNPlayerCard
-              link={`/players-stats/${gameType}/premium`}
+              link={getLink("players-stats","premium")}
               requestType="Premium"
               bet="Player"
               tagline="unlimited players bets"

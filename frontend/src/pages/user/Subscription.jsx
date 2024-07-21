@@ -1,34 +1,42 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { auth } from "../../firebase/firebase";
-import { apiHost } from "../../utils";
 import formatDate from "../../utils/formatData";
 import { ModalContext } from "../../contexts/modalContext";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { Loader } from "../LiveScores";
 
 export default function Subscription() {
-  const [data, setData] = useState();
-  const { toggleCancelSubModal } = ModalContext();
+  const navigate = useNavigate()
+  const [data, setData] = useState({});
+  const [loading, setLoading] = useState(false)
+  const { toggleCancelSubModal, subscriptionData} = ModalContext();
 
-  async function fetchData() {
-    await fetch(`${apiHost}/api/subscription/data/${auth.currentUser.uid}`)
-      .then(async (response) => {
-        const result = await response.json();
-        setData(result.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useEffect(()=> {
+    setLoading(true)
+    if (subscriptionData) {
+      setData(subscriptionData)
+      setLoading(false)
+    } else {
+      setLoading(false)
+      toast.info("No subscriptions found!")
+      navigate("/")
+    }
+  }, [navigate, subscriptionData])
+
+
 
 
   async function cancleSubscription() {
     toggleCancelSubModal()
   }
- 
+  if (loading) {
+    return (
+      <div className="my-10">
+        <Loader/>
+      </div>
+    )
+  }
   return (
     <main className="bg-blue-100 min-h-screen">
       <div className="container mx-auto px-4 md:px-8 lg:px-12 py-16">

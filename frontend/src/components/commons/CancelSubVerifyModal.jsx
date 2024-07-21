@@ -2,18 +2,22 @@ import { toast } from "react-toastify";
 import { auth } from "../../firebase/firebase";
 import { ModalContext } from "../../contexts/modalContext";
 import { apiHost } from "../../utils";
+import { useNavigate } from "react-router-dom";
 
 export default function CancelSubModal() {
   const user = auth.currentUser;
-  const { cancelSubModalOpen, toggleCancelSubModal } = ModalContext();
+  const { cancelSubModalOpen, toggleCancelSubModal, subscriptionData } = ModalContext();
+  const navigate = useNavigate()
 
   const cancleSubscription = () => {
-    fetch(`${apiHost}/api/subscription/unsubscribe/${user.uid}`)
+    fetch(`${apiHost}/api/subscription/unsubscribe/${user.uid}/${subscriptionData.id}`)
       .then((response) => {
         if (response.ok) {
           console.log(response);
-          toast.success(response.message);
+          const result = response.json()
+          toast.success(result.message);
           toggleCancelSubModal();
+          navigate("/")
         }
         else {
           toast.error("something went wrong.")
@@ -107,7 +111,7 @@ export default function CancelSubModal() {
               <div className="mt-2">
                 <p className="text-sm text-gray-500">
                   Are you really sure want to{" "}
-                  <span className="text-red-500">cancel</span> your
+                  <span className="text-red-500 font-semibold">cancel</span> your
                   subscription?
                 </p>
               </div>
