@@ -141,7 +141,9 @@ export const getSubscriptionData = async (req, res) => {
 
     const subscriptionData = querySnapshot.docs[0].data();
 
-    res.status(200).json({ data: {...subscriptionData, id: querySnapshot.docs[0].id},  });
+    res
+      .status(200)
+      .json({ data: { ...subscriptionData, id: querySnapshot.docs[0].id } });
   } catch (error) {
     console.error("Error processing PayPal webhook:", error);
     res.status(500).send("Internal Server Error");
@@ -152,9 +154,9 @@ export const removeSubscriptionData = async (docId) => {
   const docRef = doc(db, "subscriptions", docId);
   try {
     await deleteDoc(docRef);
-    return { message: "Subscription successfully cencelled!" }
+    return { message: "Subscription successfully cancelled!" };
   } catch (error) {
-    return("Internal Server Error");
+    return "Internal Server Error";
   }
 };
 
@@ -198,6 +200,45 @@ export const cancelSubscription = async (req, res) => {
       console.error(error);
       res.status(500).send("Internal Server Error");
     });
+};
+
+export const activateFreeTrial = async (req, res) => {
+  const userId = req.params.userId;
+
+  if (!userId) {
+    return res.status(400).send("Missing user Id");
+  }
+
+  try {
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("uid", "==", userId));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      return res.status(404).send("No such user exists in the database");
+    }
+
+    const userDoc = querySnapshot.docs[0];
+    const userData = userDoc.data();
+    if (userData.freetrialavailed === true) {
+      return res.status(400).send("User has already availed the free trial");
+    }
+
+    const currentTime = new Date();
+    const expirationDate = new Date(currentTime);
+    expirationDate.setDate(expirationDate.getDate() + 7);
+
+    const userRef = userDoc.ref;
+    await updateDoc(userRef, {
+      freetrialavailed: true,
+      freetrialexpiredate: Timestamp.fromDate(expirationDate),
+    });
+
+    return res.status(200).send("Free trial activated");
+  } catch (error) {
+    console.error("Error activating free trial:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
 const getSubscriptionId = async (userId) => {
