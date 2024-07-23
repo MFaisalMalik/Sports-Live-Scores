@@ -27,7 +27,7 @@ const packages = [
   },
   {
     name: "Premium",
-    price: 10,
+    price: 19.99,
     duration: "1 Month Pass",
     type: "monthly",
     primaryColorClass: "text-purple-700",
