@@ -5,10 +5,15 @@ import {
   getFirestore,
   collection,
   getDocs,
+  getDoc,
+  doc,
   where,
   query,
   limit,
+  limitToLast,
   startAfter,
+  endBefore,
+  endAt,
   orderBy,
   getCountFromServer,
 } from "firebase/firestore";
@@ -69,21 +74,23 @@ const getPremiumStats = async (req, res, statsType) => {
     let queryRef;
     if (page > 1) {
       if (page_action === "NEXT") {
+        const docSnap = await getDoc(doc(db, `${statsType} Collection`, after_this))
         queryRef = query(
           statsCollection,
           where("Type", "==", gameType),
           limit(per_page ?? 5),
           orderBy("Win Probability"),
-          startAfter(after_this)
+          startAfter(docSnap)
         );
       }
       if (page_action === "PREVIOUS") {
+        const docSnap = await getDoc(doc(db, `${statsType} Collection`, before_this))
         queryRef = query(
           statsCollection,
           where("Type", "==", gameType),
-          limit(per_page ?? 5),
+          limitToLast(per_page ?? 5),
           orderBy("Win Probability"),
-          startAfter(before_this)
+          endBefore(docSnap)
         );
       }
     } else {
@@ -99,7 +106,6 @@ const getPremiumStats = async (req, res, statsType) => {
       query(statsCollection, where("Type", "==", gameType))
     );
     const count = countSnapshot.data().count;
-
     if (querySnapshot.empty) {
       return res
         .status(200)
@@ -114,11 +120,10 @@ const getPremiumStats = async (req, res, statsType) => {
     const stats = querySnapshot.docs.map((doc) => {
       return { ...doc.data(), id: doc.id };
     });
-    // console.log(querySnapshot.docs);
-    // console.log(countSnapshot.data().count);
+
     const afterThis = stats[stats.length - 1].id;
     const beforeThis = stats[0].id;
-    res.status(200).json({ data: stats, count, afterThis, beforeThis });
+    res.status(200).json({ data: stats, count, beforeThis, afterThis});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

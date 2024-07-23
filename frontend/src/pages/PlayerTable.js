@@ -61,7 +61,8 @@ export default function PlayerTable() {
     const response = await fetch(formedUrl);
     if (response.ok) {
       const json = await response.json();
-      console.log(json);
+      // console.log(json.afterThis);
+      console.log(json.data.map(item => item.id));
       setAfterThis(json.afterThis);
       setBeforeThis(json.beforeThis);
       setPlayerStats(json.data);
@@ -97,7 +98,7 @@ export default function PlayerTable() {
     color: "#4b5563",
   };
 
-  const perPageOptions = [5, 10, 20, 50]
+  const perPageOptions = [5, 10]
     .filter((num) => count >= num)
     .map((num) => num);
 
