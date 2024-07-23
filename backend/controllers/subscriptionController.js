@@ -120,7 +120,7 @@ export const checkSubscriptionStatus = async (req, res) => {
 
     res.status(200).json({ message: "Active Subscription" });
   } catch (error) {
-    console.error("Error processing PayPal webhook:", error);
+    console.error("Error:", error);
     res.status(500).send("Internal Server Error");
   }
 };
@@ -145,7 +145,7 @@ export const getSubscriptionData = async (req, res) => {
       .status(200)
       .json({ data: { ...subscriptionData, id: querySnapshot.docs[0].id } });
   } catch (error) {
-    console.error("Error processing PayPal webhook:", error);
+    console.error("Error:", error);
     res.status(500).send("Internal Server Error");
   }
 };
@@ -202,6 +202,35 @@ export const cancelSubscription = async (req, res) => {
     });
 };
 
+export const handlePaymentWebhook = async (req, res) => {
+  console.log(req.body);
+  const isValid = await verifyWebhook(req);
+
+  if (!isValid) {
+    console.error("Invalid webhook signature");
+    res.status(400).send("Invalid webhook signature");
+  }
+
+  try {
+    const data = req.body;
+    if (data.event_type !== "PAYMENT.SALE.COMPLETED") {
+      console.log("Ignoring webhook with event type:", data.event_type);
+      return res.sendStatus(200);
+    } else {
+      await activateSubscription(data)
+        .then(() => {
+          return res.sendStatus(200);
+        })
+        .catch(() => {
+          return res.sendStatus(500);
+        });
+    }
+  } catch (error) {
+    console.error("Error processing PayPal webhook:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 export const activateFreeTrial = async (req, res) => {
   const userId = req.params.userId;
 
@@ -238,55 +267,6 @@ export const activateFreeTrial = async (req, res) => {
   } catch (error) {
     console.error("Error activating free trial:", error);
     return res.status(500).json({ error: "Internal Server Error" });
-  }
-};
-
-const getSubscriptionId = async (userId) => {
-  try {
-    const subscriptionsCollection = collection(db, "subscriptions");
-    const q = query(subscriptionsCollection, where("userId", "==", userId));
-    const querySnapshot = await getDocs(q);
-
-    if (querySnapshot.empty) {
-      return null;
-    }
-    const doc = querySnapshot.docs[0];
-    return doc.data().subscriptionId;
-  } catch (error) {
-    console.error(
-      `Error fetching subscription ID for userId ${userId}:`,
-      error
-    );
-    throw error;
-  }
-};
-
-export const handlePaymentWebhook = async (req, res) => {
-  console.log(req.body);
-  const isValid = await verifyWebhook(req);
-
-  if (!isValid) {
-    console.error("Invalid webhook signature");
-    res.status(400).send("Invalid webhook signature");
-  }
-
-  try {
-    const data = req.body;
-    if (data.event_type !== "PAYMENT.SALE.COMPLETED") {
-      console.log("Ignoring webhook with event type:", data.event_type);
-      return res.sendStatus(200);
-    } else {
-      await activateSubscription(data)
-        .then(() => {
-          return res.sendStatus(200);
-        })
-        .catch(() => {
-          return res.sendStatus(500);
-        });
-    }
-  } catch (error) {
-    console.error("Error processing PayPal webhook:", error);
-    res.status(500).send("Internal Server Error");
   }
 };
 
@@ -368,3 +348,24 @@ const createSubscriptionPayload = (data) => {
 
   return payload;
 };
+
+const getSubscriptionId = async (userId) => {
+  try {
+    const subscriptionsCollection = collection(db, "subscriptions");
+    const q = query(subscriptionsCollection, where("userId", "==", userId));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      return null;
+    }
+    const doc = querySnapshot.docs[0];
+    return doc.data().subscriptionId;
+  } catch (error) {
+    console.error(
+      `Error fetching subscription ID for userId ${userId}:`,
+      error
+    );
+    throw error;
+  }
+};
+
