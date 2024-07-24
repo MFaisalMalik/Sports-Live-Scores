@@ -98,30 +98,35 @@ export const checkSubscriptionStatus = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const subscriptionsCollection = collection(db, "subscriptions");
-    const querySnapshot = await getDocs(
-      query(subscriptionsCollection, where("userId", "==", userId))
-    );
-
-    if (querySnapshot.empty) {
-      res.status(404).json({ message: "Inactive Subscription" });
-      return;
+    if (!userId) {
+      return res.status(400).json({ message: "Missing user ID" });
     }
 
-    const subscriptionData = querySnapshot.docs[0].data();
     const currentTimestamp = Date.now();
-    const subscriptionEndDateMs =
-      subscriptionData.subscriptionEndDate.seconds * 1000;
-
-    if (subscriptionEndDateMs < currentTimestamp) {
-      res.status(404).json({ message: "Inactive Subscription" });
-      return;
+    const userData = await getUserData(userId);
+    if (userData && userData.hasOwnProperty("freetrialavailed")) {
+      const freeTrialEndDateMs = timestampToMs(userData.freetrialexpiredate);
+      if (freeTrialEndDateMs > currentTimestamp) {
+        return res.status(200).json({ message: "Active Subscription", data: userData });
+      }
     }
 
-    res.status(200).json({ message: "Active Subscription" });
+    const subscriptionData = await getUserSubscriptionData(userId);
+    if (!subscriptionData) {
+      return res.status(404).json({ message: "Inactive Subscription" });
+    }
+
+    const subscriptionEndDateMs = timestampToMs(
+      subscriptionData.subscriptionEndDate
+    );
+    if (subscriptionEndDateMs < currentTimestamp) {
+      return res.status(404).json({ message: "Inactive Subscription" });
+    }
+
+    return res.status(200).json({ message: "Active Subscription", data: subscriptionData });
   } catch (error) {
-    console.error("Error:", error);
-    res.status(500).send("Internal Server Error");
+    console.error("Error checking subscription status:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -129,21 +134,12 @@ export const getSubscriptionData = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const subscriptionsCollection = collection(db, "subscriptions");
-    const querySnapshot = await getDocs(
-      query(subscriptionsCollection, where("userId", "==", userId))
-    );
-
-    if (querySnapshot.empty) {
-      res.status(404).json({ message: "Inactive Subscription" });
-      return;
+    const subscriptionDataAndId = await getUserSubscriptionData(userId);
+    if (!subscriptionDataAndId) {
+      return res.status(404).json({ message: "Inactive Subscription" });
     }
 
-    const subscriptionData = querySnapshot.docs[0].data();
-
-    res
-      .status(200)
-      .json({ data: { ...subscriptionData, id: querySnapshot.docs[0].id } });
+    res.status(200).json({ data: subscriptionDataAndId });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).send("Internal Server Error");
@@ -369,3 +365,36 @@ const getSubscriptionId = async (userId) => {
   }
 };
 
+const getUserData = async (userId) => {
+  const userCollection = collection(db, "users");
+  const userQuery = query(userCollection, where("uid", "==", userId));
+  const userQuerySnapshot = await getDocs(userQuery);
+
+  if (userQuerySnapshot.empty) {
+    return null;
+  }
+
+  return userQuerySnapshot.docs[0].data();
+};
+
+const getUserSubscriptionData = async (userId) => {
+  const subscriptionsCollection = collection(db, "subscriptions");
+  const subscriptionQuery = query(
+    subscriptionsCollection,
+    where("userId", "==", userId)
+  );
+  const subscriptionQuerySnapshot = await getDocs(subscriptionQuery);
+
+  if (subscriptionQuerySnapshot.empty) {
+    return null;
+  }
+
+  return {
+    ...subscriptionQuerySnapshot.docs[0].data(),
+    id: subscriptionQuerySnapshot.docs[0].id,
+  };
+};
+
+const timestampToMs = (timestamp) => {
+  return timestamp.seconds * 1000;
+};
