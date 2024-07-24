@@ -6,7 +6,8 @@ import {
   checkSubscriptionStatus,
   cancelSubscription,
   getSubscriptionData,
-  removeSubscriptionData
+  removeSubscriptionData,
+  activateFreeTrial
 } from '../controllers/subscriptionController.js';
 
 const router = express.Router();
@@ -17,4 +18,6 @@ router.get('/data/:userId', getSubscriptionData);
 router.get('/check-subscription/:userId', checkSubscriptionStatus);
 router.get('/unsubscribe/:userId/:docId', cancelSubscription);
 router.get('/remove/:docId', removeSubscriptionData);
+router.get('/activate/free-trial/:userId', activateFreeTrial);
+
 export default router;

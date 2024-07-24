@@ -98,30 +98,35 @@ export const checkSubscriptionStatus = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const subscriptionsCollection = collection(db, "subscriptions");
-    const querySnapshot = await getDocs(
-      query(subscriptionsCollection, where("userId", "==", userId))
-    );
-
-    if (querySnapshot.empty) {
-      res.status(404).json({ message: "Inactive Subscription" });
-      return;
+    if (!userId) {
+      return res.status(400).json({ message: "Missing user ID" });
     }
 
-    const subscriptionData = querySnapshot.docs[0].data();
     const currentTimestamp = Date.now();
-    const subscriptionEndDateMs =
-      subscriptionData.subscriptionEndDate.seconds * 1000;
-
-    if (subscriptionEndDateMs < currentTimestamp) {
-      res.status(404).json({ message: "Inactive Subscription" });
-      return;
+    const userData = await getUserData(userId);
+    if (userData && userData.hasOwnProperty("freetrialavailed")) {
+      const freeTrialEndDateMs = timestampToMs(userData.freetrialexpiredate);
+      if (freeTrialEndDateMs > currentTimestamp) {
+        return res.status(200).json({ message: "Active Subscription", data: userData });
+      }
     }
 
-    res.status(200).json({ message: "Active Subscription" });
+    const subscriptionData = await getUserSubscriptionData(userId);
+    if (!subscriptionData) {
+      return res.status(404).json({ message: "Inactive Subscription" });
+    }
+
+    const subscriptionEndDateMs = timestampToMs(
+      subscriptionData.subscriptionEndDate
+    );
+    if (subscriptionEndDateMs < currentTimestamp) {
+      return res.status(404).json({ message: "Inactive Subscription" });
+    }
+
+    return res.status(200).json({ message: "Active Subscription", data: subscriptionData });
   } catch (error) {
-    console.error("Error processing PayPal webhook:", error);
-    res.status(500).send("Internal Server Error");
+    console.error("Error checking subscription status:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -129,21 +134,14 @@ export const getSubscriptionData = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const subscriptionsCollection = collection(db, "subscriptions");
-    const querySnapshot = await getDocs(
-      query(subscriptionsCollection, where("userId", "==", userId))
-    );
-
-    if (querySnapshot.empty) {
-      res.status(404).json({ message: "Inactive Subscription" });
-      return;
+    const subscriptionDataAndId = await getUserSubscriptionData(userId);
+    if (!subscriptionDataAndId) {
+      return res.status(404).json({ message: "Inactive Subscription" });
     }
 
-    const subscriptionData = querySnapshot.docs[0].data();
-
-    res.status(200).json({ data: {...subscriptionData, id: querySnapshot.docs[0].id},  });
+    res.status(200).json({ data: subscriptionDataAndId });
   } catch (error) {
-    console.error("Error processing PayPal webhook:", error);
+    console.error("Error:", error);
     res.status(500).send("Internal Server Error");
   }
 };
@@ -152,9 +150,9 @@ export const removeSubscriptionData = async (docId) => {
   const docRef = doc(db, "subscriptions", docId);
   try {
     await deleteDoc(docRef);
-    return { message: "Subscription successfully cencelled!" }
+    return { message: "Subscription successfully cancelled!" };
   } catch (error) {
-    return("Internal Server Error");
+    return "Internal Server Error";
   }
 };
 
@@ -200,26 +198,6 @@ export const cancelSubscription = async (req, res) => {
     });
 };
 
-const getSubscriptionId = async (userId) => {
-  try {
-    const subscriptionsCollection = collection(db, "subscriptions");
-    const q = query(subscriptionsCollection, where("userId", "==", userId));
-    const querySnapshot = await getDocs(q);
-
-    if (querySnapshot.empty) {
-      return null;
-    }
-    const doc = querySnapshot.docs[0];
-    return doc.data().subscriptionId;
-  } catch (error) {
-    console.error(
-      `Error fetching subscription ID for userId ${userId}:`,
-      error
-    );
-    throw error;
-  }
-};
-
 export const handlePaymentWebhook = async (req, res) => {
   console.log(req.body);
   const isValid = await verifyWebhook(req);
@@ -246,6 +224,45 @@ export const handlePaymentWebhook = async (req, res) => {
   } catch (error) {
     console.error("Error processing PayPal webhook:", error);
     res.status(500).send("Internal Server Error");
+  }
+};
+
+export const activateFreeTrial = async (req, res) => {
+  const userId = req.params.userId;
+
+  if (!userId) {
+    return res.status(400).send("Missing user Id");
+  }
+
+  try {
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("uid", "==", userId));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      return res.status(404).send("No such user exists in the database");
+    }
+
+    const userDoc = querySnapshot.docs[0];
+    const userData = userDoc.data();
+    if (userData.freetrialavailed === true) {
+      return res.status(400).send("User has already availed the free trial");
+    }
+
+    const currentTime = new Date();
+    const expirationDate = new Date(currentTime);
+    expirationDate.setDate(expirationDate.getDate() + 7);
+
+    const userRef = userDoc.ref;
+    await updateDoc(userRef, {
+      freetrialavailed: true,
+      freetrialexpiredate: Timestamp.fromDate(expirationDate),
+    });
+
+    return res.status(200).send("Free trial activated");
+  } catch (error) {
+    console.error("Error activating free trial:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -326,4 +343,58 @@ const createSubscriptionPayload = (data) => {
   };
 
   return payload;
+};
+
+const getSubscriptionId = async (userId) => {
+  try {
+    const subscriptionsCollection = collection(db, "subscriptions");
+    const q = query(subscriptionsCollection, where("userId", "==", userId));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      return null;
+    }
+    const doc = querySnapshot.docs[0];
+    return doc.data().subscriptionId;
+  } catch (error) {
+    console.error(
+      `Error fetching subscription ID for userId ${userId}:`,
+      error
+    );
+    throw error;
+  }
+};
+
+const getUserData = async (userId) => {
+  const userCollection = collection(db, "users");
+  const userQuery = query(userCollection, where("uid", "==", userId));
+  const userQuerySnapshot = await getDocs(userQuery);
+
+  if (userQuerySnapshot.empty) {
+    return null;
+  }
+
+  return userQuerySnapshot.docs[0].data();
+};
+
+const getUserSubscriptionData = async (userId) => {
+  const subscriptionsCollection = collection(db, "subscriptions");
+  const subscriptionQuery = query(
+    subscriptionsCollection,
+    where("userId", "==", userId)
+  );
+  const subscriptionQuerySnapshot = await getDocs(subscriptionQuery);
+
+  if (subscriptionQuerySnapshot.empty) {
+    return null;
+  }
+
+  return {
+    ...subscriptionQuerySnapshot.docs[0].data(),
+    id: subscriptionQuerySnapshot.docs[0].id,
+  };
+};
+
+const timestampToMs = (timestamp) => {
+  return timestamp.seconds * 1000;
 };
