@@ -7,6 +7,7 @@ import {
   doCreateUserWithEmailAndPassword,
   doSignInWithGoogle,
 } from "../firebase/auth";
+import { updateProfile } from "firebase/auth";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ export default function SignUp() {
       );
       const uid = userCredential.user.uid;
       const user = { name, email, uid };
+      await updateProfile(userCredential.user, { displayName: name})
       await axios.post(`${process.env.REACT_APP_API_HOST}/api/user`, user);
     } catch (error) {
       setErrorMessage(error.response?.data || error.message);

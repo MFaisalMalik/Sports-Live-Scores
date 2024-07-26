@@ -26,7 +26,9 @@ export default function SignIn() {
     if (isSigningIn) return;
     setIsSigningIn(true);
     try {
-      await doSignInWithEmailAndPassword(email, password);
+      const userCredential = await doSignInWithEmailAndPassword(email, password);
+      console.log(userCredential);
+      await saveUser(userCredential);
       navigate(redirect ? redirect : "/");
     } catch (error) {
       setErrorMessage(error.message);
@@ -43,7 +45,7 @@ export default function SignIn() {
     setIsSigningInGoogle(true);
     doSignInWithGoogle()
       .then(async (userCredential) => {
-        await saveUser(userCredential)
+        await saveUser(userCredential);
       })
       .catch((error) => {
         setErrorMessage(error.message);
@@ -55,14 +57,14 @@ export default function SignIn() {
   const saveUser = async (userCredential) => {
     try {
       const uid = userCredential.user.uid;
-        let name = userCredential.user.displayName;
-        let email = userCredential.user.email;
-        const user = { name, email, uid };
-        await axios.post(`${process.env.REACT_APP_API_HOST}/api/user`, user);
+      let name = userCredential.user.displayName;
+      let email = userCredential.user.email;
+      const user = { name, email, uid };
+      await axios.post(`${process.env.REACT_APP_API_HOST}/api/user`, user);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
   useEffect(() => {
     if (userLoggedIn) {
       navigate("/");

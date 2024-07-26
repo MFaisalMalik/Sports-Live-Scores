@@ -8,7 +8,6 @@ export default function CancelSubModal() {
   const user = auth.currentUser;
   const { cancelSubModalOpen, toggleCancelSubModal, subscriptionData } = ModalContext();
   const navigate = useNavigate()
-
   const cancleSubscription = () => {
     fetch(`${apiHost}/api/subscription/unsubscribe/${user.uid}/${subscriptionData.id}`)
       .then((response) => {

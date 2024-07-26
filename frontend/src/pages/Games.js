@@ -34,7 +34,7 @@ export default function Games() {
     <>
       <div
         className="h-[400px] bg-[var(--navbar-color)] bg-center bg-cover bg-no-repeat transition-all"
-        style={{ backgroundImage: `url(/images/${gameType}-cover.jpg)` }}
+        style={{ backgroundImage: `url(${require(`../assets/images/${gameType}-cover.jpg`)})` }}
       >
         <div className="w-full h-full bg-black/20 flex items-center">
           <div className="container mx-auto px-10 ">

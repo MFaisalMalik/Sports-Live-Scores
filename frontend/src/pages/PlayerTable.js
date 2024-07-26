@@ -61,8 +61,6 @@ export default function PlayerTable() {
     const response = await fetch(formedUrl);
     if (response.ok) {
       const json = await response.json();
-      // console.log(json.afterThis);
-      console.log(json.data.map(item => item.id));
       setAfterThis(json.afterThis);
       setBeforeThis(json.beforeThis);
       setPlayerStats(json.data);
@@ -130,7 +128,7 @@ export default function PlayerTable() {
                     <TableCell align="center" sx={headerCellStyles}>
                       Bet
                     </TableCell>
-                    {gameType != "baseball" && (
+                    {gameType !== "baseball" && (
                       <TableCell align="center" sx={headerCellStyles}>
                         Market
                       </TableCell>
@@ -161,7 +159,7 @@ export default function PlayerTable() {
                       <TableCell align="center" sx={cellStyles}>
                         {game.Bet}
                       </TableCell>
-                      {gameType != "baseball" && (
+                      {gameType !== "baseball" && (
                         <TableCell align="center" sx={cellStyles}>
                           {game.Market}
                         </TableCell>

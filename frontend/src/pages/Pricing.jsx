@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import TickIcon from "../components/commons/TickIcon";
 import "../components/Cards.css";
 import "./Pricing.css";
 import { Link } from "react-router-dom";
 import PayPalButton from "../components/PaypalButton";
 import Footer from "../components/Footer2";
-import { siteHost } from "../utils";
+import { apiHost, siteHost } from "../utils";
+import { auth } from "../firebase/firebase";
+import { toast } from "react-toastify";
 
 const packages = [
   {
@@ -56,8 +58,42 @@ const packages = [
   },
 ];
 
+async function availTrial() {
+  try {
+    const response = await fetch(
+      `${apiHost}/api/subscription/activate/free-trial/${auth?.currentUser?.uid}`,
+      {
+        method: "GET",
+      }
+    );
+    if (response.ok) {
+      toast.success("your free trial activated successfully!");
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 
 function Pricing() {
+
+
+  useEffect(() => {
+    async function getSubscriptionInfo(){
+      await fetch(`${apiHost}/api/subscription/check-subscription/${auth?.currentUser?.uid}`)
+      .then(async response => {
+        console.log(response);
+        if (response.ok){
+          const data = await response.json()
+          console.log(data);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+    getSubscriptionInfo()
+  }, []);
+
   return (
     <>
       <section className="max-w-7xl px-4 pt-24 pb-12 mx-auto">
@@ -96,12 +132,16 @@ function Pricing() {
                     </p>
                     <p className="text-sm text-gray-500">{item.duration}</p>
                     {Number(item.price) === 0 ? (
-                      <Link to="/sign-up" className="w-full mt-6">
+                      <button onClick={availTrial} className="w-full mt-6">
                         <span>Get started for free &rarr;</span>
-                      </Link>
+                      </button>
                     ) : (
                       <div className="mt-4">
-                        <PayPalButton subscriptionType={item.type} cancel_url={`${siteHost}/cancel-subscription`} return_url={`${siteHost}/success-subscription`} />
+                        <PayPalButton
+                          subscriptionType={item.type}
+                          cancel_url={`${siteHost}/cancel-subscription`}
+                          return_url={`${siteHost}/success-subscription`}
+                        />
                       </div>
                     )}
                   </div>

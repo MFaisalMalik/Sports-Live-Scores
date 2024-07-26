@@ -5,6 +5,7 @@ import { ModalContext } from "../../contexts/modalContext";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "../LiveScores";
+import { auth } from "../../firebase/firebase";
 
 export default function Subscription() {
   const navigate = useNavigate()
@@ -47,6 +48,7 @@ export default function Subscription() {
               <p className="text-xl leading-6 font-medium text-gray-900 lg:max-w-xs lg:mx-auto mb-0 lg:mb-6">
                 A single payment for your entire team
               </p>
+              <div>Hi, {auth.currentUser.displayName ?? auth.currentUser.email}</div>
               <div className="my-10 lg:my-6 flex items-baseline justify-center text-5xl leading-none font-extrabold text-gray-900">
                 <span className="font-brown">${data?.amount ?? "00"}</span>
                 <span className="text-xl leading-7 font-medium text-gray-500 font-ttnorms">

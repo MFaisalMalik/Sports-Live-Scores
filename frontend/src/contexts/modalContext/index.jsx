@@ -7,7 +7,7 @@ const context = createContext();
 export function ModalContextProvider({ children }) {
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [cancelSubModalOpen, setCancelSubModalOpen] = useState(false);
-  const [subscriptionData, setSubscriptionData] = useState(null);
+  const [subscriptionData, setSubscriptionData] = useState({});
 
   function toggleEmailModal() {
     setEmailModalOpen(!emailModalOpen);
@@ -18,14 +18,17 @@ export function ModalContextProvider({ children }) {
   }
 
   async function fetchData() {
-    await fetch(`${apiHost}/api/subscription/data/${auth.currentUser.uid}`)
+    await fetch(`${apiHost}/api/subscription/data/${auth?.currentUser?.uid}`)
       .then(async (response) => {
         if (response.ok) {
           const result = await response.json();
           setSubscriptionData(result.data);
+        } else {
+          setSubscriptionData(null)
         }
       })
       .catch((error) => {
+        setSubscriptionData(null)
         console.log(error);
       });
   }
