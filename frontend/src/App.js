@@ -28,45 +28,54 @@ import CancelSubModal from "./components/commons/CancelSubVerifyModal";
 import Subscription from "./pages/user/Subscription";
 import PaymentSuccess from "./pages/user/PaymentSuccess";
 import PaymentError from "./pages/user/PaymentError";
+import { CookiesProvider } from "react-cookie";
 
 function App() {
   return (
-    <AuthProvider>
-      <ModalContextProvider>
-        <BrowserRouter>
-          <Navbar />
-          <ScrollToTop />
-          <ToastContainer />
-          <EmailVerifyModal />
-          <CancelSubModal />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/blogs" element={<Blogs />} />
-            <Route path="/admin" element={<AdminSidebar />}>
-              <Route path="default" element={<Default />} />
-              <Route path="add-new-blog" element={<AddNewBlog />} />
-              <Route path="edit-blog/:blogSlug" element={<EditBlog />} />
-            </Route>
-            <Route path="/blogs/:blogSlug" element={<Article />} />
-            <Route path="/live-scores" element={<LiveScores />} />
-            <Route path="/:game/odds" element={<BettingOds />} />
-            <Route path="/sign-in" element={<SignIn />} />
-            <Route path="/sign-up" element={<SignUp />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/games/:gameType" element={<Games />} />
-            <Route
-              path="/games-stats/:gameType/:requestType"
-              element={<GameTable />}
-            />
-            <Route path="/players-stats/:gameType/:requestType" element={<PlayerTable />} />
-          <Route path="/:game/matchup/:slug/:id" element={<MatchUp />} />
-          <Route path="/user/subscription" element={<Subscription />} />
-          <Route path="/success-subscription" element={<PaymentSuccess />} />
-          <Route path="/cancel-subscription" element={<PaymentError />} />
-          </Routes>
-        </BrowserRouter>
-      </ModalContextProvider>
-    </AuthProvider>
+    <CookiesProvider>
+      <AuthProvider>
+        <ModalContextProvider>
+          <BrowserRouter>
+            <Navbar />
+            <ScrollToTop />
+            <ToastContainer />
+            <EmailVerifyModal />
+            <CancelSubModal />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/blogs" element={<Blogs />} />
+              <Route path="/admin" element={<AdminSidebar />}>
+                <Route path="default" element={<Default />} />
+                <Route path="add-new-blog" element={<AddNewBlog />} />
+                <Route path="edit-blog/:blogSlug" element={<EditBlog />} />
+              </Route>
+              <Route path="/blogs/:blogSlug" element={<Article />} />
+              <Route path="/live-scores" element={<LiveScores />} />
+              <Route path="/:game/odds" element={<BettingOds />} />
+              <Route path="/sign-in" element={<SignIn />} />
+              <Route path="/sign-up" element={<SignUp />} />
+              <Route path="/pricing" element={<Pricing />} />
+              <Route path="/games/:gameType" element={<Games />} />
+              <Route
+                path="/games-stats/:gameType/:requestType"
+                element={<GameTable />}
+              />
+              <Route
+                path="/players-stats/:gameType/:requestType"
+                element={<PlayerTable />}
+              />
+              <Route path="/:game/matchup/:slug/:id" element={<MatchUp />} />
+              <Route path="/user/subscription" element={<Subscription />} />
+              <Route
+                path="/success-subscription"
+                element={<PaymentSuccess />}
+              />
+              <Route path="/cancel-subscription" element={<PaymentError />} />
+            </Routes>
+          </BrowserRouter>
+        </ModalContextProvider>
+      </AuthProvider>
+    </CookiesProvider>
   );
 }
 

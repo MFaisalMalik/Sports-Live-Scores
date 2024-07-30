@@ -1,9 +1,57 @@
 import React, { useEffect, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { useNavigate, useResolvedPath } from "react-router-dom";
+import AdminLogin from "../AdminLogin";
+import { useCookies } from "react-cookie";
+import { apiHost } from "../../utils";
+
 export default function AdminSidebar() {
+
+  const [cookies, setCookie] = useCookies(["user"]);
+
+  // Expires cookie
+  var today = new Date();
+  const oneWeek = today.setDate(today.getDate()+7);
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    let username = e.target.username.value;
+    let password = e.target.password.value;
+    if (username !== "" && password !== "") {
+      try {
+        const response = await fetch(`${apiHost}/api/user/admin/login`, {
+          method: "POST",
+          body: JSON.stringify({ username, password }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (response.ok) {
+          setCookie(
+            "user",
+            { username, password },
+            {
+              path: "/",
+              expires: oneWeek,
+            }
+          );
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    // setCookie('user', user, { path: '/' })
+  }
+
+  if (cookies.user) {
+    return <Sidebar />;
+  } else {
+    return <AdminLogin onLogin={handleLogin} />;
+  }
+}
+
+const Sidebar = () => {
   const [show, setShow] = useState(true);
-  const [tooltipStatus, setTooltipStatus] = useState(0);
   const navigate = useNavigate();
   const { pathname } = useResolvedPath();
 
@@ -12,7 +60,7 @@ export default function AdminSidebar() {
       navigate("/admin/default");
     }
   }, [navigate, pathname]);
-  
+
   return (
     <>
       {/* Vertical navigation starts */}
@@ -339,4 +387,4 @@ export default function AdminSidebar() {
       </div>
     </>
   );
-}
+};
