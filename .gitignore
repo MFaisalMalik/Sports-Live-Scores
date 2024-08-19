@@ -1,6 +1,8 @@
 node_modules/
 build/
 .env
+.env*
 .DS_Store
 backend/uploads/
 uploads/
+.next/

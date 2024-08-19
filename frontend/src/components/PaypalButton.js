@@ -1,18 +1,21 @@
 import React from "react";
 import axios from "axios";
 import { auth } from "../firebase/firebase";
-import { useNavigate, useResolvedPath } from "react-router-dom";
+import { useRouter } from 'next/navigation'
 import { toast } from "react-toastify";
-import { ModalContext } from "../contexts/modalContext";
+import { useModalContext } from "../contexts/modalContext";
+import { usePathname } from "next/navigation";
+import Image from "next/image";
+import { PayPalMonogram } from "@/assets/images";
 
 export default function PayPalButton({
   subscriptionType,
   return_url,
   cancel_url,
 }) {
-  const navigate = useNavigate();
-  const { pathname } = useResolvedPath();
-  const {toggleEmailModal} = ModalContext()
+  const router = useRouter();
+  const pathname = usePathname();
+  const {toggleEmailModal} = useModalContext()
 
 
   const createSubscription = async (uid) => {
@@ -24,7 +27,7 @@ export default function PayPalButton({
 
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_HOST}/api/subscription/subscribe/${subscriptionType}`,
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/subscription/subscribe/${subscriptionType}`,
         { params }
       );
 
@@ -53,7 +56,7 @@ export default function PayPalButton({
     } else {
       toast.warning("Please Login first!");
       setTimeout(() => {
-        navigate(`/sign-in?redirect=${pathname}`);
+        router.push(`/login?redirect=${pathname}`);
       }, 500);
     }
   };
@@ -64,8 +67,8 @@ export default function PayPalButton({
       onClick={handleSubmit}
       className="bg-[#FEC33A] text-[#002F86] px-7 py-3 w-full sm:w-auto rounded-full font-medium focus:outline-none focus:ring focus:ring-offset-2 focus:ring-blue-500 flex items-center justify-center sm:justify-normal"
     >
-      <img
-        src="\images\PayPal_Monogram_Full_Color_RGB.ico"
+      <Image
+        src={PayPalMonogram}
         alt="PayPal Logo"
         width="20"
         height="20"

@@ -1,5 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
+import Image from "next/image";
+import { logo } from "@/assets/images";
 
 export default function Footer() {
   return (
@@ -9,11 +11,11 @@ export default function Footer() {
           <div className="xl:grid xl:grid-cols-3 xl:gap-8">
             <div className="space-y-4">
               <div>
-                <Link to="/">
+                <Link href="/">
                   <div className="flex items-center space-x-2 text-2xl font-medium">
                     <span>
-                      <img
-                        src="/images/logo.png"
+                      <Image
+                        src={logo}
                         alt="Logo"
                         width="64"
                         height="64"
@@ -33,7 +35,7 @@ export default function Footer() {
               </div>
               <div className="flex space-x-2">
                 <Link
-                  to=""
+                  href=""
                   target="_blank"
                   className="text-gray-200 hover:text-gray-200"
                 >
@@ -54,7 +56,7 @@ export default function Footer() {
                   </svg>
                 </Link>
                 <Link
-                  to=""
+                  href=""
                   target="_blank"
                   className="text-gray-200 hover:text-gray-200"
                 >
@@ -76,7 +78,7 @@ export default function Footer() {
                   </svg>
                 </Link>
                 <Link
-                  to=""
+                  href=""
                   target="_blank"
                   className="text-gray-200 hover:text-gray-200"
                 >
@@ -97,7 +99,7 @@ export default function Footer() {
                   </svg>
                 </Link>
                 <Link
-                  to=""
+                  href=""
                   target="_blank"
                   className="text-gray-200 hover:text-gray-200"
                 >
@@ -114,7 +116,7 @@ export default function Footer() {
                   </svg>
                 </Link>
                 <Link
-                  to=""
+                  href=""
                   target="_blank"
                   className="text-gray-200 hover:text-gray-200"
                 >
@@ -143,7 +145,7 @@ export default function Footer() {
                   <ul role="list" className="mt-6 space-y-4">
                     <li>
                       <Link
-                        to="/aiplatform"
+                        href="/aiplatform"
                         className="text-md leading-6 text-gray-300 hover:text-gray-50"
                       >
                         AI Platform
@@ -151,7 +153,7 @@ export default function Footer() {
                     </li>
                     <li>
                       <Link
-                        to="/aialgorithms"
+                        href="/aialgorithms"
                         className="text-md leading-6 text-gray-300 hover:text-gray-50"
                       >
                         AI Algorithms
@@ -159,7 +161,7 @@ export default function Footer() {
                     </li>
                     <li>
                       <Link
-                        to="/industryapplications"
+                        href="/industryapplications"
                         className="text-md leading-6 text-gray-300 hover:text-gray-50"
                       >
                         Industry Applications
@@ -174,7 +176,7 @@ export default function Footer() {
                   <ul role="list" className="mt-6 space-y-4">
                     <li>
                       <Link
-                        to="/predictiveanalysis"
+                        href="/predictiveanalysis"
                         className="text-md leading-6 text-gray-300 hover:text-gray-50"
                       >
                         Predictive Analysis
@@ -182,7 +184,7 @@ export default function Footer() {
                     </li>
                     <li>
                       <Link
-                        to="/customerexperience"
+                        href="/customerexperience"
                         className="text-md leading-6 text-gray-300 hover:text-gray-50"
                       >
                         Customer Experience
@@ -190,7 +192,7 @@ export default function Footer() {
                     </li>
                     <li>
                       <Link
-                        to="/automation"
+                        href="/automation"
                         className="text-md leading-6 text-gray-300 hover:text-gray-50"
                       >
                         Automation
@@ -207,7 +209,7 @@ export default function Footer() {
                   <ul role="list" className="mt-6 space-y-4">
                     <li>
                       <Link
-                        to="/pricing"
+                        href="/pricing"
                         className="text-md leading-6 text-gray-300 hover:text-gray-50"
                       >
                         Pricing
@@ -215,15 +217,15 @@ export default function Footer() {
                     </li>
                     <li>
                       <Link
-                        to="/blog"
+                        href="/blogs"
                         className="text-md leading-6 text-gray-300 hover:text-gray-50"
                       >
-                        Blog
+                        Blogs
                       </Link>
                     </li>
                     <li>
                       <Link
-                        to="/casestudies"
+                        href="/casestudies"
                         className="text-md leading-6 text-gray-300 hover:text-gray-50"
                       >
                         Case Studies
@@ -231,7 +233,7 @@ export default function Footer() {
                     </li>
                     <li>
                       <Link
-                        to="/terms"
+                        href="/terms"
                         className="text-md leading-6 text-gray-300 hover:text-gray-50"
                       >
                         Terms of Service
@@ -239,7 +241,7 @@ export default function Footer() {
                     </li>
                     <li>
                       <Link
-                        to="/privacy"
+                        href="/privacy"
                         className="text-md leading-6 text-gray-300 hover:text-gray-50"
                       >
                         Privacy Policy
@@ -254,7 +256,7 @@ export default function Footer() {
                   <ul role="list" className="mt-6 space-y-4">
                     <li>
                       <Link
-                        to="/aboutus"
+                        href="/aboutus"
                         className="text-md leading-6 text-gray-300 hover:text-gray-50"
                       >
                         About Us
@@ -262,7 +264,7 @@ export default function Footer() {
                     </li>
                     <li>
                       <Link
-                        to="/careers"
+                        href="/careers"
                         className="text-md leading-6 text-gray-300 hover:text-gray-50"
                       >
                         Careers
@@ -270,7 +272,7 @@ export default function Footer() {
                     </li>
                     <li>
                       <Link
-                        to="/contactus"
+                        href="/contactus"
                         className="text-md leading-6 text-gray-300 hover:text-gray-50"
                       >
                         Contact Us

@@ -8,7 +8,7 @@ function PackageCard(props) {
         <div className="cards__item__link package_item">
             <p className="package__name">{props.name}</p>
             <p className="package__price">{props.price}</p>
-            <Button name= 'select' buttonStyle='btn--rounded' buttonSize='btn--large' to='/sign-up'>Select</Button>            
+            <Button name= 'select' buttonStyle='btn--rounded' buttonSize='btn--large' href='/register'>Select</Button>            
         </div>
       </li>
     </>

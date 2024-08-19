@@ -1,9 +1,12 @@
+"use client"
+
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { apiHost } from "../../utils";
-import { Loader } from "../../pages/LiveScores";
+import Link from "next/link";
+import { apiHost } from "@/utils";
 import { toast } from "react-toastify";
 import LoaderSpinner from "../LoaderSpinner";
+import { dummyPost } from "@/assets/images";
+import Loader from "../LiveScores/Loader";
 
 export default function BlogList() {
   const [blogs, setBlogs] = useState([]);
@@ -56,7 +59,7 @@ export default function BlogList() {
           Blogs
         </h1>
         <Link
-          to="/admin/add-new-blog"
+          href="/admin/add-new-blog"
           className="rounded-lg border border-blue-500 py-1 px-2 text-blue-500 font-medium"
         >
           + Add New
@@ -73,7 +76,7 @@ export default function BlogList() {
                   src={
                     item.image
                       ? item.image
-                      : "/images/no-image-available-icon-vector.jpg"
+                      : dummyPost.src
                   }
                   alt={item.title}
                 />
@@ -82,9 +85,10 @@ export default function BlogList() {
                 <h3 className="truncate font-semibold text-gray-600">
                   {item.title}
                 </h3>
+                <p className="text-xs text-gray-500 font-medium">last modified: {new Date(item.date).toLocaleDateString("en-US", {day: "numeric", month: 'short', year: '2-digit'})}</p>
                 <div className="mt-2 flex gap-x-2">
                   <Link
-                    to={`/admin/edit-blog/${item.slug}`}
+                    href={`/admin/edit-blog/${item.slug}`}
                     className="flex items-center text-gray-400 p-1 rounded-lg hover:bg-gray-100 max-w-max"
                   >
                     <EditIcon className="w-4 h-4 mr-2" />

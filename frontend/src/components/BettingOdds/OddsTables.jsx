@@ -1,10 +1,14 @@
+"use client"
+
 import React, { useEffect, useRef, useState } from "react";
 import BestOddsBadge from "./BestOddsBadge";
 import BetMgmLogo from "./BetMgmLogo";
-import { Link } from "react-router-dom";
 import clsx from "clsx";
-import { Loader, getDays } from "../../pages/LiveScores";
-import { formatCost, formatLine } from "../../utils/formatOdd";
+import Loader from "../LiveScores/Loader";
+import getDays from "@/utils/getDays";
+import { formatCost, formatLine } from "@/utils/formatOdd";
+import Image from "next/image";
+import { bet365, betrivers, caesars, draftsKing, espnbets, fanduel, partycasino, sugarhouse } from "@/assets/images";
 
 export default function OddsTables({ game }) {
   const tableHeadRef = useRef();
@@ -165,57 +169,57 @@ const TableHead = ({ tableHeadRef }) => {
           <BetMgmLogo className="w-24" />
         </div>
         <div className="w-28 md:w-32 h-12 md:h-10 font-black text-xs md:text-sm py-2 rounded-lg bg-black flex items-center justify-center gap-x-2">
-          <img
-            src="/images/dk-sb-logo-dark.svg"
+          <Image
+            src={draftsKing}
             className="w-full h-full py-px px-1 object-contain"
             alt=""
           />
         </div>
         <div className="w-28 md:w-32 h-12 md:h-10 font-black text-xs md:text-sm py-2 rounded-lg bg-[#243657] flex items-center justify-center gap-x-2">
-          <img
-            src="/images/fd-sb-logo-dark.svg"
+          <Image
+            src={fanduel}
             className="w-full h-full py-px px-1 object-contain"
             alt=""
           />
         </div>
         <div className="w-28 md:w-32 h-12 md:h-10 font-black text-xs md:text-sm py-2 rounded-lg bg-[#093532] flex items-center justify-center gap-x-2">
-          <img
-            src="/images/caesars-logo-dark-3.svg"
+          <Image
+            src={caesars}
             className="w-full h-full py-px px-1 object-contain"
             alt=""
           />
         </div>
         <div className="w-28 md:w-32 h-12 md:h-10 font-black text-xs md:text-sm py-2 rounded-lg bg-[#00142b] flex items-center justify-center gap-x-2">
-          <img
-            src="/images/espnbet-dark.svg"
+          <Image
+            src={espnbets}
             className="w-full h-full py-px px-1 object-contain"
             alt=""
           />
         </div>
         <div className="w-28 md:w-32 h-12 md:h-10 font-black text-xs md:text-sm py-2 rounded-lg bg-[#027b5b] flex items-center justify-center gap-x-2">
-          <img
-            src="/images/bet365-logo-dark.svg"
+          <Image
+            src={bet365}
             className="w-full h-full py-px px-1 object-contain"
             alt=""
           />
         </div>
         <div className="w-28 md:w-32 h-12 md:h-10 font-black text-xs md:text-sm py-2 rounded-lg bg-[#21517d] flex items-center justify-center gap-x-2">
-          <img
-            src="/images/sugarhouse-logo-dark.svg"
+          <Image
+            src={sugarhouse}
             className="w-full h-full py-px px-1 object-contain"
             alt=""
           />
         </div>
         <div className="w-28 md:w-32 h-12 md:h-10 font-black text-xs md:text-sm py-2 rounded-lg bg-[#1a2c4d] flex items-center justify-center gap-x-2">
-          <img
-            src="/images/betrivers-logo-dark.svg"
+          <Image
+            src={betrivers}
             className="w-full h-full py-px px-1 object-contain"
             alt=""
           />
         </div>
         <div className="w-28 md:w-32 h-12 md:h-10 font-black text-xs md:text-sm py-2 rounded-lg bg-[#201551] flex items-center justify-center gap-x-2">
-          <img
-            src="/images/partycasino-logo-dark.svg"
+          <Image
+            src={partycasino}
             className="w-full h-full py-px px-1 object-contain"
             alt=""
           />
@@ -261,7 +265,7 @@ const Match = ({ data, game, eventIds }) => {
             </span> */}
           </div>
           {/* <Link
-            to={`/mlb/matchup/team-vs-team/${matchInfo.id}`}
+            href={`/mlb/matchup/team-vs-team/${matchInfo.id}`}
             className="text-blue-700 font-bold"
           >
             View Matchup

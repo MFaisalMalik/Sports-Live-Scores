@@ -42,7 +42,7 @@ export default function Header(props) {
                 "text-sm whitespace-nowrap font-semibold rounded-full py-2 px-4 bg-white border border-gray-300 hover:border-blue-400",
                 odds === item && "border-blue-400"
               )}
-              // to={`/betting-odds/${match}/${odds}`}
+              // href={`/betting-odds/${match}/${odds}`}
             >
               {item}
             </button>

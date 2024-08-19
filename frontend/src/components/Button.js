@@ -1,10 +1,10 @@
 // import React from 'react';
 // import './Button.css';
-// import { Link } from 'react-router-dom';
+// import { Link } from 'next/navigation';
 
 // export function Button() {
 //   return (
-//     <Link to='sign-up'>
+//     <Link href='/register'>
 //       <button className='btn'>Sign Up</button>
 //     </Link>
 //   );
@@ -12,7 +12,7 @@
 
 import React from 'react';
 import './Button.css';
-import { Link } from 'react-router-dom';
+import { Link } from 'next/navigation';
 
 const STYLES = ['btn--primary', 'btn--outline', 'btn--test', 'btn--rounded'];
 
@@ -36,7 +36,7 @@ export const Button = ({
 
   const checkName = name ? name : 'no-name';
   return (
-    <Link to={to} className=''>
+    <Link href={to} className=''>
       <button
         className={`btn ${checkButtonStyle} ${checkButtonSize} ${extraClass}`}
         onClick={onClick}

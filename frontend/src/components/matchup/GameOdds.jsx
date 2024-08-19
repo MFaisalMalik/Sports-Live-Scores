@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { formatLine, formatCost } from "../../utils/formatOdd";
-import { Loader } from "../../pages/LiveScores";
+"use client"
+
+import React from "react";
+import Link from "next/link";
+import { formatLine, formatCost } from "@/utils/formatOdd";
+import Loader from "../LiveScores/Loader";
 
 export default function GameOdds({ oddsLoading, notFound, eventInfo, odds, game }) {
   // const [notFound, setNotFound] = useState(false);
@@ -36,7 +38,7 @@ export default function GameOdds({ oddsLoading, notFound, eventInfo, odds, game 
   const sugarhouseLine = formatLine(sugarhouse?.lines[0]?.line);
   const sugarhouseCost = formatCost(sugarhouse?.lines[0]?.cost);
   return (
-    <div className="w-full mt-8 flex gap-x-4 px-4 md:px-8 lg:px-12">
+    <div className="w-full mt-6 flex gap-x-4 px-4 md:px-8 lg:px-12">
       <div className="w-full bg-white rounded-xl shadow-sm p-4 md:p-6">
         <h2 className="font-semibold md:font-bold md:text-lg flex">
           <svg
@@ -216,7 +218,7 @@ export default function GameOdds({ oddsLoading, notFound, eventInfo, odds, game 
         <div className="mt-4 flex justify-center">
           <Link
             className="mx-auto font-bold text-blue-500"
-            to={`/${game}/odds`}
+            href={`/odds/${game}`}
           >
             View More Odds
           </Link>

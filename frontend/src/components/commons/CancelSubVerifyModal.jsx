@@ -1,13 +1,15 @@
+"use client"
+
 import { toast } from "react-toastify";
 import { auth } from "../../firebase/firebase";
-import { ModalContext } from "../../contexts/modalContext";
+import { useModalContext } from "../../contexts/modalContext";
 import { apiHost } from "../../utils";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 
 export default function CancelSubModal() {
   const user = auth.currentUser;
-  const { cancelSubModalOpen, toggleCancelSubModal, subscriptionData } = ModalContext();
-  const navigate = useNavigate()
+  const { cancelSubModalOpen, toggleCancelSubModal, subscriptionData } = useModalContext();
+  const router = useRouter()
   const cancleSubscription = () => {
     fetch(`${apiHost}/api/subscription/unsubscribe/${user.uid}/${subscriptionData.id}`)
       .then((response) => {
@@ -16,7 +18,7 @@ export default function CancelSubModal() {
           const result = response.json()
           toast.success(result.message);
           toggleCancelSubModal();
-          navigate("/")
+          router.push("/")
         }
         else {
           toast.error("something went wrong.")

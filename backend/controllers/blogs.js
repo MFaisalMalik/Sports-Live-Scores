@@ -7,6 +7,8 @@ import {
   getDocs,
   getDoc,
   deleteDoc,
+  orderBy,
+  query,
 } from "firebase/firestore";
 import fs from "fs";
 import { getDownloadURL, ref, uploadBytes, getStorage } from "firebase/storage";
@@ -141,13 +143,17 @@ export const checkSlugAvailability = async (req, res) => {
 };
 
 export const getBlogs = async (req, res) => {
-  const querySnapshot = await getDocs(collection(db, "blogs"));
-  if (querySnapshot) {
+  const blogsCollection = collection(db, "blogs");
+  const snapshot = await getDocs(
+    query(blogsCollection, orderBy("date", "desc"))
+  );
+
+  if (snapshot) {
     let data = [];
-    querySnapshot.forEach((doc) => {
+    snapshot.forEach((doc) => {
       data.push(doc.data());
     });
-    res.json(data);
+    return res.json(data);
   } else {
     res.send({ error: "error" });
   }

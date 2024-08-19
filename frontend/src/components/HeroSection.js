@@ -1,11 +1,12 @@
+"use client"
+
 import React from "react";
-import "../App.css";
 import "./HeroSection.css";
 import ChevronDownIcon from "./commons/ChevronDownIcon";
 
 function HeroSection() {
   return (
-    <div className="w-full bg-[url('/public/images/Banner.jpg')] bg-cover bg-no-repeat bg-center min-h-[90vh] ">
+    <div className="w-full bg-[url('../assets/images/Banner.jpg')] bg-cover bg-no-repeat bg-center min-h-[90vh] bg-[--navbar-color]">
       <div className="w-full h-full min-h-[90vh] bg-black/70">
         <div className="container mx-auto px-4 md:px-8 lg:px-12 py-10 relative flex w-full h-full min-h-[90vh] flex-col justify-center items-center ">
           <div

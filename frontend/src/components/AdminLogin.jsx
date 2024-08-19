@@ -1,3 +1,5 @@
+import { logo } from "@/assets/images";
+import Image from "next/image";
 import React from "react";
 
 export default function AdminLogin({onLogin}) {
@@ -7,9 +9,10 @@ export default function AdminLogin({onLogin}) {
         <form onSubmit={onLogin} className="min-h-96 min-w-80 px-8 py-6 mt-4 text-left bg-white  rounded-xl shadow-lg">
           <div className="flex flex-col justify-center items-center h-full select-none">
             <div className="flex flex-col items-center justify-center gap-2 mb-8">
-                <img
-                  src="/images/logo.png"
-                  className="w-8"
+                <Image
+                  src={logo}
+                  className="w-14"
+                  alt="logo"
                 />
               <p className="m-0 text-[16px] font-semibold">
                 Login to as Admin

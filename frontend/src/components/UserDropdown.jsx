@@ -1,15 +1,18 @@
+"use client"
+
 import React, { useEffect, useRef, useState } from "react";
-import { useClickOutside } from "../utils/useClickOutside";
-import { Link, useNavigate } from "react-router-dom";
-import { doSignOut } from "../firebase/auth";
-import { auth } from "../firebase/firebase";
-import ShieldExclaimation from "../components/commons/ShieldExclaimation";
+import { useClickOutside } from "@/utils/useClickOutside";
+import { useRouter } from "next/navigation";
+import Link from 'next/link'
+import { doSignOut } from "@/firebase/auth";
+import { auth } from "@/firebase/firebase";
+import ShieldExclaimation from "@/components/commons/ShieldExclaimation";
 import ShieldCheck from "./commons/ShieldCheck";
-import { ModalContext } from "../contexts/modalContext";
-import { apiHost } from "../utils";
+import { useModalContext } from "@/contexts/modalContext";
+import { apiHost } from "@/utils";
 
 export default function UserDropdown() {
-  const { toggleEmailModal } = ModalContext();
+  const { toggleEmailModal } = useModalContext();
   const [open, setOpen] = useState(false);
   const [hasSubscription, setHasSubscription] = useState(false);
   const user = auth.currentUser;
@@ -22,7 +25,7 @@ export default function UserDropdown() {
     userEmail?.length > 14 ? userEmail?.substring(0, 14) + "..." : userEmail;
 
   const wrapperRef = useRef(null);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const close = () => {
     setOpen(false);
@@ -125,7 +128,7 @@ export default function UserDropdown() {
               <nav className="grid gap-1">
                 {hasSubscription && (
                   <Link
-                    to="/user/subscription"
+                    href="/user/subscription"
                     onClick={close}
                     className="flex items-center leading-6 space-x-3 py-3 px-4 w-full text-lg text-gray-500 focus:outline-none hover:bg-gray-100 rounded-md"
                   >
@@ -143,7 +146,7 @@ export default function UserDropdown() {
                   </Link>
                 )}
                 <Link
-                  to="#"
+                  href="#"
                   onClick={close}
                   className="flex items-center leading-6 space-x-3 py-3 px-4 w-full text-lg text-gray-500 focus:outline-none hover:bg-gray-100 rounded-md"
                 >
@@ -167,7 +170,7 @@ export default function UserDropdown() {
                 type="button"
                 onClick={() => {
                   doSignOut().then(() => {
-                    navigate("/", true);
+                    router.push("/", true);
                   });
                 }}
                 className="flex items-center space-x-3 py-3 px-4 w-full leading-6 text-lg text-gray-500 focus:outline-none hover:bg-gray-100 rounded-md"

@@ -1,7 +1,10 @@
+"use client"
+
 import React, { useEffect, useState } from "react";
 import { apiHost } from "../../utils";
 import Markdown from "react-markdown";
-import { Link } from "react-router-dom";
+import Link from "next/link";
+import { dummyPost } from "@/assets/images";
 
 export default function RelatedArticles() {
   const [blogs, setBlogs] = useState([]);
@@ -130,10 +133,10 @@ export default function RelatedArticles() {
 const BlogCard = ({title, slug, content, image}) => {
   return (
     <li className="">
-      <Link to={`/blogs/${slug}`} className="relative flex gap-x-4">
+      <Link href={`/blogs/${slug}`} className="relative flex gap-x-4">
       <img
-        src={image || '/images/no-image-available-icon-vector.jpg'}
-        alt=""
+        src={image ?? dummyPost.src}
+        alt="blogImage"
         className="shadow-md rounded-lg bg-slate-50 w-28 h-20 object-cover"
       />
       <div className="sm:ml-6 xl:ml-0 overflow-hidden truncate">

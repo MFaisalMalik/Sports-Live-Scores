@@ -1,6 +1,7 @@
 import React from "react";
 import "./Cards.css";
 import CardItem from "./CardItem";
+import { Baseball, Hockey, basketball, football } from "@/assets/images";
 
 function Cards() {
   return (
@@ -13,24 +14,24 @@ function Cards() {
           <h2 className="font-bold text-4xl">Best Picks!</h2>
           <ul className="mt-10 w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <CardItem
-              src="images/Football.jpg"
+              image={football}
               text="Football"
               path="/games/football"
               id="left-card"
             />
             <CardItem
-              src="images/Baseball.jpg"
+              image={Baseball}
               text="Baseball"
               path="/games/baseball"
             />
             <CardItem
-              src="images/Basketball.jpg"
+              image={basketball}
               text="Basketball"
               path="/games/basketball"
               id="left-card"
             />
             <CardItem
-              src="images/Hockey.jpg"
+              image={Hockey}
               text="Hockey"
               path="/games/hockey"
             />

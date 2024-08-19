@@ -1,11 +1,13 @@
+"use client"
+
 import { sendEmailVerification } from "firebase/auth";
 import { toast } from "react-toastify";
 import { auth } from "../../firebase/firebase";
-import { ModalContext } from "../../contexts/modalContext";
+import { useModalContext } from "@/contexts/modalContext";
 
 export default function EmailVerifyModal () {
   const user = auth.currentUser
-  const {emailModalOpen, toggleEmailModal} = ModalContext()
+  const {emailModalOpen, toggleEmailModal} = useModalContext()
 
 
   const sendVerfication = () => {

@@ -1,9 +1,12 @@
+'use client'
+
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from 'next/navigation'
+import Link from "next/link";
 
 export default function GameNPlayerCard(props) {
   return (
-    <Link to={props.link}>
+    <Link href={props.link}>
       <div className="relative group">
         <span className="absolute top-0 left-0 w-full h-full mt-1 ml-1 group-hover:mt-[2px] group-hover:ml-[2px] transition-all bg-indigo-500 rounded-lg"></span>
         <div className="relative h-full p-5 bg-white border-2 border-indigo-500 rounded-lg">

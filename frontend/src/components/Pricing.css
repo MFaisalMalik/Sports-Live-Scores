@@ -1,0 +1,22 @@
+
+
+
+.packages {
+  padding-top: 7rem;  
+}
+
+.package_item {
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+  border: 1px solid #070F2B;
+}
+
+.package__name {
+  font-size: 20px;
+}
+
+.package__price {
+  font-size: 30px;
+}
+

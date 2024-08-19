@@ -1,6 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import slugify from "slugify";
+import Link from "next/link";
+import { placeholderBlue } from "@/assets/images";
 
 export default function BlogCard({ image, title, slug, date }) {
   const monthNames = [
@@ -22,10 +22,11 @@ export default function BlogCard({ image, title, slug, date }) {
   const month = monthNames[new Date(date).getMonth()];
 
   return (
-    <div
-      className="relative rounded-xl overflow-hidden border flex items-end justify-start w-full text-left bg-center bg-cover h-96"
+    <Link
+      href={`/blogs/${slug}`}
+      className="relative rounded-xl cursor-pointer overflow-hidden flex items-end bg-blue-200 justify-start w-full text-left bg-center bg-cover h-96 ring-2 ring-blue-400/40"
       style={{
-        backgroundImage: `url(${image || 'https://media.istockphoto.com/id/1198931639/photo/writing-a-blog-blogger-influencer-reading-text-on-screen.jpg?s=612x612&w=0&k=20&c=4FJ_fzzZYqBoGG-RY8fcohpaOKKwnnI-ik58cPy6t-g='})`,
+        backgroundImage: `url(${image ?? placeholderBlue.src})`,
       }}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/70 "></div>
@@ -42,13 +43,14 @@ export default function BlogCard({ image, title, slug, date }) {
       <h2 className="z-10 p-5">
         <Link
           rel="noopener noreferrer"
-          to={`/blogs/${slug}`}
-          className="font-medium text-white text-md hover:underline"
+          href={`/blogs/${slug}`}
+          title={title}
+          className="font-semibold text-white text-md hover:underline"
         >
           {" "}
-          {title}
+          {title?.length < 55 ? title : `${title?.slice(0, 55)}...`}
         </Link>
       </h2>
-    </div>
+    </Link>
   );
 }

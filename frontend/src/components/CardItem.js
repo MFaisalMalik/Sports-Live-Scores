@@ -1,5 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
+import Image from "next/image";
 
 function CardItem(props) {
   return (
@@ -8,12 +9,12 @@ function CardItem(props) {
         id={props.id}
         className="group hover:-translate-y-2 transition duration-500 ease-in-out rounded-xl bg-white"
       >
-        <Link className="relative cards__item__link" to={props.path}>
+        <Link className="relative cards__item__link" href={props.path}>
           <figure className="cards__item__pic-wrap">
-            <img
+            <Image
               className="cards__item__img group-hover:scale-105 transition-all ease-in duration-300"
               alt={`${props.text}`}
-              src={props.src}
+              src={props.image}
             />
           </figure>
           <div className="absolute bottom-0 w-full flex items-center justify-center p-4 bg-gradient-to-t from-black to-transparent">

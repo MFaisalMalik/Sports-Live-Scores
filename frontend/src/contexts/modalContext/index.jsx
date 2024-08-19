@@ -1,3 +1,5 @@
+"use client"
+
 import { createContext, useContext, useEffect, useState } from "react";
 import { apiHost } from "../../utils";
 import { auth } from "../../firebase/firebase";
@@ -55,6 +57,6 @@ export function ModalContextProvider({ children }) {
   );
 }
 
-export const ModalContext = () => {
+export const useModalContext = () => {
   return useContext(context);
 };
