@@ -10,8 +10,8 @@ export default function AdminSidebar() {
   const [cookies, setCookie] = useCookies(["user"]);
 
   // Expires cookie
-  var today = new Date();
-  const oneWeek = today.setDate(today.getDate()+7);
+  var oneWeek = new Date();
+  oneWeek.setDate(oneWeek.getDate()+7);
 
   async function handleLogin(e) {
     e.preventDefault();
