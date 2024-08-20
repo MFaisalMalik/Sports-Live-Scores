@@ -14,7 +14,7 @@ import {
   TablePagination,
 } from "@mui/material";
 import { auth } from "@/firebase/firebase";
-import Loader from "@/components/LiveScores/Loader";
+import Loader from "@/components/livescores/Loader";;
 import { apiHost } from "@/utils";
 
 export default function GameTable() {

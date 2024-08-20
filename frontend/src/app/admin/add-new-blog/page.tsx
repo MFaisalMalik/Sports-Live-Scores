@@ -21,23 +21,23 @@ export default function AddNewBlog() {
 
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
-  const [displayImages, setDisplayImages] = useState([]);
-  const [images, setImages] = useState([]);
+  const [displayImages, setDisplayImages] = useState<string[]>([]);
+  const [images, setImages] = useState<File[]>([]);
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
   const [slugLoading, setSlugLoading] = useState(false);
   const [slugAvailable, setSlugAvailable] = useState(true);
 
   function imagesUploadHandler(e: HTMLInputEvent) {
-    const files = Array.from(e.target.files)
+    const files = Array.from(e.target.files || [])
   
     setImages(files);
-    // if (e.target.files.length > 2) alert('You can only upload maximum two [2] images');
     files.forEach((item, i) => {
       let reader = new FileReader();
       reader.readAsDataURL(item);
       reader.onload = (e) => {
-        setDisplayImages((prevState) => [...prevState, e.target.result]);
+        const result = e.target?.result as string;
+        setDisplayImages((prevState) => [...prevState, result]);
       };
     });
   }
@@ -238,7 +238,7 @@ export default function AddNewBlog() {
               className="rounded-lg p-2 w-full bg-blue-500 text-white flex items-center justify-center"
             >
               {loading ? (
-                <LoaderSpinner loaderStyle="size-4 stroke-white" size={5} color="white" />
+                <LoaderSpinner loaderStyle="size-4 stroke-white"/>
               ) : (
                 <span>Save </span>
               )}
@@ -250,10 +250,10 @@ export default function AddNewBlog() {
   );
 }
 
-function BlogImages({ images, removeImage }) {
+function BlogImages({ images, removeImage }: { images: string[], removeImage: (index: number)=> void}) {
   return (
     <div className="flex flex-wrap gap-3 mt-4 mb-10">
-      {images.map((image: string | StaticImport, index: React.Key | null | undefined) => {
+      {images.map((image: string | StaticImport, index: number) => {
         // console.log(index,image.slice(0,10))
         return (
           <div
@@ -284,25 +284,25 @@ function BlogImages({ images, removeImage }) {
   );
 }
 
-function SelectedFiles({ data, onRemove, className }) {
-  return (
-    <div className={`grid grid-cols-1 gap-3 ${className}`}>
-      {data.map((item: { name: boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<React.AwaitedReactNode> | React.Key | null | undefined; }) => (
-        <div
-          key={item.name}
-          className="relative h-full rounded-xl border border-gray-200 bg-white text-sm"
-        >
-          <button
-            onClick={() => onRemove(item)}
-            className="absolute -left-1 -top-1 flex items-center justify-center rounded-full bg-gray-300 p-1 shadow-md"
-          >
-            <CrossIcon className="h-3 w-3 font-bold " />
-          </button>
-          <div className=" h-12 justify-center rounded-xl bg-white p-3 text-sm outline-none">
-            <p>{item.name}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
+// function SelectedFiles({ data, onRemove, className }) {
+//   return (
+//     <div className={`grid grid-cols-1 gap-3 ${className}`}>
+//       {data.map((item: { name: boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<React.AwaitedReactNode> | React.Key | null | undefined; }) => (
+//         <div
+//           key={item.name}
+//           className="relative h-full rounded-xl border border-gray-200 bg-white text-sm"
+//         >
+//           <button
+//             onClick={() => onRemove(item)}
+//             className="absolute -left-1 -top-1 flex items-center justify-center rounded-full bg-gray-300 p-1 shadow-md"
+//           >
+//             <CrossIcon className="h-3 w-3 font-bold " />
+//           </button>
+//           <div className=" h-12 justify-center rounded-xl bg-white p-3 text-sm outline-none">
+//             <p>{item.name}</p>
+//           </div>
+//         </div>
+//       ))}
+//     </div>
+//   );
+// }

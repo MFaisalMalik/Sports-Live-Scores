@@ -24,12 +24,11 @@ import {
 import "@mdxeditor/editor/style.css";
 import { useRef } from "react";
 
-export default function RichTextEditor({ editorRef, value, setValue }) {
+export default function RichTextEditor({ value, setValue }) {
   const inserImageRef = useRef()
   return (
     <div className="bg-white rounded-lg">
     <MDXEditor
-      ref={editorRef}
       onChange={setValue}
       markdown={value}
       plugins={[

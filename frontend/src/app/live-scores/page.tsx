@@ -6,7 +6,7 @@ import getDays from "@/utils/getDays"
 import NextArrow from "@/components/livescores/NextArrow"
 import PrevArrow from '@/components/livescores/PrevArrow'
 import SingleMatch from "@/components/livescores/SingleMatch"
-import Loader from "@/components/LiveScores/Loader";
+import Loader from "@/components/livescores/Loader";;
 import { mlb, nba, nfl, nhl } from "@/assets/images";
 import Image from "next/image";
 

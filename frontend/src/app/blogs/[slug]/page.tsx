@@ -1,15 +1,16 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import BlogCard from "@/components/BlogCard";
 import { apiHost } from "@/utils";
 import Markdown from "react-markdown";
+import Loader from "@/components/livescores/Loader";
 
 export default function Article() {
   const { slug } = useParams();
-  const [article, setArticle] = useState();
-  const [blogs, setBlogs] = useState();
+  const [article, setArticle] = useState(null);
+  const [blogs, setBlogs] = useState(null);
 
   useEffect(() => {
     fetch(`${apiHost}/api/blogs/${slug}`, {
@@ -43,24 +44,34 @@ export default function Article() {
   return (
     <>
       <section className="container mx-auto p-5 sm:p-10 md:p-16 relative">
-        {article?.image && (
-          <div
-            className={`bg-cover bg-center text-center overflow-hidden min-h-[500px] rounded-xl `}
-            style={{
-              backgroundImage: `url(${article?.image})`,
-            }}
-          />
-        )}
-        <div className="max-w-3xl mx-auto mt-20">
-          <div className="mt-3 bg-white flex flex-col justify-between leading-normal">
-            <div className="bg-white rounded-none lg:rounded-xl relative top-0 lg:px-8">
-              <h1 className="text-gray-900 font-bold text-3xl mb-5">
-                {article?.title}
-              </h1>
-              {article?.content && <Markdown className="prose prose-headings:p-0 prose-headings:mb-2 prose-img:rounded-lg prose-a:no-underline prose-a:text-blue-500">{article.content}</Markdown>}
+        {article ? (
+          <>
+            {article.image && (
+              <div
+                className={`bg-cover bg-center text-center overflow-hidden min-h-[500px] rounded-xl `}
+                style={{
+                  backgroundImage: `url(${article?.image})`,
+                }}
+              />
+            )}
+            <div className="max-w-3xl mx-auto mt-20">
+              <div className="mt-3 bg-white flex flex-col justify-between leading-normal">
+                <div className="bg-white rounded-none lg:rounded-xl relative top-0 lg:px-8">
+                  <h1 className="text-gray-900 font-bold text-3xl mb-5">
+                    {article?.title}
+                  </h1>
+                  {article?.content && (
+                    <Markdown className="prose prose-headings:p-0 prose-headings:mb-2 prose-img:rounded-lg prose-a:no-underline prose-a:text-blue-500">
+                      {article.content}
+                    </Markdown>
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          </>
+        ) : (
+          <Loader />
+        )}
       </section>
 
       <div className="bg-blue-100">

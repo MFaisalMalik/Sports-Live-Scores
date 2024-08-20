@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useCallback, useEffect, useState } from "react";
 import React from "react";
@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { auth } from "@/firebase/firebase";
 import { apiHost } from "@/utils";
-import Loader from "@/components/LiveScores/Loader";
+import Loader from "@/components/livescores/Loader";
 
 export default function PlayerTable() {
   const { game, type } = useParams();
@@ -35,9 +35,7 @@ export default function PlayerTable() {
       hockey: "NHL",
     };
     let url = new URL(
-      `${apiHost}/api/games/players/${type}/${
-        gamesCodes[game] || "MLB"
-      }`
+      `${apiHost}/api/games/players/${type}/${gamesCodes[game] || "MLB"}`
     );
     let params = new URLSearchParams(url.search);
     if (type === "premium" && auth.currentUser) {
@@ -108,6 +106,8 @@ export default function PlayerTable() {
     year: "numeric",
   });
 
+  console.log(playerStats);
+
   return (
     <main className="min-h-screen">
       <div className="container mx-auto px-4 md:px-8 lg:px-12">
@@ -135,9 +135,11 @@ export default function PlayerTable() {
                         Market
                       </TableCell>
                     )}
+
                     <TableCell align="center" sx={headerCellStyles}>
                       Expected Value
                     </TableCell>
+
                     <TableCell align="center" sx={headerCellStyles}>
                       Win Probability
                     </TableCell>

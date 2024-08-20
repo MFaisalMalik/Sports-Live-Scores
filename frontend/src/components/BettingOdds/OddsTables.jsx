@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import BestOddsBadge from "./BestOddsBadge";
 import BetMgmLogo from "./BetMgmLogo";
 import clsx from "clsx";
-import Loader from "../LiveScores/Loader";
+import Loader from "../livescores/Loader";
 import getDays from "@/utils/getDays";
 import { formatCost, formatLine } from "@/utils/formatOdd";
 import Image from "next/image";

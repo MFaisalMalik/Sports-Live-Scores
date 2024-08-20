@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { formatLine, formatCost } from "@/utils/formatOdd";
-import Loader from "../LiveScores/Loader";
+import Loader from "../livescores/Loader";
 
 export default function GameOdds({ oddsLoading, notFound, eventInfo, odds, game }) {
   // const [notFound, setNotFound] = useState(false);

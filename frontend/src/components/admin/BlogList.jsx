@@ -6,7 +6,7 @@ import { apiHost } from "@/utils";
 import { toast } from "react-toastify";
 import LoaderSpinner from "../LoaderSpinner";
 import { dummyPost } from "@/assets/images";
-import Loader from "../LiveScores/Loader";
+import Loader from "../livescores/Loader";
 
 export default function BlogList() {
   const [blogs, setBlogs] = useState([]);

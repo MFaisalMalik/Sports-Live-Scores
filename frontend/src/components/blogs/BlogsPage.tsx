@@ -5,7 +5,7 @@ import BlogCard from "@/components/BlogCard";
 import Link from "next/link";
 
 import { apiHost } from "@/utils";
-import Loader from "@/components/LiveScores/Loader";
+import Loader from "@/components/livescores/Loader";;
 
 export default function BlogsPage() {
   const [blogs, setBlogs] = useState([]);

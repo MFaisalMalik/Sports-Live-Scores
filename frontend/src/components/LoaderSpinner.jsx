@@ -1,7 +1,7 @@
 import React from "react";
 
-export default function LoaderSpinner( {loaderStyle} ) {
-  const className = `animate-spin size-6 stroke-gray-500 ${loaderStyle}`
+export default function LoaderSpinner({ loaderStyle }) {
+  const className = `animate-spin size-6 stroke-gray-500 ${loaderStyle}`;
   return (
     <div className="inline" aria-label="Loading..." role="status">
       <svg className={className} viewBox="0 0 256 256">

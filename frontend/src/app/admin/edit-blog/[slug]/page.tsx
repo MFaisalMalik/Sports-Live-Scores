@@ -7,7 +7,7 @@ import { useRouter, useParams } from "next/navigation";
 import allBlogs from "@/utils/allBlogs.json";
 import slugify from "slugify";
 import { apiHost } from "@/utils";
-import Loader from "@/components/LiveScores/Loader";
+import Loader from "@/components/livescores/Loader";;
 import LoaderSpinner from "@/components/LoaderSpinner";
 import { toast } from "react-toastify";
 
@@ -237,36 +237,27 @@ function BlogImages({ images, removeImage }) {
   );
 }
 
-function SelectedFiles({ data, onRemove, className }) {
-  return (
-    <div className={`grid grid-cols-1 gap-3 ${className}`}>
-      {data.map(
-        (item: {
-          name:
-            | boolean
-            | React.ReactElement<any, string | React.JSXElementConstructor<any>>
-            | Iterable<React.ReactNode>
-            | Promise<React.AwaitedReactNode>
-            | React.Key
-            | null
-            | undefined;
-        }) => (
-          <div
-            key={item.name}
-            className="relative h-full rounded-xl border border-gray-200 bg-white text-sm"
-          >
-            <button
-              onClick={() => onRemove(item)}
-              className="absolute -left-1 -top-1 flex items-center justify-center rounded-full bg-gray-300 p-1 shadow-md"
-            >
-              <CrossIcon className="h-3 w-3 font-bold " />
-            </button>
-            <div className=" h-12 justify-center rounded-xl bg-white p-3 text-sm outline-none">
-              <p>{item.name}</p>
-            </div>
-          </div>
-        )
-      )}
-    </div>
-  );
-}
+// function SelectedFiles({ data, onRemove, className }) {
+//   return (
+//     <div className={`grid grid-cols-1 gap-3 ${className}`}>
+//       {data.map(
+//         (item) => (
+//           <div
+//             key={item.name}
+//             className="relative h-full rounded-xl border border-gray-200 bg-white text-sm"
+//           >
+//             <button
+//               onClick={() => onRemove(item)}
+//               className="absolute -left-1 -top-1 flex items-center justify-center rounded-full bg-gray-300 p-1 shadow-md"
+//             >
+//               <CrossIcon className="h-3 w-3 font-bold " />
+//             </button>
+//             <div className=" h-12 justify-center rounded-xl bg-white p-3 text-sm outline-none">
+//               <p>{item.name}</p>
+//             </div>
+//           </div>
+//         )
+//       )}
+//     </div>
+//   );
+// }
