@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { apiHost } from "../../utils";
 import { auth } from "../../firebase/firebase";
 
-const context = createContext();
+const modalContext = createContext();
 
 export function ModalContextProvider({ children }) {
   const [emailModalOpen, setEmailModalOpen] = useState(false);
@@ -40,7 +40,7 @@ export function ModalContextProvider({ children }) {
   }, []);
 
   return (
-    <context.Provider
+    <modalContext.Provider
       value={{
         emailModalOpen,
         setEmailModalOpen,
@@ -53,10 +53,10 @@ export function ModalContextProvider({ children }) {
       }}
     >
       {children}
-    </context.Provider>
+    </modalContext.Provider>
   );
 }
 
 export const useModalContext = () => {
-  return useContext(context);
+  return useContext(modalContext);
 };

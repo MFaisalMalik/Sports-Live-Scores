@@ -4,7 +4,7 @@ import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import MainLayout from "@/components/MainLayout";
+import Providers from "./providers";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={inter.className}>
-        <MainLayout>{children}</MainLayout>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

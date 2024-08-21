@@ -10,6 +10,13 @@ import { apiHost } from "@/utils";
 import Loader from "@/components/livescores/Loader";;
 import LoaderSpinner from "@/components/LoaderSpinner";
 import { toast } from "react-toastify";
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import Image from "next/image";
+
+interface HTMLInputEvent extends Event {
+  target: HTMLInputElement & EventTarget;
+}
+
 
 export default function EditBlog() {
   const { slug } = useParams();
@@ -22,19 +29,21 @@ export default function EditBlog() {
   const router = useRouter();
 
   const [title, setTitle] = useState("");
-  const [displayImages, setDisplayImages] = useState([]);
-  const [images, setImages] = useState([]);
+  const [displayImages, setDisplayImages] = useState<string[]>([]);
+  const [images, setImages] = useState<File[]>([]);
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
 
-  function imagesUploadHandler(files: any) {
-    setImages([...files]);
+  function imagesUploadHandler(e: HTMLInputEvent) {
+    const files = Array.from(e.target.files || [])
+    setImages(files);
     // if (e.target.files.length > 2) alert('You can only upload maximum two [2] images');
     [...files].forEach((item, i) => {
       let reader = new FileReader();
       reader.readAsDataURL(item);
       reader.onload = (e) => {
-        setDisplayImages((prevState) => [...prevState, e.target.result]);
+        const result = e.target?.result as string;
+        setDisplayImages((prevState) => [...prevState, result]);
       };
     });
   }
@@ -152,7 +161,7 @@ export default function EditBlog() {
                 <FileUploadField
                   id="picture"
                   extra="mb-2"
-                  onChange={({ target }) => imagesUploadHandler(target.files)}
+                  onChange={imagesUploadHandler}
                   placeholder="PNG, JPG, or GIF (max. 800 x 400 pixels)"
                   label="picture"
                   type="file"
@@ -201,11 +210,11 @@ export default function EditBlog() {
   );
 }
 
-function BlogImages({ images, removeImage }) {
+function BlogImages({ images, removeImage }: { images: string[], removeImage: (index: number)=> void}) {
   return (
     <div className="flex flex-wrap gap-3 my-10">
       {images.map(
-        (image: string | undefined, index: React.Key | null | undefined) => {
+        (image: string | StaticImport, index: number) => {
           // console.log(index,image.slice(0,10))
           return (
             <div
@@ -221,7 +230,7 @@ function BlogImages({ images, removeImage }) {
                 <CrossIcon className="h-3 w-3 font-bold " />
               </button>
               <div className="relative h-24 w-36 ">
-                <img
+                <Image
                   width="20"
                   height="10"
                   className="h-full w-full rounded-xl object-cover"

@@ -1,13 +1,12 @@
 "use client"
 
-import React from "react";
-import Footer from "@/components/Footer2";
+
 import { auth } from "@/firebase/firebase";
+// import { headers } from "next/headers";
 import GameNPlayerCard from "@/components/GameNPlayerCard";
 import { useModalContext } from "@/contexts/modalContext";
-import { useParams, usePathname } from "next/navigation";
 import { footballCover, baseballCover, basketballCover, hockeyCover } from "@/assets/images";
-
+import { usePathname } from "next/navigation";
 
 const bgImages = {
   football: footballCover,
@@ -17,9 +16,11 @@ const bgImages = {
 }
 
 
-export default function Games() {
-  const { game } = useParams();
-  const pathname = usePathname();
+export default function Page({params: { game }}) {
+  // const headerList = headers();
+  // const pathname = headerList.get("x-current-path");
+  const pathname = usePathname()
+
   const { subscriptionData } = useModalContext();
 
   const getLink = (stats, type) => {

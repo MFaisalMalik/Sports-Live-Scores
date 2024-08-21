@@ -1,33 +1,10 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
+import React from "react";
 import BlogCard from "@/components/BlogCard";
 import Link from "next/link";
 
-import { apiHost } from "@/utils";
-import Loader from "@/components/livescores/Loader";;
+import Loader from "@/components/livescores/Loader";
 
-export default function BlogsPage() {
-  const [blogs, setBlogs] = useState([]);
-
-  async function fetchData() {
-    await fetch(`${apiHost}/api/blogs`, {
-      method: "GET",
-    })
-      .then(async (response) => {
-        const data = await response.json();
-        console.log(data);
-        setBlogs(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
+export default function BlogsPage({ blogs }) {
   return (
     <>
       <div className="h-[400px] bg-[url('../assets/images/blogs-banner.webp')] bg-center bg-cover bg-no-repeat">

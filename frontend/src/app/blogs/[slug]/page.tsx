@@ -1,45 +1,51 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import React from "react";
+// import { useParams } from "next/navigation";
 import BlogCard from "@/components/BlogCard";
 import { apiHost } from "@/utils";
 import Markdown from "react-markdown";
 import Loader from "@/components/livescores/Loader";
 
-export default function Article() {
-  const { slug } = useParams();
-  const [article, setArticle] = useState(null);
-  const [blogs, setBlogs] = useState(null);
+import type { Metadata, NextPage, ResolvingMetadata } from 'next'
+ 
+type Props = {
+  params: { slug: string }
+  // searchParams: { [key: string]: string | string[] | undefined }
+}
+ 
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  // read route params
+  const slug = params.slug
+ 
+  // fetch data
+  const article = await fetch(`${apiHost}/api/blogs/${slug}`).then((res) => res.json())
+ 
+  // optionally access and extend (rather than replace) parent metadata
+  const previousImages = (await parent).openGraph?.images || []
+ 
+  return {
+    title: article.title,
+    openGraph: {
+      images: [article?.image, ...previousImages],
+    },
+  }
+}
 
-  useEffect(() => {
-    fetch(`${apiHost}/api/blogs/${slug}`, {
-      method: "GET",
-    })
-      .then(async (res) => {
-        const data = await res.json();
-        setArticle(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    fetch(`${apiHost}/api/blogs`, {
-      method: "GET",
-    })
-      .then(async (res) => {
-        const data = await res.json();
-        setBlogs(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [slug]);
 
-  // useEffect(() => {
-  //   if (article?.content) {
-  //     console.log(article?.content);
-  //   }
-  // }, [article]);
+export default async function Page({ params: { slug } }: { params: { slug: string}}) {
+  const blogs = await fetch(`${apiHost}/api/blogs`, {
+    method: "GET",
+  })
+    .then((res) => res.json())
+    .catch((error) => console.log(error));
+
+  const article = await fetch(`${apiHost}/api/blogs/${slug}`, {
+    method: "GET",
+  })
+    .then((res) => res.json())
+    .catch((error) => console.log(error));
 
   return (
     <>
@@ -80,7 +86,7 @@ export default function Article() {
             Related Articles
           </h2>
           <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-4 sm:grid-cols-2">
-            {blogs?.slice(0, 4)?.map((item, index) => {
+            {blogs?.slice(0, 4)?.map((item:any, index:any) => {
               return <BlogCard key={index} {...item} />;
             })}
           </div>

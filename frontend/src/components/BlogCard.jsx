@@ -24,6 +24,7 @@ export default function BlogCard({ image, title, slug, date }) {
   return (
     <Link
       href={`/blogs/${slug}`}
+      rel="noopener noreferrer"
       className="relative rounded-xl cursor-pointer overflow-hidden flex items-end bg-blue-200 justify-start w-full text-left bg-center bg-cover h-96 ring-2 ring-blue-400/40"
       style={{
         backgroundImage: `url(${image ?? placeholderBlue.src})`,
@@ -41,15 +42,13 @@ export default function BlogCard({ image, title, slug, date }) {
         </div>
       </div>
       <h2 className="z-10 p-5">
-        <Link
-          rel="noopener noreferrer"
-          href={`/blogs/${slug}`}
+        <div
           title={title}
           className="font-semibold text-white text-md hover:underline"
         >
           {" "}
           {title?.length < 55 ? title : `${title?.slice(0, 55)}...`}
-        </Link>
+        </div>
       </h2>
     </Link>
   );
