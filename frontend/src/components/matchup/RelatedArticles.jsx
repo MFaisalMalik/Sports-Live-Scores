@@ -10,7 +10,7 @@ export default function RelatedArticles() {
   const [blogs, setBlogs] = useState([]);
 
   async function fetchData() {
-    await fetch(`${apiHost}/api/blogs`, {
+    await fetch(`${apiHost}/api/blogs/sport`, {
       method: "GET",
     })
       .then(async (response) => {

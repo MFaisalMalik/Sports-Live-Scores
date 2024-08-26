@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import React from "react";
-import { useParams } from "next/navigation";
 import {
   TableContainer,
   Table,
@@ -17,8 +16,7 @@ import { auth } from "@/firebase/firebase";
 import { apiHost } from "@/utils";
 import Loader from "@/components/livescores/Loader";
 
-export default function PlayerTable() {
-  const { game, type } = useParams();
+export default function PlayerTable({ params: { game, type } }) {
   const [playerStats, setPlayerStats] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [afterThis, setAfterThis] = useState(null);
@@ -87,6 +85,7 @@ export default function PlayerTable() {
     border: "1px solid #eff6ff",
     backgroundColor: "var(--navbar-color)",
     borderCollapse: "collapse",
+    whiteSpace: 'nowrap'
   };
 
   const cellStyles = {
@@ -94,6 +93,7 @@ export default function PlayerTable() {
     fontSize: 14,
     fontWeight: "bold",
     color: "#4b5563",
+    whiteSpace: 'nowrap'
   };
 
   const perPageOptions = [5, 10]
@@ -106,12 +106,11 @@ export default function PlayerTable() {
     year: "numeric",
   });
 
-
   return (
     <main className="min-h-screen">
       <div className="container mx-auto px-4 md:px-8 lg:px-12 mb-4">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mt-6 mb-2">
-          {`${game.at(0).toUpperCase() + game.slice(1)}`} Player Stats
+        <h1 className="text-3xl font-bold capitalize text-center text-gray-800 mt-6 mb-2">
+          {game} Player Stats
         </h1>
         <p className="text-center font-bold mb-4">{date}</p>
         <div>

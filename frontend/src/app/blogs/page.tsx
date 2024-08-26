@@ -1,5 +1,4 @@
 import BlogsPage from "@/components/blogs/BlogsPage";
-import { apiHost } from "@/utils";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,11 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const blogs = await fetch(`${apiHost}/api/blogs`, {
-    method: "GET",
-  })
-    .then((res) => res.json())
-    .catch((error) => console.log(error));
-
-  return <BlogsPage blogs={blogs} />;
+  return <BlogsPage />;
 }

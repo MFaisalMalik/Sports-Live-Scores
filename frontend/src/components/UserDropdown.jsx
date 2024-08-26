@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
 import React, { useEffect, useRef, useState } from "react";
 import { useClickOutside } from "@/utils/useClickOutside";
 import { useRouter } from "next/navigation";
-import Link from 'next/link'
+import Link from "next/link";
 import { doSignOut } from "@/firebase/auth";
 import { auth } from "@/firebase/firebase";
 import ShieldExclaimation from "@/components/commons/ShieldExclaimation";
@@ -30,16 +30,14 @@ export default function UserDropdown() {
   const close = () => {
     setOpen(false);
   };
+
   useClickOutside(wrapperRef, close);
 
   useEffect(() => {
     async function checkSubscription() {
-      await fetch(
-        `${apiHost}/api/subscription/check-subscription/${user.uid}`
-      )
-        .then(async (res) => {
+      await fetch(`${apiHost}/api/subscription/check-subscription/${user.uid}`)
+        .then((res) => {
           if (res.ok) {
-            // const data = await res.json();
             setHasSubscription(true);
           } else {
             setHasSubscription(false);

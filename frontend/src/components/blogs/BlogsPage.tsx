@@ -1,10 +1,66 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import BlogCard from "@/components/BlogCard";
 import Link from "next/link";
 
 import Loader from "@/components/livescores/Loader";
+import { apiHost } from "@/utils";
 
-export default function BlogsPage({ blogs }) {
+export default function BlogsPage() {
+  const [blogs, setBlogs] = useState([]);
+  const [afterThis, setAfterThis] = useState();
+  const [beforeThis, setBeforeThis] = useState();
+  const [count, setCount] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageAction, setPageAction] = useState("NEXT");
+
+  async function fetchData() {
+    await fetch(`${apiHost}/api/blogs/default`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        page: currentPage,
+        page_action: pageAction,
+        after_this: afterThis,
+        before_this: beforeThis,
+      }),
+    })
+      .then(async (response) => {
+        const data = await response.json();
+        setBlogs(data.blogs);
+        setAfterThis(data.afterThis);
+        setBeforeThis(data.beforeThis);
+        setCount(data.count);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, [currentPage]);
+
+  function handlePageChange(page: number) {
+    if (page > currentPage) {
+      setPageAction("NEXT");
+    } else {
+      setPageAction("PREVIOUS");
+    }
+    setCurrentPage(page);
+  }
+
+  function getPaginationPages(totalCount: number, blogsPerPage = 8) {
+    const totalPages = Math.ceil(totalCount / blogsPerPage);
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  const pages = getPaginationPages(count);
+  const lastPage = pages[pages.length - 1];
+
   return (
     <>
       <div className="h-[400px] bg-[url('../assets/images/blogs-banner.webp')] bg-center bg-cover bg-no-repeat">
@@ -30,56 +86,31 @@ export default function BlogsPage({ blogs }) {
               return <BlogCard key={index} {...item} />;
             })}
           </div>
-          {blogs.length < 1 && (
+          {blogs?.length < 1 && (
             <div className="flex justify-center w-full">
               <Loader />
             </div>
           )}
-          {blogs.length > 8 && (
+          {count && count > 8 && (
             <div className="mt-8 flex justify-center">
-              <nav className="bg-blue-200 rounded-full px-4 py-2">
-                <ul className="flex text-gray-600 gap-4 font-medium py-2">
-                  <li>
-                    <Link
-                      href="#"
-                      className="rounded-full px-4 py-2 bg-white text-gray-600"
-                    >
-                      1
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="#"
-                      className="rounded-full px-4 py-2 hover:bg-white hover:text-gray-600 transition duration-300 ease-in-out"
-                    >
-                      2
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="#"
-                      className="rounded-full px-4 py-2 hover:bg-white hover:text-gray-600 transition duration-300 ease-in-out"
-                    >
-                      3
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="#"
-                      className="rounded-full px-4 py-2 hover:bg-white hover:text-gray-600 transition duration-300 ease-in-out"
-                    >
-                      4
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="#"
-                      className="rounded-full px-4 py-2 hover:bg-white hover:text-gray-600 transition duration-300 ease-in-out"
-                    >
-                      5
-                    </Link>
-                  </li>
-                </ul>
+              <nav className="bg-blue-200 rounded-full">
+                <div className="flex divide-x divide-gray-200">
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    className="w-full max-w-28 text-sm bg-blue-500 disabled:bg-gray-300 hover:bg-blue-700 disabled:hover:bg-gray-300 text-white disabled:text-gray-600 px-4 py-2 rounded-l-full disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={currentPage < 2}
+                  >
+                    PREVIOUS
+                  </button>
+
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === lastPage}
+                    className="w-full max-w-28 text-sm bg-blue-500 disabled:bg-gray-300 hover:bg-blue-700 disabled:hover:bg-gray-300 px-4 py-2 rounded-r-full disabled:cursor-not-allowed text-white disabled:text-gray-600"
+                  >
+                    NEXT
+                  </button>
+                </div>
               </nav>
             </div>
           )}

@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
 import { useCallback, useEffect, useState } from "react";
 import React from "react";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import {
   TableContainer,
   Table,
@@ -14,16 +14,16 @@ import {
   TablePagination,
 } from "@mui/material";
 import { auth } from "@/firebase/firebase";
-import Loader from "@/components/livescores/Loader";;
+import Loader from "@/components/livescores/Loader";
 import { apiHost } from "@/utils";
 
 export default function GameTable() {
-
   // console.log(searchParams.get("page"));
   // console.log(searchParams.get("limit"));
 
   const { game, type } = useParams();
-  
+  const queryParams = useSearchParams()
+
   const [gameStats, setGameStats] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [afterThis, setAfterThis] = useState(null);
@@ -32,9 +32,7 @@ export default function GameTable() {
   const [pageAction, setPageAction] = useState("NEXT");
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  
   const fetchGameStats = useCallback(async () => {
-
     const gamesCodes = {
       baseball: "MLB",
       basketball: "NBA",
@@ -42,10 +40,14 @@ export default function GameTable() {
       hockey: "NHL",
     };
 
-    let url = new URL(`${apiHost}/api/games/${type}/${
-      gamesCodes[game] || "MLB"
-    }`);
-    let params = new URLSearchParams(url.search);
+    let url = new URL(
+      `${apiHost}/api/games/${type}/${gamesCodes[game] || "MLB"}`
+    );
+    let params = new URLSearchParams(queryParams);
+    // console.log(url.search);
+    // console.log(params);
+    // console.log(queryParams);
+
     if (type === "premium" && auth.currentUser) {
       const userId = auth.currentUser.uid;
       params.set("userId", userId);
@@ -64,8 +66,9 @@ export default function GameTable() {
       params.set("before_this", beforeThis);
     }
     // console.log(rowsPerPage, currentPage);
-    
+
     let formedUrl = new URL(`${url.origin}${url.pathname}?${params}`).href;
+  
     const response = await fetch(formedUrl);
     if (response.ok) {
       const json = await response.json();
@@ -73,13 +76,14 @@ export default function GameTable() {
       setBeforeThis(json.beforeThis);
       setGameStats(json.data);
       setCount(json.count);
+    } else {
+      console.log("Response Error");
     }
-  }, [currentPage, game, type, rowsPerPage])
+  }, [currentPage, game, type, rowsPerPage]);
 
   useEffect(() => {
     fetchGameStats();
   }, [fetchGameStats, currentPage, rowsPerPage]);
-
 
   function handlePageChange(page) {
     if (page > currentPage) {
@@ -100,6 +104,7 @@ export default function GameTable() {
     border: "1px solid #eff6ff",
     backgroundColor: "var(--navbar-color)",
     borderCollapse: "collapse",
+    whiteSpace: "nowrap",
   };
 
   const cellStyles = {
@@ -107,19 +112,20 @@ export default function GameTable() {
     fontSize: 14,
     fontWeight: "bold",
     color: "#4b5563",
+    whiteSpace: "nowrap",
   };
 
-  const date = new Date().toLocaleDateString('en-US', {
-    month: 'short',
+  const date = new Date().toLocaleDateString("en-US", {
+    month: "short",
     day: "2-digit",
-    year: "numeric"
-  })
+    year: "numeric",
+  });
 
   return (
     <main className="min-h-screen">
       <div className="container mx-auto px-4 md:px-8 lg:px-12 mb-4">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mt-6 mb-2">
-          {`${game.at(0).toUpperCase() + game.slice(1)}`} Game Stats
+        <h1 className="text-3xl font-bold capitalize text-center text-gray-800 mt-6 mb-2">
+          {game} Game Stats
         </h1>
         <p className="text-center font-bold mb-4">{date}</p>
         <div>
@@ -196,22 +202,20 @@ export default function GameTable() {
                   ))}
                 </TableBody>
               </Table>
-              {
-                type === "premium" && (
-                  <TablePagination
-                    rowsPerPage={rowsPerPage}
-                    count={count}
-                    page={currentPage}
-                    onPageChange={(_, page) => handlePageChange(page)}
-                    rowsPerPageOptions={perPageOptions}
-                    onRowsPerPageChange={({ target }) =>
-                      setRowsPerPage(target.value)
-                    }
-                    component="div"
-                  />
-                )
-              }
-              </TableContainer>
+              {type === "premium" && (
+                <TablePagination
+                  rowsPerPage={rowsPerPage}
+                  count={count}
+                  page={currentPage}
+                  onPageChange={(_, page) => handlePageChange(page)}
+                  rowsPerPageOptions={perPageOptions}
+                  onRowsPerPageChange={({ target }) =>
+                    setRowsPerPage(target.value)
+                  }
+                  component="div"
+                />
+              )}
+            </TableContainer>
           ) : (
             <div>
               <Loader />

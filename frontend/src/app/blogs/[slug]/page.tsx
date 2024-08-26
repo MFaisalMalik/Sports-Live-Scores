@@ -1,41 +1,45 @@
 import React from "react";
-// import { useParams } from "next/navigation";
 import BlogCard from "@/components/BlogCard";
 import { apiHost } from "@/utils";
 import Markdown from "react-markdown";
 import Loader from "@/components/livescores/Loader";
 
-import type { Metadata, NextPage, ResolvingMetadata } from 'next'
- 
+import type { Metadata, NextPage, ResolvingMetadata } from "next";
+
 type Props = {
-  params: { slug: string }
+  params: { slug: string };
   // searchParams: { [key: string]: string | string[] | undefined }
-}
- 
+};
+
 export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   // read route params
-  const slug = params.slug
- 
+  const slug = params.slug;
+
   // fetch data
-  const article = await fetch(`${apiHost}/api/blogs/${slug}`).then((res) => res.json())
- 
+  const article = await fetch(`${apiHost}/api/blogs/${slug}`).then((res) =>
+    res.json()
+  );
+
   // optionally access and extend (rather than replace) parent metadata
-  const previousImages = (await parent).openGraph?.images || []
- 
+  const previousImages = (await parent).openGraph?.images || [];
+
   return {
     title: article.title,
     openGraph: {
       images: [article?.image, ...previousImages],
     },
-  }
+  };
 }
 
-
-export default async function Page({ params: { slug } }: { params: { slug: string}}) {
-  const blogs = await fetch(`${apiHost}/api/blogs`, {
+export default async function Page({
+  params: { slug },
+}: {
+  params: { slug: string };
+}) {
+  const blogs = await fetch(`${apiHost}/api/blogs/sport`, {
     method: "GET",
   })
     .then((res) => res.json())
@@ -86,7 +90,7 @@ export default async function Page({ params: { slug } }: { params: { slug: strin
             Related Articles
           </h2>
           <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-4 sm:grid-cols-2">
-            {blogs?.slice(0, 4)?.map((item:any, index:any) => {
+            {blogs?.map((item: any, index: any) => {
               return <BlogCard key={index} {...item} />;
             })}
           </div>

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useEffect } from "react";
 import { useState } from "react";
@@ -23,23 +23,25 @@ export default function Login() {
   const [isSigningInGoogle, setIsSigningInGoogle] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (isSigningIn) return;
     setIsSigningIn(true);
     try {
-      const userCredential = await doSignInWithEmailAndPassword(email, password);
+      const userCredential = await doSignInWithEmailAndPassword(
+        email,
+        password
+      );
       console.log(userCredential);
       await saveUser(userCredential);
       router.push(redirect ? redirect : "/");
     } catch (error) {
-      if (error instanceof Error)
-      setErrorMessage(error.message);
+      if (error instanceof Error) setErrorMessage(error.message);
       setIsSigningIn(false);
     }
   };
 
-  const onGoogleSignIn = (e: { preventDefault: () => void; }) => {
+  const onGoogleSignIn = (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     if (isSigningIn) return;
@@ -95,6 +97,7 @@ export default function Login() {
                       id="email"
                       name="email"
                       type="email"
+                      required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       disabled={isSigningIn}
@@ -116,6 +119,7 @@ export default function Login() {
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
+                      required
                       disabled={isSigningIn}
                       className="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600"
                       placeholder="Password"
@@ -137,7 +141,9 @@ export default function Login() {
 
                   {errorMessage && (
                     <span className="block text-sm text-red-500 ">
-                      {errorMessage}
+                      {errorMessage.startsWith("Firebase: Error")
+                        ? errorMessage.slice(15)
+                        : errorMessage}
                     </span>
                   )}
 

@@ -172,7 +172,7 @@ export default function SignUp() {
 
                   {errorMessage && (
                     <span className="block text-sm text-red-500 ">
-                      {errorMessage}
+                      {errorMessage.startsWith("Firebase:") ? errorMessage.slice(9) : errorMessage.startsWith("Firebase: Error") ? errorMessage.slice(15) : errorMessage}
                     </span>
                   )}
 

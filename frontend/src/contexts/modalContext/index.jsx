@@ -36,7 +36,9 @@ export function ModalContextProvider({ children }) {
   }
 
   useEffect(() => {
-    fetchData();
+    if (auth.currentUser) {
+      fetchData();
+    }
   }, []);
 
   return (

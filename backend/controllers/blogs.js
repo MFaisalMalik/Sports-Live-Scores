@@ -9,6 +9,11 @@ import {
   deleteDoc,
   orderBy,
   query,
+  getCountFromServer,
+  limit,
+  startAfter,
+  endBefore,
+  limitToLast,
 } from "firebase/firestore";
 import fs from "fs";
 import { getDownloadURL, ref, uploadBytes, getStorage } from "firebase/storage";
@@ -32,7 +37,11 @@ export const publishBlog = async (req, res) => {
         //   // Upload image to storage and get image url first
         const imageURL = await uploadImage(data.image);
         if (imageURL) {
-          await saveBlog({ ...data, image: imageURL, date: new Date().toLocaleDateString() })
+          await saveBlog({
+            ...data,
+            image: imageURL,
+            date: new Date().toLocaleDateString(),
+          })
             .then(() => {
               res.status(200).send({ statusCode: 200, message: "sucess" });
             })
@@ -68,9 +77,13 @@ export const updateBlog = async (req, res) => {
         };
         //   // Upload image to storage and get image url first
         try {
-          const imageURL = await uploadImage(data.image)
+          const imageURL = await uploadImage(data.image);
           if (imageURL) {
-            await saveBlog({ ...data, image: imageURL, date: new Date().toLocaleDateString() })
+            await saveBlog({
+              ...data,
+              image: imageURL,
+              date: new Date().toLocaleDateString(),
+            })
               .then(() => {
                 res.status(200).send({ statusCode: 200, message: "success" });
               })
@@ -79,7 +92,7 @@ export const updateBlog = async (req, res) => {
               });
           }
         } catch (error) {
-          res.status(500).send(`${error.message}`)
+          res.status(500).send(`${error.message}`);
         }
       } else {
         let data = { ...req.body, date: new Date().toLocaleDateString() };
@@ -92,7 +105,7 @@ export const updateBlog = async (req, res) => {
           });
       }
     }
-  })
+  });
 };
 
 const uploadImage = async (file) => {
@@ -124,7 +137,7 @@ const saveBlog = async (data) => {
   try {
     await setDoc(doc(db, "blogs", data.slug), data);
   } catch (error) {
-    console.log("save error",error);
+    console.log("save error", error);
   }
 };
 
@@ -143,20 +156,76 @@ export const checkSlugAvailability = async (req, res) => {
 };
 
 export const getBlogs = async (req, res) => {
+  const { page, page_action, after_this, before_this } = req.body;
+
   const blogsCollection = collection(db, "blogs");
-  const snapshot = await getDocs(
+  let queryRef;
+  if (page > 1) {
+    if (page_action === "NEXT") {
+      const afterSnap = await getDoc(doc(db, "blogs", after_this));
+      queryRef = query(
+        blogsCollection,
+        orderBy("date", "desc"),
+        limit(8),
+        startAfter(afterSnap)
+      );
+    }
+    if (page_action === "PREVIOUS") {
+      const beforeSnap = await getDoc(doc(db, "blogs", before_this));
+      queryRef = query(
+        blogsCollection,
+        orderBy("date", "desc"),
+        limitToLast(8),
+        endBefore(beforeSnap)
+      );
+    }
+  } else {
+    queryRef = query(blogsCollection, orderBy("date", "desc"), limit(8));
+  }
+
+  const snapshot = await getDocs(queryRef);
+  const countSnapshot = await getCountFromServer(
     query(blogsCollection, orderBy("date", "desc"))
   );
 
-  if (snapshot) {
-    let data = [];
-    snapshot.forEach((doc) => {
-      data.push(doc.data());
-    });
-    return res.json(data);
-  } else {
-    res.send({ error: "error" });
+  const count = countSnapshot.data().count;
+
+  if (snapshot.empty) {
+    return res.status(200).json({ data: [], count: 0 });
   }
+
+  const blogs = snapshot.docs.map((doc) => {
+    return { ...doc.data(), id: doc.id };
+  });
+
+  const afterThis = blogs[blogs.length - 1].id;
+  const beforeThis = blogs[0].id;
+  res.status(200).json({ blogs, count, beforeThis, afterThis });
+};
+
+export const getSportBlogs = async (req, res) => {
+  const blogsCollection = collection(db, "blogs");
+  const snapshot = await getDocs(
+    query(blogsCollection, orderBy("date", "desc"), limit(4))
+  );
+
+  // const countSnapshot = await getCountFromServer(
+  //   query(blogsCollection, orderBy("date", "desc"))
+  // );
+
+  // const count = countSnapshot.data().count;
+
+  if (snapshot.empty) {
+    return res.status(200).json({ message: "Not Found" });
+  }
+
+  const blogs = snapshot.docs.map((doc) => {
+    return { ...doc.data(), id: doc.id };
+  });
+
+  // const afterThis = blogs[blogs.length - 1].id;
+  // const beforeThis = blogs[0].id;
+  res.status(200).json(blogs);
 };
 
 export const getSingleBlog = async (req, res) => {
@@ -166,7 +235,7 @@ export const getSingleBlog = async (req, res) => {
     if (docSnap.exists()) {
       res.status(200).json(docSnap.data());
     } else {
-      res.status(404).send({message: "Not available"});
+      res.status(404).send({ message: "Not available" });
     }
   } catch (error) {
     res.status(500).send(error);
@@ -177,12 +246,11 @@ export const deleteBlog = async (req, res) => {
   const docRef = doc(db, "blogs", req.body.slug);
   try {
     await deleteDoc(docRef);
-    res.status(204).send({message: "success"});
+    res.status(204).send({ message: "success" });
   } catch (error) {
     res.status(500).send(error);
   }
 };
-
 
 export const getArticle = async (req, res) => {
   const slug = req.params.slug;
@@ -192,10 +260,9 @@ export const getArticle = async (req, res) => {
     if (docSnap.exists()) {
       res.status(200).json(docSnap.data());
     } else {
-      res.status(404).send({message: "Not Found"});
+      res.status(404).send({ message: "Not Found" });
     }
   } catch (error) {
     res.status(500).send(error);
   }
 };
-
