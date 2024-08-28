@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/authContext";
@@ -11,6 +11,9 @@ import clsx from "clsx";
 import UserDropdown from "./UserDropdown";
 import { logo } from "@/assets/images";
 import Image from "next/image";
+import { useModalContext } from "@/contexts/modalContext";
+import { auth } from "@/firebase/firebase";
+import { apiHost } from "@/utils";
 
 function Navbar() {
   const { userLoggedIn } = useAuth();
@@ -21,6 +24,31 @@ function Navbar() {
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
+
+  const [subsStatus, setSubsStatus] = useState();
+
+  useEffect(() => {
+    async function getSubscriptionInfo() {
+      await fetch(
+        `${apiHost}/api/subscription/check-subscription/${auth.currentUser.uid}`
+      )
+        .then(async (response) => {
+          if (response.ok) {
+            const data = await response.json();
+            setSubsStatus(data.status);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
+    if (auth?.currentUser) {
+      getSubscriptionInfo();
+    } else {
+      setSubsStatus("inactive");
+    }
+  }, []);
 
   return (
     <>
@@ -142,15 +170,17 @@ function Navbar() {
                       Betting Odds
                     </Link>
                   </li>
-                  <li className="nav-item">
-                    <Link
-                      href="/pricing"
-                      className="flex items-center justify-center text-white font-semibold px-4 cursor-pointer py-2 h-full lg:hover:border-b-4 border-white transition-all"
-                      onClick={closeMobileMenu}
-                    >
-                      Pricing
-                    </Link>
-                  </li>
+                  {subsStatus === "inactive" && (
+                    <li className="nav-item">
+                      <Link
+                        href="/pricing"
+                        className="flex items-center justify-center text-white font-semibold px-4 cursor-pointer py-2 h-full lg:hover:border-b-4 border-white transition-all"
+                        onClick={closeMobileMenu}
+                      >
+                        Pricing
+                      </Link>
+                    </li>
+                  )}
                 </ul>
 
                 {userLoggedIn ? (

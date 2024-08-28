@@ -116,7 +116,7 @@ export const checkSubscriptionStatus = async (req, res) => {
 
     // const subscriptionData = await getUserSubscriptionData(userId);
     if (!subscriptionData) {
-      return res.status(404).json({ message: "Inactive Subscription" });
+      return res.status(404).json({ status: "inactive", message: "Inactive Subscription" });
     }
 
     if (subscriptionData && subscriptionData.hasOwnProperty("subscriptionId")){
@@ -124,13 +124,14 @@ export const checkSubscriptionStatus = async (req, res) => {
         subscriptionData.subscriptionEndDate
       );
       if (subscriptionEndDateMs < currentTimestamp) {
-        return res.status(404).json({ message: "Inactive Subscription" });
+        return res.status(404).json({ status: "inactive", message: "Inactive Subscription" });
       }
   
       return res
         .status(200)
-        .json({ message: "Active Subscription", data: subscriptionData });
+        .json({ message: "Active Subscription", status: "active", data: subscriptionData });
     }
+
     if (
       subscriptionData &&
       subscriptionData.hasOwnProperty("freetrialavailed")
@@ -142,6 +143,7 @@ export const checkSubscriptionStatus = async (req, res) => {
         return res
           .status(200)
           .json({
+            status: "active",
             message: "Active Subscription",
             data: { ...subscriptionData, freeTrialAvailable: true },
           });
@@ -149,6 +151,7 @@ export const checkSubscriptionStatus = async (req, res) => {
         return res
           .status(200)
           .json({
+            status: "active",
             message: "Active Subscription",
             data: { ...subscriptionData, freeTrialAvailable: false },
           });
