@@ -12,6 +12,24 @@ export default function BlogList() {
   const [blogs, setBlogs] = useState([]);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(null);
+  const [isLoading, setIsloading] = useState(false)
+
+  async function fetchData() {
+    setIsloading(true)
+    await fetch(`${apiHost}/api/blogs/default`, {
+      method: "POST",
+    })
+      .then(async (response) => {
+        const data = await response.json();
+        console.log(data);
+        setIsloading(false)
+        setBlogs(data.blogs)
+      })
+      .catch((error) => {
+        setIsloading(false)
+        console.log(error);
+      });
+  }
 
   async function handleDeleteBlog(slug, i) {
     setCurrentIndex(i);
@@ -35,18 +53,6 @@ export default function BlogList() {
     }
   }
 
-  async function fetchData() {
-    await fetch(`${apiHost}/api/blogs`, {
-      method: "GET",
-    })
-      .then(async (response) => {
-        const data = await response.json();
-        setBlogs(data)
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
 
   useEffect(() => {
     fetchData();
@@ -67,7 +73,12 @@ export default function BlogList() {
       </div>
 
       <div className="mt-4 flex flex-col gap-6">
-        {blogs.length > 0 ? (
+        {
+          isLoading ? (
+            <div className="py-10">
+              <Loader />
+            </div>
+          ) : (
           blogs.map((item, i) => (
             <div key={i} className="flex gap-4">
               <div className="min-w-32 w-32 h-20 overflow-hidden">
@@ -108,10 +119,6 @@ export default function BlogList() {
               </div>
             </div>
           ))
-        ) : (
-          <div className="py-10">
-            <Loader />
-          </div>
         )}
       </div>
     </div>
