@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import BlogCard from "@/components/BlogCard";
-import Link from "next/link";
 
 import Loader from "@/components/livescores/Loader";
 import { apiHost } from "@/utils";

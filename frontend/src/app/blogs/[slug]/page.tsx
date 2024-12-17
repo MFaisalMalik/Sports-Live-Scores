@@ -1,3 +1,5 @@
+export const revalidate = 3600 * 24 // revalidate at most every day
+
 import React from "react";
 import BlogCard from "@/components/BlogCard";
 import { apiHost } from "@/utils";
